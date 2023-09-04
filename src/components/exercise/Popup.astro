@@ -1,0 +1,135 @@
+---
+import { Icon } from "astro-icon/components";
+const { boxes } = Astro.props;
+const boxCount = boxes
+  .map(
+    (_, index) => `<div class="box box-${index + 1}">.box-${index + 1}</div>`
+  )
+  .join("\n\t");
+const htmlContent = `<div class="container">
+  ${boxCount}
+</div>`;
+const htmlContentAlt = `<div class="container">
+  <div class="box box-1">.box-1</div>
+  ...
+</div>`;
+---
+
+<details class="popup">
+  <summary>
+    <Icon name="solar:code-square-line-duotone" stroke-width={2} />
+     HTML
+  </summary>
+  <div>
+    <textarea readonly aria-label="HTML code" class="prism-live language-html"
+      >{boxes.length > 1 ? htmlContent : htmlContentAlt}</textarea
+    >
+  </div>
+</details>
+
+<style>
+  .popup {
+    position: relative;
+    color: #fff;
+    z-index: 10;
+    margin-inline-start: auto;
+
+    @media (max-width: 895px) {
+      align-self: flex-end;
+    }
+  }
+
+  .popup summary {
+    cursor: pointer;
+    gap: var(--space-1);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--bdrs-sm);
+    user-select: none;
+    display: inline-flex;
+    background: var(--blue-700);
+    align-items: center;
+  }
+
+  .popup summary::marker {
+    content: none;
+  }
+  .popup summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .popup summary svg {
+    inline-size: 1.25em;
+    block-size: 1.25em;
+  }
+
+  .popup[open] summary {
+    background: var(--blue-900);
+    box-shadow:
+      inset 0 -1px 1px #fff3,
+      inset 0px 1px 1px 1px #0000007d;
+  }
+
+  .popup summary + div {
+    position: absolute;
+    bottom: 100%;
+    left: calc(var(--space-3) * -1);
+    margin-block-end: var(--space-1);
+    z-index: 10;
+    touch-action: pan-x;
+    filter: drop-shadow(0 1px 0.25px #fff3)
+      drop-shadow(2px 4px 12px rgba(0, 0, 0, 0.2666666667))
+      drop-shadow(0 1px 2px rgba(0, 0, 0, 0.0666666667));
+  }
+
+  .popup :global(pre) {
+    margin-block: 0;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    padding-block: 0.75rem 1.35em;
+    --r: 1rem;
+    --h: 1rem;
+    --p: 15%;
+    padding: 0.75rem var(--r);
+    border-bottom: var(--h) solid #0000;
+    background-origin: border-box;
+    background-color: var(--blue-700);
+    --m: conic-gradient(
+          from -45deg at var(--p) 100%,
+          #0000,
+          #000 1deg 90deg,
+          #0000 91deg
+        )
+        0 100%/100% calc(100% - var(--r)) no-repeat,
+      conic-gradient(
+          at calc(var(--r) / 2) calc(var(--r) / 2),
+          #000 270deg,
+          #0000 0
+        )
+        0 0 / calc(100% - var(--r) / 2) calc(100% - var(--r) / 2) padding-box,
+      radial-gradient(50% 50%, #000 98%, #0000) 0 0 / var(--r) var(--r) space
+        padding-box;
+    -webkit-mask: var(--m);
+    mask: var(--m);
+    inline-size: max-content;
+  }
+
+  @media (max-width: 920px) {
+    .popup summary + div {
+      left: auto;
+      right: -2rem;
+    }
+    .popup pre {
+      --p: 88%;
+    }
+  }
+
+  :global(.popup pre)::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
+<script>
+  import "../../js/popup.js";
+</script>

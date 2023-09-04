@@ -1,0 +1,186 @@
+---
+const { entry, index, total, theme } = Astro.props;
+const { slug, data, collection } = entry;
+const {
+  title,
+  id,
+  isExtra,
+  hints,
+  customClass,
+  help,
+  startingCSS,
+  canAddBoxes,
+  image,
+  video,
+} = data;
+const { Content } = await entry.render();
+const boxes = [...Array(data.boxes)];
+
+import ExerciseLabel from "./exercise/ExerciseLabel.astro";
+import BtnControls from "./exercise/BtnControls.astro";
+import Editor from "./exercise/Editor.astro";
+import Output from "./exercise/Output.astro";
+import Hints from "./exercise/Hints.astro";
+import TargetMedia from "./exercise/TargetMedia.astro";
+
+// console.log(entry);
+---
+
+<section
+  data-extra={isExtra && "true"}
+  data-exercise-key={"vc-" + id}
+  class={customClass ?? ""}
+>
+  <ExerciseLabel {title} {index} {total} />
+
+  {
+    isExtra && (
+      <div class="banner" data-banner-title="Ekstra">
+        Ekstra
+      </div>
+    )
+  }
+
+  <article class="exercise-details">
+    <div class="exercise-content">
+      <Content />
+
+      {hints ? <Hints {hints} /> : <div data-no-hints>Ingen hints</div>}
+    </div>
+
+    <picture>
+      <TargetMedia {image} {index} {video} />
+    </picture>
+
+    {canAddBoxes && <BtnControls />}
+  </article>
+
+  <!-- editor -->
+  <Editor
+    id={id}
+    startingCSS={startingCSS.trim()}
+    {boxes}
+    helpLink={help?.link}
+    helpTopic={help?.topic}
+  />
+
+  <Output {boxes} {theme} />
+</section>
+
+<style>
+  small {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: hsl(209, 23%, 74%);
+    position: relative;
+    display: flex;
+    gap: 0.5ch;
+    flex-wrap: wrap;
+    margin-inline-start: var(--space-2);
+
+    a:any-link {
+      text-decoration: none;
+      color: var(--blue-500);
+      gap: var(--space-1);
+      align-items: center;
+
+      span {
+        text-decoration: underline;
+      }
+
+      svg {
+        inline-size: 1em;
+        block-size: 1em;
+      }
+
+      &:hover,
+      &:focus-visible {
+        color: #fff;
+
+        span {
+          text-decoration: underline var(--blue-500);
+        }
+      }
+    }
+  }
+  .reset-buttons {
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-start: var(--space-2);
+    z-index: 1;
+    display: grid;
+    gap: 0 0.4ch;
+    place-items: end;
+    margin-inline-end: var(--space-2);
+  }
+
+  .reset-buttons > * {
+    grid-area: 1 / 1;
+  }
+
+  .button-group-confirm {
+    display: flex;
+    gap: 0.5ch;
+    pointer-events: none;
+    opacity: 0;
+    transition: 0.3s opacity;
+  }
+
+  .reset-buttons.active .button-group-confirm {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .reset-buttons.active > button {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  button[data-accept] {
+    --btn-stroke: 0;
+    --btn-theme: var(--blue-500);
+    position: relative;
+    color: #fff;
+    padding: 0;
+    inline-size: 28px;
+    block-size: 28px;
+    background: transparent;
+    display: grid;
+    place-content: center;
+    border-radius: var(--bdrs-round);
+  }
+
+  :global(button svg path) {
+    stroke-width: 3;
+  }
+
+  button:focus-visible {
+    --btn-stroke: 2px;
+  }
+
+  @media (hover: hover) {
+    button:hover {
+      --btn-stroke: 2px;
+    }
+  }
+
+  .banner {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    text-align: center;
+    padding: var(--space-3);
+    line-height: 1;
+    font-weight: 800;
+    font-size: 0.7em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: var(--space-1);
+    background: var(--ui-accent);
+    border-radius: calc(var(--bdrs-l) - (var(--space-1) / 2));
+  }
+</style>
+
+<script>
+  import "../js/intersecting";
+</script>

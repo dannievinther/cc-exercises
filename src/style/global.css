@@ -1,0 +1,9 @@
+@import "./reset.css" layer(reset);
+@import "./prism.css" layer(prism);
+@import "./custom.css" layer(custom);
+
+path,
+g,
+symbol {
+    stroke-width: inherit !important;
+}

@@ -1,0 +1,126 @@
+---
+import { Icon } from "astro-icon/components";
+import HintList from "./HintList.astro";
+const { hints } = Astro.props;
+
+const types = [...new Set(hints.map((h) => h.type))];
+function getHints(type) {
+  return hints.filter((hint) => hint.type === type);
+}
+---
+
+<details>
+  <summary>
+    Hints
+    <Icon
+      name="solar:alt-arrow-down-line-duotone"
+      width={16}
+      height={16}
+      aria-hidden="true"
+      stroke-width={3}
+    />
+  </summary>
+  {types.map((type) => <HintList hints={getHints(type)} />)}
+</details>
+
+<style>
+  @layer components {
+    :global([data-no-hints]) {
+      text-transform: uppercase;
+      font-family: "Mona Sans", system-ui;
+      font-size: 0.7em;
+      font-weight: 600;
+      color: var(--gray-600);
+      padding: 0.45rem var(--space-4) var(--space-1);
+      border-radius: var(--bdrs-md);
+      border: 2px solid var(--gray-200);
+      width: max-content;
+      letter-spacing: 0.05em;
+    }
+
+    details {
+      display: inline-grid;
+    }
+
+    details[open] summary {
+      border-radius: var(--bdrs-l) var(--bdrs-l) 0 0;
+    }
+
+    details svg {
+      transition: 1.5s
+        linear(
+          0,
+          0.218 2.1%,
+          0.862 6.5%,
+          1.114,
+          1.296 10.7%,
+          1.346,
+          1.37 12.9%,
+          1.373,
+          1.364 14.5%,
+          1.315 16.2%,
+          1.032 21.8%,
+          0.941 24%,
+          0.891 25.9%,
+          0.877,
+          0.869 27.8%,
+          0.87,
+          0.882 30.7%,
+          0.907 32.4%,
+          1.012 38.3%,
+          1.036,
+          1.046 42.7% 44.1%,
+          1.042 45.7%,
+          0.996 53.3%,
+          0.988,
+          0.984 57.5%,
+          0.985 60.7%,
+          1.001 68.1%,
+          1.006 72.2%,
+          0.998 86.7%,
+          1
+        );
+    }
+
+    details[open] svg {
+      rotate: -180deg;
+    }
+
+    [astro-icon="chevron-down"] {
+      stroke-width: 3px;
+    }
+
+    summary {
+      padding: var(--space-3);
+      background: #e9eef4;
+      border-radius: var(--bdrs-l);
+      color: var(--ui-accent);
+      inline-size: max-content;
+      text-transform: uppercase;
+      font-variation-settings: "wdth" 120;
+      font-family: "Mona Sans", system-ui;
+      font-size: 0.7em;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      letter-spacing: 0.05em;
+      text-decoration: underline 0.25em var(--blue-500);
+      text-underline-offset: 0.125em;
+
+      display: flex;
+      gap: 0.3ch;
+    }
+
+    [astro-icon] {
+      transition: 0.2s cubic-bezier(0.1, 0, 0.1, 1);
+
+      & :global(path) {
+        stroke-width: 3px;
+      }
+    }
+    summary::-webkit-details-marker {
+      display: none;
+    }
+  }
+</style>

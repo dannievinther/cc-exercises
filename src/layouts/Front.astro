@@ -1,0 +1,17 @@
+---
+import "../style/global.css";
+import Head from "../components/Head.astro";
+import Footer from "../components/Footer.astro";
+const { title } = Astro.props;
+---
+
+<html lang="da">
+  <head>
+    <Head title="Vinther Codes" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+    <Footer />
+  </body>
+</html>

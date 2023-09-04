@@ -1,0 +1,114 @@
+---
+import { Icon } from "astro-icon/components";
+const { title, index, total } = Astro.props;
+---
+
+<h2 class="small-label" id={`exercise-${index}`}>
+  <a href={`#exercise-${index}`}>
+    <Icon
+      name="solar:link-circle-bold"
+      width={24}
+      height={24}
+      stroke-width="2.25"
+    />
+    {title}
+  </a>
+  <span>{index} / {total}</span>
+</h2>
+
+<style>
+  a:hover {
+    text-decoration: none;
+  }
+
+  .small-label {
+    font-family: "Mona Sans", system-ui;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 0.8em;
+    color: var(--ui-accent);
+    letter-spacing: 1px;
+    display: flex;
+    gap: var(--space-4) var(--space-5);
+    justify-content: space-between;
+    flex-wrap: wrap-reverse;
+    align-items: baseline;
+    align-self: start;
+
+    transition: 0.3s transform;
+
+    --min-font: 18;
+    --max-font: 22;
+    --screen-max: 1200;
+    --screen-min: 375;
+    font-size: clamp(
+      var(--min-font) * 1px,
+      var(--responsive),
+      var(--max-font) * 1px
+    );
+    line-height: 1.125;
+
+    padding-block-end: var(--space-3);
+    border-bottom: 1px solid hsl(209deg 27% 90%);
+
+    & a:any-link {
+      font-variation-settings: "wdth" var(--font-stretch, 100);
+      position: relative;
+      color: var(--ui-accent);
+
+      text-decoration: none;
+
+      transition:
+        translate 0.2s cubic-bezier(0.645, 0.045, 0.355, 1),
+        font-variation-settings 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+
+      display: grid;
+      align-items: center;
+      grid-template-columns: 0 1fr;
+      gap: 0.1em;
+      margin-inline-start: -0.2em;
+
+      &:hover {
+        translate: calc(var(--space-5) + 0.2em) 0;
+      }
+
+      & :global(svg) {
+        color: var(--purple-600);
+        inline-size: 0.9em;
+        block-size: 0.9em;
+        opacity: 0;
+        transition: 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+        justify-self: flex-end;
+        translate: -0.4em 0;
+
+        :global(g) {
+          stroke-width: 2.5;
+        }
+      }
+
+      &:hover :global(svg) {
+        opacity: 1;
+        translate: 0 0;
+      }
+    }
+
+    & span {
+      font-weight: 600;
+      font-size: 0.55em;
+      color: var(--blue-muted);
+      font-variation-settings: "wdth" 125;
+    }
+  }
+
+  .small-label::before {
+    content: none;
+    block-size: 2px;
+    inline-size: 1.5rem;
+    background: var(--ui-accent);
+    background: currentColor;
+  }
+</style>
+
+<script>
+  import "../../js/copy";
+</script>

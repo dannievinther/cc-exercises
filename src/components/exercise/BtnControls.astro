@@ -1,0 +1,49 @@
+---
+import Button from "./Button.astro";
+---
+
+<div class="controls">
+  <div>
+    <Button icon="minus">Fjern boks</Button>
+    <span>.box</span>
+    <Button icon="plus">Tilføj boks</Button>
+  </div>
+</div>
+
+<style>
+  @layer components {
+    .controls {
+      display: grid;
+      grid: auto / repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+      gap: 0 var(--space-6);
+      justify-items: end;
+      align-self: end;
+      grid-column: 1 / -1;
+
+      &::after {
+        content: "";
+      }
+
+      > div {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        grid-column: -2;
+        background:
+          linear-gradient(#fff 0%, #e9eef4 100%) padding-box,
+          #fff;
+        box-shadow:
+          rgb(255 255 255) 0px 0px 0px 0px,
+          rgb(51 65 85 / 10%) 0px 0px 0px 1px,
+          rgb(0 0 0 / 5%) 0px 20px 25px -5px,
+          rgb(0 0 0 / 5%) 0px 8px 10px -6px;
+        border-radius: var(--bdrs-l);
+
+        > span {
+          font-weight: 600;
+          font-family: var(--font-mono);
+        }
+      }
+    }
+  }
+</style>

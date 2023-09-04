@@ -1,0 +1,119 @@
+---
+import { Icon } from "astro-icon/components";
+const { label = "", linkTo = "/" } = Astro.props;
+const year = new Date().getFullYear();
+
+// import chevronright from "../icons/chevron-right.svg?raw";
+
+const notHome = Astro.url.pathname !== "/";
+---
+
+{
+  notHome && (
+    <div>
+      <button class="load-more">Indlæs flere</button>
+    </div>
+  )
+}
+<footer>
+  <a href={linkTo} class="more-exercises"
+    >Prøv også {label}
+    <Icon
+      name="solar:alt-arrow-right-line-duotone"
+      width={16}
+      height={16}
+      stroke-width={3}
+    /></a
+  >
+
+  <small><span>© {year}&nbsp;Vinther.codes</span></small>
+</footer>
+
+<style>
+  :global(html:not([data-extra="true"])) .more-exercises {
+    display: none;
+  }
+
+  button {
+    all: unset;
+    cursor: pointer;
+  }
+
+  a {
+    display: flex;
+    gap: var(--space-1);
+    align-items: center;
+    color: #fff;
+    text-decoration: none;
+    padding: var(--space-3) var(--space-3) var(--space-3) var(--space-5);
+    border: 2px solid #5b7187;
+    inline-size: fit-content;
+    place-self: center;
+    border-radius: var(--bdrs-l);
+    transition: 0.2s;
+
+    & :global(svg) {
+      color: #a9bcce;
+      display: inline-block;
+      vertical-align: middle;
+      transition: inherit;
+    }
+
+    &:hover {
+      border-color: #a9bcce;
+      color: var(--blue-500);
+
+      & :global(svg) {
+        color: var(--blue-500);
+      }
+    }
+  }
+
+  [astro-icon="lucide:chevron-right"] {
+    width: 1.5rem;
+    height: 1.5rem;
+    stroke-width: 2;
+  }
+
+  div {
+    text-align: center;
+    margin: var(--space-7) var(--space-5) 0;
+  }
+  .load-more {
+    color: var(--blue-900);
+    border-radius: var(--bdrs-l);
+    padding: var(--space-3);
+    inline-size: max-content;
+    text-transform: uppercase;
+    font-variation-settings: "wdth" 120;
+    font-family:
+      Mona Sans,
+      system-ui;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+    text-shadow: 0 0 10px hsl(209deg 15% 93%);
+    letter-spacing: 0.05em;
+    text-decoration: underline 0.25em var(--blue-500);
+    text-underline-offset: 0.125em;
+    transition: 0.2s;
+
+    &:active {
+      text-decoration-color: var(--blue-muted-comment);
+    }
+
+    &:is(:hover, focus-visible) {
+      text-underline-offset: 0.5rem;
+    }
+  }
+
+  :global([data-extra="true"]) .load-more {
+    display: none;
+  }
+</style>
+
+<script>
+  import "../js/loadmore";
+</script>

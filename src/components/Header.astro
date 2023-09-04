@@ -1,0 +1,170 @@
+---
+import { Icon } from "astro-icon/components";
+// import chevronleft from "../icons/chevron-left.svg?raw";
+---
+
+<header class="main-header">
+  <a class="back" href="/">
+    <Icon name="solar:alt-arrow-left-line-duotone" width={18} />
+     &nbsp;Til exercssises</a
+  >
+
+  <!-- <div class="exercise-logo">
+    <Icon name="lucide:layout-dashboard" width="28" height="28" />
+  </div>
+  <h1>Grid Exercises</h1>
+  <p>
+    Følgende øvelser har til hensigt at hjælpe dig med at lære at bruge CSS
+    Grid.
+  </p>
+  <a href="#exercise-1" class="btn">Kom i gang</a> -->
+</header>
+
+<style is:global>
+  .main-header {
+    position: relative;
+    display: grid;
+    grid: auto/minmax(var(--space-5), 1fr) minmax(auto, 1200px) minmax(
+        var(--space-5),
+        1fr
+      );
+    gap: var(--space-5) 0;
+
+    padding-block: var(--space-6);
+
+    margin-block-end: var(--space-9);
+
+    /*z-index: 100;*/
+    /*pointer-events: none;*/
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      z-index: -1;
+      transform: skew(0deg, -1deg);
+      transform-origin: 0 0;
+      box-shadow:
+        rgb(255 255 255) 0px 0px 0px 0px,
+        rgb(51 65 85 / 10%) 0px 0px 0px 1px,
+        rgb(0 0 0 / 5%) 0px 20px 25px -5px,
+        rgb(0 0 0 / 5%) 0px 8px 10px -6px;
+    }
+
+    & > * {
+      grid-column: 2;
+    }
+
+    & p {
+      max-width: 50ch;
+    }
+
+    .back:any-link {
+      font-family: "Mona Sans", system-ui;
+      display: flex;
+      gap: 0.55ch;
+      align-items: center;
+      inline-size: fit-content;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      text-decoration: none;
+
+      &:hover,
+      &:hover svg {
+        color: #212529;
+      }
+    }
+
+    & [astro-icon="chevron-left"] {
+      width: 1.125rem;
+      height: 1.125rem;
+      color: var(--gray-200);
+      stroke-width: 3;
+    }
+
+    .btn:any-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-5);
+      background: var(--blue-800);
+      border: 2px solid var(--blue-800);
+      justify-self: start;
+      color: #fff;
+      border-radius: 1e5px;
+      font-weight: 600;
+      text-decoration: none;
+      line-height: 1.25;
+      transition: 0.15s;
+
+      &:hover {
+        color: var(--blue-800);
+        background: transparent;
+      }
+    }
+
+    & h1 {
+      font-weight: 900;
+
+      font-size: 4rem;
+      --min-font: 40;
+      --max-font: 64;
+      font-size: clamp(
+        var(--min-font) * 1px,
+        var(--responsive),
+        var(--max-font) * 1px
+      );
+      line-height: 1.125;
+    }
+
+    /*&.is-pinned {
+            position: sticky;
+            top: -1px;
+
+            h1 {
+            transform: translate(25%, 5px) scale(0.5);
+            transition: 0.3s;
+            }
+        }
+
+        .stroke-text {
+            // --c: #72f1b8;
+            // color: var(--c, #72f1b8);
+            --c: var(--primary);
+            color: var(--c, #82f4e1);
+            -webkit-text-fill-color: transparent;
+            -webkit-text-stroke: 2px currentColor;
+            overflow: hidden;
+            max-width: 3.1ch;
+            display: inline-block;
+            vertical-align: bottom;
+            text-decoration: underline var(--c) 4px;
+            text-underline-offset: 4px;
+            transition: 0.3s;
+            will-change: max-width;
+            contain: paint;
+        }
+
+        .toggled {
+            --c: var(--ui-secondary, #fb28a8);
+            max-width: 1.05ch;
+        }*/
+  }
+
+  .exercise-logo {
+    max-width: min-content;
+    padding: 0.8rem;
+    border: 5px double #dedee0;
+    border-radius: 1e5px;
+    color: var(--blue-700);
+    background:
+      radial-gradient(#fff 0 0) content-box,
+      hsl(209deg 27% 93%) padding-box;
+    aspect-ratio: 1;
+  }
+
+  .exercise-logo svg {
+    display: block;
+  }
+</style>
