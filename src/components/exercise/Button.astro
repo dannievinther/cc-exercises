@@ -12,16 +12,16 @@ const { icon } = Astro.props;
       <Icon
         name="solar:minus-circle-line-duotone"
         stroke-width={2}
-        width={24}
-        height={24}
+        width={28}
+        height={28}
         fill="none"
       />
     ) : (
       <Icon
         name="solar:add-circle-line-duotone"
         stroke-width={2}
-        width={24}
-        height={24}
+        width={28}
+        height={28}
         fill="none"
       />
     )
@@ -41,9 +41,10 @@ const { icon } = Astro.props;
         rgb(0 0 0 / 5%) 0px 20px 25px -5px,
         rgb(0 0 0 / 5%) 0px 8px 10px -6px; */
       background: transparent;
-      border-radius: none;
+      border-radius: var(--bdrs-round);
       transition: 0s;
       overflow: clip;
+      padding: 0;
     }
     button:not([disabled]):active {
       background:
@@ -66,7 +67,8 @@ const { icon } = Astro.props;
 
     :is(.plus, .minus) {
       box-shadow: none;
-      padding: 0.25rem 0.5rem;
+      /* padding: 0.25rem 0.5rem; */
+      padding: 0;
     }
 
     [astro-icon] {
