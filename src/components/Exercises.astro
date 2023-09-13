@@ -84,11 +84,11 @@ import TargetMedia from "./exercise/TargetMedia.astro";
       gap: var(--space-1);
       align-items: center;
 
-      span {
+      & span {
         text-decoration: underline;
       }
 
-      svg {
+      & svg {
         inline-size: 1em;
         block-size: 1em;
       }
@@ -103,6 +103,7 @@ import TargetMedia from "./exercise/TargetMedia.astro";
       }
     }
   }
+
   .reset-buttons {
     position: absolute;
     inset-inline-end: 0;
@@ -178,6 +179,21 @@ import TargetMedia from "./exercise/TargetMedia.astro";
     margin: var(--space-1);
     background: var(--ui-accent);
     border-radius: calc(var(--bdrs-l) - (var(--space-1) / 2));
+  }
+
+  .banner {
+    transition: 0.3s;
+    transform: perspective(1px);
+    clip-path: inset(
+      0 0 calc(100% - 12px) calc(100% - 12px) round 6px 0
+        calc(var(--bdrs-l) - (var(--space-1) / 2))
+        calc(var(--bdrs-l) - (var(--space-1) / 2))
+    );
+    user-select: none;
+  }
+
+  .banner:hover {
+    clip-path: inset(0 0 0 0);
   }
 </style>
 
