@@ -2,7 +2,8 @@
 // const classReg = /(?!\s)[^,()/*{}]+(?![^{]*})/g;
 // const classReg = /(?!\s)[^,()/*{}]+(?![^{]*})/g;
 // const classReg = /(?!\s)[^,/*{}]+(?![^{]*})/g;
-const classReg = /(?<!\{[^}]*)[^,/*&{}\s]+(?![^{]*\})/g;
+// const classReg = /(?<!\{[^}]*)[^,/*&{}\s]+(?![^{]*\})/g;
+const classReg = /(?<!\{(?:[^\{\}]|\{[^\{\}]*\})*?)[^,/*&{}\s]+(?!.*\})/g;
 
 export function prefix(str, exerciseKey) {
   return str.replaceAll(
