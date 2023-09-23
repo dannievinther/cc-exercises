@@ -83,7 +83,7 @@ const { boxes, theme } = Astro.props;
         #f1eef5;
     }
 
-    .output:is(.editor:focus-within + *) .box {
+    .output:is(.editor:focus-within + *) :global(.box) {
       filter: brightness(0.95);
     }
 
