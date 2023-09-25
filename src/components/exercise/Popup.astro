@@ -2,6 +2,8 @@
 import { Icon } from "astro-icon/components";
 const { boxes, startingHTML } = Astro.props;
 
+console.log(startingHTML);
+
 const boxCount = boxes
   .map(
     (_, index) => `<div class="box box-${index + 1}">.box-${index + 1}</div>`
@@ -15,14 +17,22 @@ const htmlContentAlt = `<div class="container">
   ...
 </div>`;
 
-const htmlTags =
+// const htmlTags =
+//   startingHTML &&
+//   startingHTML
+//     .match(/<\w+.*?>/g)
+//     .map((tag) => tag.replace(/(\s+\w+(?:="[^"]*")?)/g, ""))
+//     .join("\n\t");
+const indentedHTML =
   startingHTML &&
   startingHTML
-    .match(/<\w+.*?>/g)
-    .map((tag) => tag.replace(/(\s+\w+(?:="[^"]*")?)/g, ""))
-    .join("\n\t");
+    .split("\n")
+    .map((line) => "\t" + line)
+    .join("\n")
+    .trim();
+
 const customContent = `<div class="container">
-  ${htmlTags}
+  ${indentedHTML}
 </div>`;
 
 const html = startingHTML
