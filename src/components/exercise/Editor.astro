@@ -2,7 +2,8 @@
 import { Icon } from "astro-icon/components";
 import Popup from "./Popup.astro";
 
-const { id, startingCSS, helpLink, helpTopic, boxes } = Astro.props;
+const { id, startingCSS, startingHTML, helpLink, helpTopic, boxes } =
+  Astro.props;
 ---
 
 <div class="editor">
@@ -66,7 +67,7 @@ const { id, startingCSS, helpLink, helpTopic, boxes } = Astro.props;
       ) : null
     }
 
-    <Popup {boxes} />
+    <Popup {boxes} {startingHTML} />
   </div>
 
   <style is:inline class="style"></style>

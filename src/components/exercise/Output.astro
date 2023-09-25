@@ -1,13 +1,17 @@
 ---
-const { boxes, theme } = Astro.props;
+const { boxes, theme, startingHTML } = Astro.props;
 ---
 
 <div class="output" data-theme={theme}>
   <div class="container">
     {
-      boxes.map((_, index) => (
-        <div class={`box box-${index + 1}`}>.box-{index + 1}</div>
-      ))
+      startingHTML ? (
+        <Fragment set:html={startingHTML} />
+      ) : (
+        boxes.map((_, index) => (
+          <div class={`box box-${index + 1}`}>.box-{index + 1}</div>
+        ))
+      )
     }
   </div>
 </div>
@@ -117,6 +121,14 @@ const { boxes, theme } = Astro.props;
       }
     }
 
+    :global(.resize-x-only) .output {
+      resize: horizontal;
+
+      &::before {
+        content: "Dobbeltklik for at nulstille bredde";
+      }
+    }
+
     .output::-webkit-resizer {
       box-shadow: none !important;
       border: 0 !important;
@@ -177,6 +189,15 @@ const { boxes, theme } = Astro.props;
       gap: 1px;
       background: #f1eef5;
     }
+    .output .container :global(img) {
+      width: auto;
+      max-width: 100%;
+    }
+
+    .output .container :global(p) {
+      text-decoration-line: line-through;
+      text-decoration-thickness: 2ex;
+    }
 
     :global(section.stretch) .output {
       align-self: stretch;
@@ -187,17 +208,13 @@ const { boxes, theme } = Astro.props;
         50% / cover transparent;
     }
 
-    .output:is(section.logo-box *) .box:nth-child(1) {
+    .output:is(section.logo-box *) :global(.logo) {
       padding: 1rem;
       display: grid;
       font-size: 80%;
       line-height: 1.2;
-
-      &::before {
-        content: "Logo";
-        font-size: 2rem;
-        font-weight: 900;
-      }
+      font-size: 2rem;
+      font-weight: 900;
     }
   }
 </style>

@@ -20,6 +20,7 @@ const exerciseCollection = defineCollection({
         })
         .optional(),
       startingCSS: z.string().optional(),
+      startingHTML: z.string().optional(),
       hints: z
         .array(
           z.object({

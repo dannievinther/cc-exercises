@@ -9,6 +9,7 @@ const {
   customClass,
   help,
   startingCSS,
+  startingHTML,
   canAddBoxes,
   image,
   video,
@@ -62,9 +63,10 @@ import TargetMedia from "./exercise/TargetMedia.astro";
     {boxes}
     helpLink={help?.link}
     helpTopic={help?.topic}
+    {startingHTML}
   />
 
-  <Output {boxes} {theme} />
+  <Output {boxes} {theme} {startingHTML} />
 </section>
 
 <style>

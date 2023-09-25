@@ -1,6 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
-const { boxes } = Astro.props;
+const { boxes, startingHTML } = Astro.props;
+
 const boxCount = boxes
   .map(
     (_, index) => `<div class="box box-${index + 1}">.box-${index + 1}</div>`
@@ -13,6 +14,24 @@ const htmlContentAlt = `<div class="container">
   <div class="box box-1">.box-1</div>
   ...
 </div>`;
+
+const htmlTags =
+  startingHTML &&
+  startingHTML
+    .match(/<\w+.*?>/g)
+    .map((tag) => tag.replace(/(\s+\w+(?:="[^"]*")?)/g, ""))
+    .join("\n\t");
+const customContent = `<div class="container">
+  ${htmlTags}
+</div>`;
+
+const html = startingHTML
+  ? customContent
+  : boxes.length > 1
+  ? htmlContent
+  : htmlContentAlt;
+
+// console.log(htmlTags);
 ---
 
 <details class="popup">
@@ -22,7 +41,7 @@ const htmlContentAlt = `<div class="container">
   </summary>
   <div>
     <textarea readonly aria-label="HTML code" class="prism-live language-html"
-      >{boxes.length > 1 ? htmlContent : htmlContentAlt}</textarea
+      >{html}</textarea
     >
   </div>
 </details>
@@ -113,6 +132,7 @@ const htmlContentAlt = `<div class="container">
     -webkit-mask: var(--m);
     mask: var(--m);
     inline-size: max-content;
+    max-inline-size: 400px;
   }
 
   @media (max-width: 920px) {
