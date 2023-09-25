@@ -2,8 +2,6 @@
 import { Icon } from "astro-icon/components";
 const { boxes, startingHTML } = Astro.props;
 
-console.log(startingHTML);
-
 const boxCount = boxes
   .map(
     (_, index) => `<div class="box box-${index + 1}">.box-${index + 1}</div>`

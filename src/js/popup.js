@@ -1,13 +1,9 @@
 const popup = Array.from(document.querySelectorAll(".popup"));
 popup.forEach((pop) => {
-  // const popupSum = pop.querySelector("summary");
-  // if (popupSum.length === 0) return;
-
   pop.addEventListener("click", (e) => {
-    pop.open = true;
-    inject(e.currentTarget);
-    pop.open = false;
+    inject(pop);
     dismiss(pop);
+    pop.style.pointerEvents = "none";
   });
 });
 
@@ -15,14 +11,16 @@ function dismiss(details) {
   document.addEventListener("click", ({ target }) => {
     if (!target.closest("summary")) {
       details.open = false;
+      details.style.pointerEvents = "auto";
     }
   });
 }
 
 function inject(popup) {
+  popup.open = true;
   const exercise = popup.closest("section:has(.controls)");
-  const popupTextarea = exercise.querySelector(".popup textarea");
   if (!exercise) return;
+  const popupTextarea = exercise.querySelector(".popup textarea");
   const exerciseKey = exercise.dataset.exerciseKey;
   const boxes = localStorage.getItem(`box-${exerciseKey}`);
   if (!boxes) return;
@@ -35,5 +33,5 @@ function inject(popup) {
 </div>`;
   popupTextarea.value = customContent;
   popupTextarea.focus();
-  popupTextarea.focus();
+  popup.open = false;
 }
