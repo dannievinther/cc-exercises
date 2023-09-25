@@ -5,6 +5,7 @@ const sections = document.querySelectorAll("section");
 sections.forEach((section) => {
   const styleTag = section.querySelector(".editor > style");
   const textarea = section.querySelector(".editor > textarea");
+  const popup = section.querySelector(".popup");
   const output = section.querySelector(".output");
   let startingCSS = textarea.textContent;
   const exerciseKey = section.dataset.exerciseKey;
