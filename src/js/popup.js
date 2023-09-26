@@ -17,21 +17,23 @@ function dismiss(details) {
 }
 
 function inject(popup) {
-  popup.open = true;
-  const exercise = popup.closest("section:has(.controls)");
-  if (!exercise) return;
-  const popupTextarea = exercise.querySelector(".popup textarea");
-  const exerciseKey = exercise.dataset.exerciseKey;
-  const boxes = localStorage.getItem(`box-${exerciseKey}`);
-  if (!boxes) return;
-  const boxCount = Array.from(
-    { length: boxes },
-    (_, index) => `<div class="box box-${index + 1}">.box-${index + 1}</div>`
-  ).join("\n\t");
-  const customContent = `<div class="container">
+  const exercise = popup.closest("section");
+  const controls = exercise.querySelector(".controls");
+  if (controls) {
+    const popupTextarea = exercise.querySelector(".popup textarea");
+    const exerciseKey = exercise.dataset.exerciseKey;
+    const boxes = localStorage.getItem(`box-${exerciseKey}`);
+    if (!boxes) return;
+    const boxCount = Array.from(
+      { length: boxes },
+      (_, index) => `<div class="box box-${index + 1}">.box-${index + 1}</div>`
+    ).join("\n\t");
+    const customContent = `<div class="container">
   ${boxCount}
 </div>`;
-  popupTextarea.value = customContent;
-  popupTextarea.focus();
-  popup.open = false;
+    popupTextarea.value = customContent;
+    popup.open = true;
+    popupTextarea.focus();
+    popup.open = false;
+  }
 }
