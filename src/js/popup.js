@@ -3,7 +3,7 @@ popup.forEach((pop) => {
   pop.addEventListener("click", (e) => {
     inject(pop);
     dismiss(pop);
-    pop.style.pointerEvents = "none";
+    // pop.style.pointerEvents = "none";
   });
 });
 
@@ -11,7 +11,7 @@ function dismiss(details) {
   document.addEventListener("click", ({ target }) => {
     if (!target.closest("summary")) {
       details.open = false;
-      details.style.pointerEvents = "auto";
+      // details.style.pointerEvents = "auto";
     }
   });
 }
