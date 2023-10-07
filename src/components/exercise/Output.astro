@@ -18,8 +18,9 @@ const { boxes, theme, startingHTML } = Astro.props;
 
 <style>
   @layer components {
-    [data-theme="green"] :global(.box) {
+    [data-theme="green"] :global(:is(.box, [class|="box"])) {
       --ui-primary: hsl(153.07deg 89.8% 80.78% / 95%);
+      --ui-primary-dark: hsl(153.07deg 70% 65%);
       --ui-primary-border: hsl(153.07deg 79.8% 39.78%);
     }
 
@@ -28,7 +29,13 @@ const { boxes, theme, startingHTML } = Astro.props;
       --ui-primary-border: var(--violet-400);
     }
 
-    :global(.box) {
+    [data-theme="indigo"] :global(:is(.box, [class|="box"])) {
+      --ui-primary: oklch(89% 0.07 292.66 / 0.95);
+      --ui-primary-dark: oklch(75% 0.1 292.66);
+      --ui-primary-border: oklch(60% 0.07 292.66);
+    }
+
+    :global(.box, [class|="box"]) {
       /* --ui-primary: hsl(153.07deg 89.8% 80.78% / 95%);
       --ui-primary-border: hsl(153.07deg 79.8% 39.78%); */
 
@@ -48,7 +55,7 @@ const { boxes, theme, startingHTML } = Astro.props;
         0 16px 16px rgba(0, 90, 250, 0.05);
     }
 
-    :global(.box) {
+    :global(.box, [class|="box"]) {
       --min-font: 12;
       --max-font: 29;
       --screen-max: 895;
@@ -69,6 +76,41 @@ const { boxes, theme, startingHTML } = Astro.props;
           var(--responsive),
           var(--max-font) * 1px
         );
+      }
+    }
+
+    :global([class|="box"]:has(*)) {
+      padding: 1rem;
+      position: relative;
+      display: revert;
+      justify-content: revert;
+      align-items: revert;
+
+      &::before {
+        content: "." attr(class);
+        font-weight: 500;
+        position: absolute;
+        top: 0.25rem;
+        left: 0;
+        right: 0;
+        text-align: center;
+        line-height: 0.8;
+        font-size: 0.6em;
+      }
+
+      :is(h4) {
+        line-height: 1.125;
+      }
+
+      :is(h4, p) {
+        padding-block: 0.5rem;
+      }
+
+      > :is([class*="box"], h4, p) {
+        box-shadow: inherit;
+        border-radius: inherit;
+        background: var(--ui-primary-dark);
+        padding-inline: 0.5rem;
       }
     }
 

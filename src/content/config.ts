@@ -35,6 +35,7 @@ const exerciseCollection = defineCollection({
 export const collections = {
   grid: exerciseCollection,
   flex: exerciseCollection,
+  subgrid: exerciseCollection,
 };
 
 // title: Simpelt grid
