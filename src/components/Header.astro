@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+const { hasWarning } = Astro.props;
 // import chevronleft from "../icons/chevron-left.svg?raw";
 ---
 
@@ -19,6 +20,17 @@ import { Icon } from "astro-icon/components";
   </p>
   <a href="#exercise-1" class="btn">Kom i gang</a> -->
 </header>
+
+{
+  hasWarning && (
+    <div class="alert">
+      <p>
+        <strong>Advarsel:</strong> Følgende øvelser virker pt. ikke optimalt i
+        Firefox.
+      </p>
+    </div>
+  )
+}
 
 <style is:global>
   .main-header {
@@ -150,6 +162,27 @@ import { Icon } from "astro-icon/components";
             --c: var(--ui-secondary, #fb28a8);
             max-width: 1.05ch;
         }*/
+  }
+
+  .alert {
+    width: fit-content;
+    margin: -2rem auto 3rem;
+    padding: 1rem;
+    background: oklch(0.88 0.08 22.38);
+    border-radius: var(--bdrs-l);
+    border: 2px solid currentColor;
+    color: oklch(0.65 0.3 29.62);
+
+    > p {
+      color: oklch(0.3 0.14 29.24);
+      font-size: 0.9rem;
+    }
+  }
+
+  @supports selector(div:has(> *)) {
+    .alert {
+      display: none;
+    }
   }
 
   .exercise-logo {

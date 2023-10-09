@@ -1,5 +1,5 @@
 ---
-const { collection, theme } = Astro.props;
+const { collection, theme, hasWarning } = Astro.props;
 
 import { getCollection } from "astro:content";
 import Exercises from "../components/Exercises.astro";
@@ -10,7 +10,7 @@ const exEntries = await getCollection(collection);
 const title = collection.charAt(0).toUpperCase() + collection.slice(1);
 ---
 
-<Base {title}>
+<Base {title} {hasWarning}>
   {
     exEntries.map((entry, index) => (
       <Exercises {entry} index={index + 1} total={exEntries.length} {theme} />
