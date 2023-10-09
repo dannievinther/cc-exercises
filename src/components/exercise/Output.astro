@@ -2,7 +2,11 @@
 const { boxes, theme, startingHTML } = Astro.props;
 ---
 
-<div class="output" data-theme={theme}>
+<div
+  class="output"
+  data-theme={theme}
+  data-custom-html={startingHTML ? "true" : "false"}
+>
   <div class="container">
     {
       startingHTML ? (
@@ -55,6 +59,10 @@ const { boxes, theme, startingHTML } = Astro.props;
         0 16px 16px rgba(0, 90, 250, 0.05);
     }
 
+    [data-custom-html="true"] :global(.box) {
+      display: block;
+    }
+
     :global(.box, [class|="box"]) {
       --min-font: 12;
       --max-font: 29;
@@ -79,7 +87,7 @@ const { boxes, theme, startingHTML } = Astro.props;
       }
     }
 
-    :global([class|="box"]:has(*)) {
+    :global(:is([class|="box"], .box):has(*)) {
       padding: 1rem;
       position: relative;
       display: revert;
@@ -100,6 +108,9 @@ const { boxes, theme, startingHTML } = Astro.props;
 
       :is(h4) {
         line-height: 1.125;
+      }
+      :is(p) {
+        text-align: start;
       }
 
       :is(h4, p) {
