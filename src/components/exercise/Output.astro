@@ -33,7 +33,7 @@ const { boxes, theme, startingHTML } = Astro.props;
       --ui-primary-border: var(--violet-400);
     }
 
-    [data-theme="indigo"] :global(:is(.box, [class|="box"])) {
+    [data-theme="indigo"] :global(:is(.box, [class|="box"], dt)) {
       --ui-primary: oklch(89% 0.07 292.66 / 0.95);
       --ui-primary-dark: oklch(75% 0.1 292.66);
       --ui-primary-border: oklch(60% 0.07 292.66);
@@ -117,7 +117,7 @@ const { boxes, theme, startingHTML } = Astro.props;
         padding-block: 0.5rem;
       }
 
-      > :is([class*="box"], h4, p) {
+      > :is([class*="box"], h4, p, dt, dd) {
         box-shadow: inherit;
         border-radius: inherit;
         background: var(--ui-primary-dark);
@@ -247,9 +247,19 @@ const { boxes, theme, startingHTML } = Astro.props;
       max-width: 100%;
     }
 
-    .output .container :global(p) {
+    .output .container :global(:is(p, dt, dd)) {
       text-decoration-line: line-through;
       text-decoration-thickness: 2ex;
+    }
+
+    .output .container :global(:is(dl, dt, dd)) {
+      margin: 0;
+      padding: 0;
+      text-align: start;
+    }
+
+    .output .container :global(dt) {
+      color: var(--ui-primary-dark);
     }
 
     :global(section.stretch) .output {
