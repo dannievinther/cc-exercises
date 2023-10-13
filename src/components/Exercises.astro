@@ -25,11 +25,12 @@ import Hints from "./exercise/Hints.astro";
 import TargetMedia from "./exercise/TargetMedia.astro";
 
 // console.log(`${collection}-${slug}`);
+// data-exercise-key={"vc-" + id}
 ---
 
 <section
   data-extra={isExtra && "true"}
-  data-exercise-key={"vc-" + id}
+  data-exercise-key={`${collection}-${slug}`}
   class={customClass ?? ""}
 >
   <ExerciseLabel {title} {index} {total} />
