@@ -59,7 +59,7 @@ import TargetMedia from "./exercise/TargetMedia.astro";
 
   <!-- editor -->
   <Editor
-    id={id}
+    id={`${collection}-${slug}`}
     startingCSS={startingCSS.trim()}
     {boxes}
     helpLink={help?.link}
