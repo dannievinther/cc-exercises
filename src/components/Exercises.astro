@@ -16,6 +16,7 @@ const {
 } = data;
 const { Content } = await entry.render();
 const boxes = [...Array(data.boxes)];
+const exerciseID = `${collection}-${slug}`;
 
 import ExerciseLabel from "./exercise/ExerciseLabel.astro";
 import BtnControls from "./exercise/BtnControls.astro";
@@ -30,10 +31,10 @@ import TargetMedia from "./exercise/TargetMedia.astro";
 
 <section
   data-extra={isExtra && "true"}
-  data-exercise-key={`${collection}-${slug}`}
+  data-exercise-key={exerciseID}
   class={customClass ?? ""}
 >
-  <ExerciseLabel {title} {index} {total} />
+  <ExerciseLabel {title} {index} {total} {exerciseID} />
 
   {
     isExtra && (
@@ -59,7 +60,7 @@ import TargetMedia from "./exercise/TargetMedia.astro";
 
   <!-- editor -->
   <Editor
-    id={`${collection}-${slug}`}
+    id={exerciseID}
     startingCSS={startingCSS.trim()}
     {boxes}
     helpLink={help?.link}

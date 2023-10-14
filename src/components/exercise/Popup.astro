@@ -140,6 +140,10 @@ const html = startingHTML
     mask: var(--m);
     inline-size: max-content;
     max-inline-size: 400px;
+
+    @media (width < 500px) {
+      --p: 82%;
+    }
   }
 
   @media (max-width: 920px) {

@@ -1,10 +1,10 @@
 ---
 import { Icon } from "astro-icon/components";
-const { title, index, total } = Astro.props;
+const { title, index, total, exerciseID } = Astro.props;
 ---
 
-<h2 class="small-label" id={`exercise-${index}`}>
-  <a href={`#exercise-${index}`}>
+<h2 class="small-label" id={exerciseID}>
+  <a href={`#${exerciseID}`}>
     <Icon
       name="solar:link-circle-bold"
       width={24}

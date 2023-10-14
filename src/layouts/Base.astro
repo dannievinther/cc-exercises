@@ -7,7 +7,7 @@ import Footer from "../components/Footer.astro";
 const { title, hasWarning } = Astro.props;
 
 const links = {
-  Flex: {
+  Flexbox: {
     link: "/grid",
     label: "Grid-øvelser",
   },
@@ -32,7 +32,7 @@ const link = links[title].link;
     </style>
   </head>
   <body>
-    <Header {hasWarning} />
+    <Header {hasWarning} {title} />
 
     <main>
       <slot />

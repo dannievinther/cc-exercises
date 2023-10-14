@@ -34,7 +34,7 @@ const exerciseCollection = defineCollection({
 
 export const collections = {
   grid: exerciseCollection,
-  flex: exerciseCollection,
+  flexbox: exerciseCollection,
   subgrid: exerciseCollection,
 };
 
