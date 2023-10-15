@@ -1,5 +1,6 @@
 ---
-import { Image } from "astro:assets";
+// import { Image } from "astro:assets";
+import { Picture } from "astro:assets";
 const { index, image, video } = Astro.props;
 ---
 
@@ -9,12 +10,13 @@ const { index, image, video } = Astro.props;
       <source src={video} type="video/mp4" />
     </video>
   ) : (
-    <Image
+    <Picture
       src={image}
       alt=""
       loading={index === 1 ? "eager" : "lazy"}
       fetchpriority={index === 1 ? "high" : "low"}
       format="avif"
+      formats={["avif", "webp"]}
     />
   )
 }

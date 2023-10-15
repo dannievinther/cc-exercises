@@ -51,9 +51,9 @@ import TargetMedia from "./exercise/TargetMedia.astro";
       {hints ? <Hints {hints} /> : <div data-no-hints>Ingen hints</div>}
     </div>
 
-    <picture>
-      <TargetMedia {image} {index} {video} />
-    </picture>
+    <!-- <picture> -->
+    <TargetMedia {image} {index} {video} />
+    <!-- </picture> -->
 
     {canAddBoxes && <BtnControls />}
   </article>
