@@ -17,6 +17,15 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Shn";
+  src: url("/assets/fonts/sohne.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 300;
+  letter-spacing: .2px;
+  font-display: fallback;
+}
+
 :root {
   --aquamarine-50: #f6fcfb;
   --aquamarine-100: #d3f2ed;
@@ -169,7 +178,7 @@ h3 {
 p {
   font-family: "Mona Sans", "Wotfard", Segoe UI, system-ui, -apple-system,
     sans-serif;
-  font-weight: 400;
+  font-weight: 430;
   font-size: 18px;
   --min-font: 16;
   --max-font: 18;
