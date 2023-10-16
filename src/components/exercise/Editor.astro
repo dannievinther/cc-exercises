@@ -4,10 +4,12 @@ import Popup from "./Popup.astro";
 
 const { id, startingCSS, startingHTML, helpLink, helpTopic, boxes } =
   Astro.props;
+
+const labelID = id + "-label";
 ---
 
 <div class="editor">
-  <label for={id}><span>CSS</span></label>
+  <label for={labelID}><span>CSS</span></label>
   <div class="reset-buttons">
     <button class="reset">
       <span class="visually-hidden">Nulstil</span>
@@ -40,7 +42,7 @@ const { id, startingCSS, startingHTML, helpLink, helpTopic, boxes } =
     </div>
   </div>
   <textarea
-    id={id}
+    id={labelID}
     autocorrect="off"
     autocomplete="off"
     spellcheck="false"
