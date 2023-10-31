@@ -8,6 +8,22 @@
   font-display: swap;
 }
 
+/* @font-face {
+  font-family: "Geist Mono";
+  src: url("/assets/fonts/GeistMonoVF.woff2") format("woff2 supports variations"),
+    url("/assets/fonts/GeistMonoVF.woff2") format("woff2-variations");
+  font-weight: 32 240;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("/assets/fonts/GeistVF.woff2") format("woff2 supports variations"),
+    url("/assets/fonts/GeistVF.woff2") format("woff2-variations");
+  font-weight: 32 240;
+  font-display: swap;
+} */
+
 @font-face {
   font-family: "OpMn";
   src: url("/assets/fonts/OperatorMono-Medium.woff2") format("woff2");
@@ -17,14 +33,14 @@
   font-display: swap;
 }
 
-@font-face {
+/* @font-face {
   font-family: "Shn";
   src: url("/assets/fonts/sohne.woff2") format("woff2");
   font-style: normal;
   font-weight: 300;
   letter-spacing: .2px;
   font-display: fallback;
-}
+} */
 
 :root {
   --aquamarine-50: #f6fcfb;
@@ -179,6 +195,9 @@ p {
   font-family: "Mona Sans", "Wotfard", Segoe UI, system-ui, -apple-system,
     sans-serif;
   font-weight: 430;
+  font-feature-settings: "ss01" on;
+  /* font-family: "Geist";
+  font-weight: 84; */
   font-size: 18px;
   --min-font: 16;
   --max-font: 18;
@@ -388,6 +407,10 @@ pre.prism-live,
 code {
   font-family: "OpMn", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace !important;
   font-weight: 500;
+  /* font-family: "Geist Mono", Consolas, Monaco, "Andale Mono", "Ubuntu Mono",
+    monospace !important;
+  font-weight: 126;
+  font-feature-settings: "ss03" on; */
 }
 
 html:not([data-extra="true"]) section[data-extra="true"] {
