@@ -40,6 +40,9 @@ function getHints(type) {
 
     details {
       display: inline-grid;
+
+      filter: drop-shadow(0px 0px 1px #3341551a)
+        drop-shadow(0px 0px 1px #3341551a) drop-shadow(0px 0px 10px #3341551a);
     }
 
     details[open] summary {
@@ -92,7 +95,7 @@ function getHints(type) {
 
     summary {
       padding: var(--space-3);
-      background: #e9eef4;
+      /* background: #e9eef4; */
       border-radius: var(--bdrs-l);
       color: var(--ui-accent);
       inline-size: max-content;
@@ -107,6 +110,8 @@ function getHints(type) {
       letter-spacing: 0.05em;
       text-decoration: underline 0.25em var(--blue-500);
       text-underline-offset: 0.125em;
+
+      background: #fff;
 
       display: flex;
       gap: 0.3ch;

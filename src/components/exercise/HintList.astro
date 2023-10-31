@@ -27,9 +27,11 @@ const { hints } = Astro.props;
     padding: 2.5px;
 
     padding: calc(var(--space-3) + 3px) calc(var(--space-3) + 5px);
-    background: #e9eef4;
+    /* background: #e9eef4; */
     border-radius: var(--bdrs-l);
     margin-block-start: calc(var(--space-4) * -1);
+
+    background: #fff;
   }
 
   [data-type="property"] {
@@ -49,7 +51,7 @@ const { hints } = Astro.props;
 
     background: linear-gradient(90deg, var(--blue-700), transparent),
       var(--blue-800);
-    padding: var(--space-4);
+    padding: var(--space-3) var(--space-4);
     border-radius: var(--bdrs-md);
     margin: -3px -5px;
   }
