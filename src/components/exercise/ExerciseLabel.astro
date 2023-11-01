@@ -107,6 +107,33 @@ const { title, index, total, exerciseID } = Astro.props;
     background: var(--ui-accent);
     background: currentColor;
   }
+
+  @supports (animation-range: entry 0% entry 100%) {
+    @property --title {
+      syntax: "<percentage>";
+      inherits: true;
+      initial-value: -50%;
+    }
+    .small-label a {
+      background: linear-gradient(
+        -220deg,
+        currentColor var(--title),
+        transparent calc(var(--title) + 50%)
+      );
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+
+      animation: r linear both;
+      animation-timeline: view();
+      animation-range: cover 0% contain 50%;
+    }
+
+    @keyframes r {
+      to {
+        --title: 100%;
+      }
+    }
+  }
 </style>
 
 <script>
