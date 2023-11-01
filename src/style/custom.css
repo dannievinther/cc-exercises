@@ -229,7 +229,7 @@ footer {
 
 footer>* {
   grid-column: 2 / -2;
-  color: var(--ui-secondary, #fb28a8);
+  color: var(--purple-50);
   font-weight: 700;
 }
 

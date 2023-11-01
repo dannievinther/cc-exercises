@@ -1,6 +1,7 @@
 code[class*="language-"],
 pre[class*="language-"] {
-  color: #ffa956;
+  /* color: #ffa956; */
+  color: #ffd493;
   background: none;
   font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
   font-size: 1em;
@@ -78,7 +79,8 @@ pre[class*="language-"] {
 
 .token.selector {
 
-  color: var(--ui-primary);
+  /* color: var(--ui-primary); */
+  color: #4bf3c8;
 
 }
 
