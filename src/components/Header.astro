@@ -50,14 +50,22 @@ const { hasWarning, title } = Astro.props;
       );
     gap: var(--space-5) 0;
 
-    padding-block: var(--space-6);
+    /* padding-block: var(--space-6); */
+    padding-block: var(--space-5);
 
     margin-block-end: var(--space-9);
+
+    background: #fff;
+    box-shadow:
+      rgb(255 255 255) 0px 0px 0px 0px,
+      rgb(51 65 85 / 10%) 0px 0px 0px 1px,
+      rgb(0 0 0 / 5%) 0px 20px 25px -5px,
+      rgb(0 0 0 / 5%) 0px 8px 10px -6px;
 
     /*z-index: 100;*/
     /*pointer-events: none;*/
     &::before {
-      content: "";
+      content: none;
       position: absolute;
       inset: 0;
       background: #fff;
