@@ -54,21 +54,22 @@ import TargetMedia from "./exercise/TargetMedia.astro";
     <!-- <picture> -->
     <TargetMedia {image} {index} {video} />
     <!-- </picture> -->
-
-    {canAddBoxes && <BtnControls />}
   </article>
 
-  <!-- editor -->
-  <Editor
-    id={exerciseID}
-    startingCSS={startingCSS.trim()}
-    {boxes}
-    helpLink={help?.link}
-    helpTopic={help?.topic}
-    {startingHTML}
-  />
+  <div class="exercise-interactivity">
+    <!-- editor -->
+    <Editor
+      id={exerciseID}
+      startingCSS={startingCSS.trim()}
+      {boxes}
+      helpLink={help?.link}
+      helpTopic={help?.topic}
+      {startingHTML}
+    />
 
-  <Output {boxes} {theme} {startingHTML} />
+    {canAddBoxes && <BtnControls />}
+    <Output {boxes} {theme} {startingHTML} />
+  </div>
 </section>
 
 <style>
@@ -105,6 +106,26 @@ import TargetMedia from "./exercise/TargetMedia.astro";
           text-decoration: underline var(--blue-500);
         }
       }
+    }
+  }
+
+  .exercise-interactivity {
+    grid-column: 1 / -1;
+    display: inherit;
+    grid-template-columns: inherit;
+    grid-template-rows: min-content 1fr;
+    gap: inherit;
+
+    & :global(.editor) {
+      grid-row-end: span 2;
+    }
+    & :global(.output) {
+      grid-row-start: 2;
+      grid-column-start: 2;
+    }
+    & :global(.controls) {
+      grid-column: revert;
+      justify-items: center;
     }
   }
 
