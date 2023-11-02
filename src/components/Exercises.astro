@@ -110,22 +110,25 @@ import TargetMedia from "./exercise/TargetMedia.astro";
   }
 
   .exercise-interactivity {
-    grid-column: 1 / -1;
-    display: inherit;
-    grid-template-columns: inherit;
-    grid-template-rows: min-content 1fr;
-    gap: inherit;
+    display: contents;
+    @media (min-width: 895px) {
+      grid-column: 1 / -1;
+      display: inherit;
+      grid-template-columns: inherit;
+      grid-template-rows: min-content 1fr;
+      gap: inherit;
 
-    & :global(.editor) {
-      grid-row-end: span 2;
-    }
-    & :global(.output) {
-      grid-row-start: 2;
-      grid-column-start: 2;
-    }
-    & :global(.controls) {
-      grid-column: revert;
-      justify-items: center;
+      & :global(.editor) {
+        grid-row-end: span 2;
+      }
+      & :global(.output) {
+        grid-row-start: 2;
+        grid-column-start: 2;
+      }
+      & :global(.controls) {
+        grid-column: revert;
+        justify-items: center;
+      }
     }
   }
 
