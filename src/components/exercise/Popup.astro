@@ -35,16 +35,16 @@ const customContent = `<div class="container">
 const html = startingHTML
   ? customContent
   : boxes.length > 1
-  ? htmlContent
-  : htmlContentAlt;
+    ? htmlContent
+    : htmlContentAlt;
 
 // console.log(htmlTags);
 ---
 
 <details class="popup">
   <summary>
-    <Icon name="solar:code-square-line-duotone" stroke-width={2} />
-     HTML
+    <Icon name="code" width={22} height={22} stroke-width={1.5} />
+    HTML
   </summary>
   <div>
     <textarea readonly aria-label="HTML code" class="prism-live language-html"
@@ -86,8 +86,8 @@ const html = startingHTML
   }
 
   .popup summary svg {
-    inline-size: 1.25em;
-    block-size: 1.25em;
+    /* inline-size: 1.25em;
+    block-size: 1.25em; */
   }
 
   .popup[open] summary {

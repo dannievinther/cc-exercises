@@ -9,21 +9,9 @@ const { icon } = Astro.props;
     </svg> -->
   {
     icon === "minus" ? (
-      <Icon
-        name="solar:minus-circle-line-duotone"
-        stroke-width={2}
-        width={28}
-        height={28}
-        fill="none"
-      />
+      <Icon name="minus" stroke-width={2} width={28} height={28} fill="none" />
     ) : (
-      <Icon
-        name="solar:add-circle-line-duotone"
-        stroke-width={2}
-        width={28}
-        height={28}
-        fill="none"
-      />
+      <Icon name="plus" stroke-width={2} width={28} height={28} fill="none" />
     )
   }
   <!-- <span><slot /></span> -->

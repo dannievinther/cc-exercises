@@ -18,12 +18,7 @@ const notHome = Astro.url.pathname !== "/";
     notHome && (
       <a href={linkTo} class="more-exercises">
         Prøv også {label}
-        <Icon
-          name="solar:alt-arrow-right-line-duotone"
-          width={16}
-          height={16}
-          stroke-width={3}
-        />
+        <Icon name="chevron-right" width={16} height={16} stroke-width={3} />
       </a>
     )
   }

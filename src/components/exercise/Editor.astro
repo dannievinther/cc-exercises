@@ -13,31 +13,16 @@ const labelID = id + "-label";
   <div class="reset-buttons">
     <button class="reset">
       <span class="visually-hidden">Nulstil</span>
-      <Icon
-        name="solar:rewind-back-circle-line-duotone"
-        width={26}
-        height={26}
-        stroke-width={1.6}
-      />
+      <Icon name="refresh" width={20} height={20} stroke-width={2} />
     </button>
     <div class="button-group-confirm">
       <button data-accept="true" data-message="Accepter">
         <span class="visually-hidden">Accepter nulstilling</span>
-        <Icon
-          name="solar:check-circle-line-duotone"
-          stroke-width={2}
-          width={28}
-          height={28}
-        />
+        <Icon name="v" stroke-width={2} width={28} height={28} />
       </button>
       <button data-accept="false" data-message="Afvis">
         <span class="visually-hidden">Afvis nulstilling</span>
-        <Icon
-          name="solar:close-circle-line-duotone"
-          stroke-width={2}
-          width={28}
-          height={28}
-        />
+        <Icon name="x" stroke-width={2} width={28} height={28} />
       </button>
     </div>
   </div>
@@ -58,10 +43,10 @@ const labelID = id + "-label";
           <a href={helpLink} target="_blank" rel="noopener">
             <span>Lær mere om {helpTopic}</span>
             <Icon
-              name="solar:square-share-line-broken"
-              width={14}
-              height={14}
-              stroke-width={2}
+              name="external-1"
+              width={26}
+              height={26}
+              stroke-width={2.25}
               aria-label="åbner i nyt vindue."
             />
           </a>
@@ -76,9 +61,10 @@ const labelID = id + "-label";
 </div>
 
 <style>
-  [data-icon="solar:square-share-line-broken"] {
-    vertical-align: -2px;
-    margin-inline-start: 0.3em;
+  [data-icon="external-1"] {
+    vertical-align: middle;
+    margin-inline-start: 0.1em;
+    stroke: currentColor;
   }
   .editor {
     position: relative;
@@ -154,8 +140,8 @@ const labelID = id + "-label";
       }
 
       & svg {
-        inline-size: 1em;
-        block-size: 1em;
+        inline-size: 1.15em;
+        block-size: 1.15em;
       }
 
       &:hover,

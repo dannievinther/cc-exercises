@@ -13,7 +13,7 @@ function getHints(type) {
   <summary>
     Hints
     <Icon
-      name="solar:alt-arrow-down-line-duotone"
+      name="chevron"
       width={16}
       height={16}
       aria-hidden="true"
@@ -89,7 +89,7 @@ function getHints(type) {
       rotate: -180deg;
     }
 
-    [astro-icon="chevron-down"] {
+    [data-icon="chevron-down"] {
       stroke-width: 3px;
     }
 
@@ -117,7 +117,7 @@ function getHints(type) {
       gap: 0.3ch;
     }
 
-    [astro-icon] {
+    [data-icon] {
       transition: 0.2s cubic-bezier(0.1, 0, 0.1, 1);
 
       & :global(path) {
