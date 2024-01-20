@@ -24,6 +24,26 @@ const { title } = Astro.props;
         gap: 3rlh;
         place-content: center;
         background: oklch(0.18 0.06 247.26);
+
+        &::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: conic-gradient(
+            at 50% -20% in oklab,
+            #0000 35%,
+            #fff9 45% 55%,
+            #0000 65%
+          );
+          mask: radial-gradient(
+            circle farthest-side at 50% -20%,
+            #000 10%,
+            #0000 50%
+          );
+          mix-blend-mode: overlay;
+          z-index: -1;
+          pointer-events: none;
+        }
       }
     </style>
   </body>
