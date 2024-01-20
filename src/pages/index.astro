@@ -121,7 +121,9 @@ import Front from "../layouts/Front.astro";
     flex-flow: wrap;
     gap: clamp(0.5rem, 0.2561rem + 1.0405vw, 1.0625rem);
     padding: 0.7rlh;
-    box-shadow: inset 0 0 10px #0006;
+    box-shadow:
+      inset 0 0 10px #0006,
+      0 0 20px oklch(0.25 0.04 253.46 / 50%);
 
     &::before {
       border-inline-width: 1px;
