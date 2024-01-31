@@ -169,8 +169,12 @@ const { boxes, theme, startingHTML } = Astro.props;
       padding: var(--padding);
       margin: calc(var(--padding) * -1);
 
+      position: sticky;
+      top: 1rem;
+
       @media (max-width: 895px) {
         resize: revert;
+        position: static;
       }
     }
 
