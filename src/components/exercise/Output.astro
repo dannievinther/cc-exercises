@@ -175,6 +175,10 @@ const { boxes, theme, startingHTML } = Astro.props;
       @media (max-width: 895px) {
         resize: revert;
         position: static;
+
+        &::before {
+          display: none;
+        }
       }
     }
 
