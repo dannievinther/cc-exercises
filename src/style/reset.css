@@ -33,9 +33,11 @@ body {
 :focus {
   outline: 1px dotted black;
 }
+
 :focus:not(:focus-visible) {
   outline: none;
 }
+
 :focus-visible {
   outline: 2px solid black;
 }
@@ -96,6 +98,7 @@ a:not([class]) {
 }
 
 @media (pointer: fine) and (hover: hover) {
+
   a:not([class]):hover,
   a:not([class]):focus {
     text-decoration: underline;
@@ -232,6 +235,7 @@ table {
 [aria-hidden="false"][hidden] {
   display: initial;
 }
+
 [aria-hidden="false"][hidden]:not(:focus) {
   clip: rect(0, 0, 0, 0);
   clip-path: inset(100%);
@@ -268,6 +272,7 @@ noscript {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *:before,
   *:after {

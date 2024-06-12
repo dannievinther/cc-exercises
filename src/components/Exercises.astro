@@ -32,6 +32,7 @@ import TargetMedia from "./exercise/TargetMedia.astro";
 <section
   data-extra={isExtra && "true"}
   data-exercise-key={exerciseID}
+  data-theme={theme}
   class={customClass ?? ""}
 >
   <ExerciseLabel {title} {index} {total} {exerciseID} />
@@ -105,6 +106,68 @@ import TargetMedia from "./exercise/TargetMedia.astro";
         span {
           text-decoration: underline var(--blue-500);
         }
+      }
+    }
+  }
+  [data-theme="green"] {
+    --ui-primary: hsl(153.07deg 89.8% 80.78% / 95%);
+    --ui-primary-dark: hsl(153.07deg 70% 65%);
+    --ui-primary-border: hsl(153.07deg 79.8% 39.78%);
+  }
+
+  [data-theme="purple"] {
+    --ui-primary: var(--violet-100);
+    --ui-primary-border: var(--violet-400);
+  }
+
+  [data-theme="indigo"] {
+    --ui-primary: oklch(89% 0.07 292.66 / 0.95);
+    --ui-primary-dark: oklch(75% 0.1 292.66);
+    --ui-primary-border: oklch(60% 0.07 292.66);
+  }
+
+  .exercise-details {
+    picture {
+      position: relative;
+      align-self: start;
+
+      &::before,
+      &::after {
+        --offset: 1rlh;
+        content: "";
+        position: absolute;
+        inset: 0 1px;
+        pointer-events: none;
+        border: 1px dashed var(--gray-500);
+      }
+
+      &::before {
+        border-inline-width: 1px;
+        margin-block: calc(-1 * var(--offset));
+        mask: linear-gradient(
+          #0000,
+          #000 var(--offset) calc(100% - var(--offset)),
+          #0000
+        );
+      }
+
+      &::after {
+        border-block-width: 1px;
+        margin-inline: calc(-1 * var(--offset));
+        mask: linear-gradient(
+          90deg,
+          #0000,
+          #000 var(--offset) calc(100% - var(--offset)),
+          #0000
+        );
+      }
+
+      & + &::after {
+        border-block-start-width: 0;
+      }
+
+      &:has(+ &)::after {
+        border-block-end-width: 0;
       }
     }
   }

@@ -21,7 +21,7 @@ const { title, index, total, exerciseID } = Astro.props;
     text-transform: uppercase;
     font-weight: 800;
     font-size: 0.8em;
-    color: var(--ui-accent);
+    /* color: var(--ui-accent); */
     letter-spacing: 0.025em;
     display: flex;
     gap: var(--space-4) var(--space-5);
@@ -44,13 +44,14 @@ const { title, index, total, exerciseID } = Astro.props;
     );
     line-height: 1.125;
 
-    padding-block-end: var(--space-3);
-    border-bottom: 1px solid hsl(209deg 27% 90%);
+    /* padding-block-end: var(--space-3); */
+    /* border-bottom: 1px solid hsl(209deg 27% 90%); */
 
     & a:any-link {
       font-variation-settings: "wdth" var(--font-stretch, 100);
       position: relative;
-      color: var(--ui-accent);
+      /* color: var(--ui-accent); */
+      color: var(--gray-1000);
 
       text-decoration: none;
 
@@ -91,7 +92,8 @@ const { title, index, total, exerciseID } = Astro.props;
     & span {
       font-weight: 600;
       font-size: 0.55em;
-      color: var(--blue-muted);
+      /* color: var(--blue-muted); */
+      color: var(--gray-800);
       font-variation-settings: "wdth" 125;
     }
   }

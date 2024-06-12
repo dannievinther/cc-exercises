@@ -2,11 +2,7 @@
 const { boxes, theme, startingHTML } = Astro.props;
 ---
 
-<div
-  class="output"
-  data-theme={theme}
-  data-custom-html={startingHTML ? "true" : "false"}
->
+<div class="output" data-custom-html={startingHTML ? "true" : "false"}>
   <div class="container">
     {
       startingHTML ? (
@@ -22,23 +18,6 @@ const { boxes, theme, startingHTML } = Astro.props;
 
 <style>
   @layer components {
-    [data-theme="green"] :global(:is(.box, [class|="box"])) {
-      --ui-primary: hsl(153.07deg 89.8% 80.78% / 95%);
-      --ui-primary-dark: hsl(153.07deg 70% 65%);
-      --ui-primary-border: hsl(153.07deg 79.8% 39.78%);
-    }
-
-    [data-theme="purple"] :global(.box) {
-      --ui-primary: var(--violet-100);
-      --ui-primary-border: var(--violet-400);
-    }
-
-    [data-theme="indigo"] :global(:is(.box, [class|="box"], dt)) {
-      --ui-primary: oklch(89% 0.07 292.66 / 0.95);
-      --ui-primary-dark: oklch(75% 0.1 292.66);
-      --ui-primary-border: oklch(60% 0.07 292.66);
-    }
-
     :global(.box, [class|="box"]) {
       /* --ui-primary: hsl(153.07deg 89.8% 80.78% / 95%);
       --ui-primary-border: hsl(153.07deg 79.8% 39.78%); */
@@ -164,8 +143,13 @@ const { boxes, theme, startingHTML } = Astro.props;
 
       user-select: none;
       border-radius: var(--bdrs-sm);
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E@keyframes ant %7Bto %7Bstroke-dashoffset: -8;%7D%7D%3C/style%3E%3Crect width='100%25' height='100%25' style='stroke: %23a9bcce; stroke-width: 3.75px; fill: none;stroke-dasharray: 5 3; animation: ant 0s infinite linear'/%3E%3C/svg%3E")
-        border-box;
+      background:
+        var(--resize-icon) calc(100% + 3px) calc(100% + 3px) / 1.6rem 1.6rem
+          no-repeat border-box,
+        conic-gradient(at 75% 75%, #fff 75%, transparent 0) 100% 101% / 1.6rem
+          1.6rem no-repeat border-box,
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E@keyframes ant %7Bto %7Bstroke-dashoffset: -8;%7D%7D%3C/style%3E%3Crect width='100%25' height='100%25' style='stroke: %23a9bcce; stroke-width: 3.75px; fill: none;stroke-dasharray: 5 3; animation: ant 0s infinite linear'/%3E%3C/svg%3E")
+          border-box;
       padding: var(--padding);
       margin: calc(var(--padding) * -1);
 
@@ -196,20 +180,26 @@ const { boxes, theme, startingHTML } = Astro.props;
     }
 
     .output::after {
-      content: "↖";
-      display: grid;
+      /* content: ""; */
+      content: "";
+      /* display: grid;
       place-content: center;
-      font-weight: 900;
+      font-weight: 900; */
       position: absolute;
-      bottom: calc(-1 * var(--space-3));
+      /* bottom: calc(-1 * var(--space-3));
       right: calc(-1 * var(--space-3));
       inline-size: var(--space-6);
-      block-size: var(--space-6);
-      border-radius: var(--bdrs-round);
+      block-size: var(--space-6); */
+      /* border-radius: var(--bdrs-round); */
+      right: -5px;
+      bottom: -5px;
+      inline-size: 1.6rem;
+      block-size: 1.6rem;
 
-      border: 2px solid var(--ui-accent);
+      /* border: 2px solid var(--ui-accent); */
       color: var(--ui-accent);
-      background: var(--ui-surface);
+      /* background: var(--ui-surface); */
+      background: var(--resize-icon) 0 0 / contain no-repeat;
       pointer-events: none;
       z-index: 2;
 

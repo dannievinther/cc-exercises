@@ -91,24 +91,24 @@ const { hasWarning, title } = Astro.props;
     .back:any-link {
       font-family: "Mona Sans", system-ui;
       display: flex;
-      gap: 0.55ch;
+      gap: 0.3ch;
       align-items: center;
       inline-size: fit-content;
       font-weight: 600;
       font-size: 0.9rem;
-      color: var(--gray-600);
+      color: var(--gray-900);
       text-decoration: none;
 
       &:hover,
       &:hover svg {
-        color: #212529;
+        color: var(--gray-1000);
       }
     }
 
-    & [astro-icon="chevron-left"] {
+    & [data-icon="chevron-left"] {
       width: 1.125rem;
       height: 1.125rem;
-      color: var(--gray-200);
+      color: var(--gray-600);
       stroke-width: 3;
     }
 

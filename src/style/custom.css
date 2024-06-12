@@ -43,16 +43,19 @@
 } */
 
 :root {
-  --aquamarine-50: #f6fcfb;
-  --aquamarine-100: #d3f2ed;
-  --aquamarine-200: #adefe4;
-  --aquamarine-300: #82f4e1;
-  --aquamarine-400: #6ee2cf;
-  --aquamarine-500: #60cfbc;
-  --aquamarine-600: #55bbaa;
-  --aquamarine-700: #51a597;
-  --aquamarine-800: #508d83;
-  --aquamarine-900: #4e7972;
+  --resize-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'%3E%3Cpath fill='%23909090' d='M9.75 16.5a6.75 6.75 0 0 0 6.75-6.75v-4.5a2.25 2.25 0 0 1 4.5 0v4.5A11.25 11.25 0 0 1 9.75 21h-4.5a2.25 2.25 0 0 1 0-4.5h4.5Z'/%3E%3C/svg%3E%0A");
+
+  /* Neutrals */
+  --gray-100: #f2f2f2;
+  --gray-200: #ebebeb;
+  --gray-300: #e6e6e6;
+  --gray-400: #ebebeb;
+  --gray-500: #c9c9c9;
+  --gray-600: #a8a8a8;
+  --gray-700: #8f8f8f;
+  --gray-800: #7d7d7d;
+  --gray-900: #555555;
+  --gray-1000: #171717;
 
   /* Greens */
   --green-50: #e4f4ed;
@@ -96,10 +99,6 @@
   --purple-700: #4c12a4;
   --purple-800: #471d86;
   --purple-900: #42246f;
-
-  /* Grays */
-  --gray-200: #cccccc;
-  --gray-600: #4d4d4d;
 
   --violet-100: #f3daf8;
   --violet-200: #e2b9ea;
@@ -170,6 +169,8 @@ html:focus-within {
 body {
   display: flow-root;
   overscroll-behavior: none;
+  color: var(--gray-900);
+  line-height: 1.7;
   /* min-height: 100%; */
   /* padding-block: 6rem; */
 }
@@ -200,13 +201,13 @@ p {
   font-weight: 84; */
   font-size: 18px;
   --min-font: 16;
-  --max-font: 18;
+  --max-font: 17;
   --screen-max: 1200;
   --screen-min: 375;
   font-size: clamp(var(--min-font) * 1px,
       var(--responsive),
       var(--max-font) * 1px);
-  color: #425466;
+  /* color: #425466; */
 }
 
 [contenteditable] {
@@ -285,9 +286,9 @@ section {
   box-shadow: rgb(255 255 255) 0px 0px 0px 0px,
     rgb(51 65 85 / 10%) 0px 0px 0px 1px, rgb(0 0 0 / 5%) 0px 20px 25px -5px,
     rgb(0 0 0 / 5%) 0px 8px 10px -6px;
-  background: linear-gradient(hsl(210deg 73% 100%) 0%, #f3f4f6 100%) padding-box,
+  /* background: linear-gradient(hsl(210deg 73% 100%) 0%, #f3f4f6 100%) padding-box,
     #fff;
-  border: 1px solid transparent;
+  border: 1px solid transparent; */
 
   &::before {
     content: "";
@@ -378,14 +379,15 @@ button[disabled] {
   color: var(--m, var(--ui-primary));
   border-radius: var(--bdrs-md);
 
-  color: var(--blue-800) !important;
+  /* color: var(--blue-800) !important; */
   /* background: #e9eef4; */
+  color: var(--gray-1000);
   background: #fff;
   box-shadow: inset #33415526 0 0 0 1px, #0000000d 0 20px 25px -5px;
 }
 
 .resize {
-  font-weight: 800;
+  /* font-weight: 800;
   font-size: 0.9em;
   font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
     "Roboto", "Helvetica Neue", Arial, sans-serif;
@@ -396,7 +398,12 @@ button[disabled] {
   border-radius: var(--bdrs-round);
   border: 2px solid var(--ui-accent);
   color: var(--ui-accent);
-  background: var(--ui-surface);
+  background: var(--ui-surface); */
+  display: inline flow-root;
+  inline-size: 1rem;
+  block-size: 1rem;
+  vertical-align: middle;
+  background: var(--resize-icon) 0 0 / contain no-repeat;
 }
 
 div.prism-live {
