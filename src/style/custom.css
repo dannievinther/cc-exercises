@@ -8,9 +8,9 @@
   font-display: swap;
 }
 
-@view-transition {
+/* @view-transition {
   navigation: auto;
-}
+} */
 
 /* ::view-transition-old(current),
 ::view-transition-new(current) {
