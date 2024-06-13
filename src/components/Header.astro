@@ -25,7 +25,10 @@ const linkItems = [
           linkItems.map((item) => (
             <li>
               <a
-                aria-current={Astro.url.pathname === item.href}
+                aria-current={
+                  Astro.url.pathname.replace(/\/$/, "") ===
+                  item.href.replace(/\/$/, "")
+                }
                 href={item.href}
               >
                 {item.text}
