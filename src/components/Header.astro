@@ -2,26 +2,40 @@
 import { Icon } from "astro-icon/components";
 const { hasWarning, title } = Astro.props;
 // import chevronleft from "../icons/chevron-left.svg?raw";
+
+// current pathname from Astro
+
+const linkItems = [
+  { href: "/grid", text: "Grid" },
+  { href: "/subgrid", text: "Subgrid" },
+  { href: "/flex", text: "Flexbox" },
+];
 ---
 
 <header class="main-header">
   <div class="header-content">
-    <a class="back" href="/">
+    <!-- <a class="back" href="/">
       <Icon name="chevron-left" width={16} height={16} stroke-width={3} />
-      &nbsp;Exercises</a
-    >
-    <h1>{title}</h1>
+      Home
+    </a> -->
+    <!-- <h1>{title}</h1> -->
+    <nav>
+      <ul>
+        {
+          linkItems.map((item) => (
+            <li>
+              <a
+                aria-current={Astro.url.pathname === item.href}
+                href={item.href}
+              >
+                {item.text}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
   </div>
-
-  <!-- <div class="exercise-logo">
-    <Icon name="lucide:layout-dashboard" width="28" height="28" />
-  </div>
-  <h1>Grid Exercises</h1>
-  <p>
-    Følgende øvelser har til hensigt at hjælpe dig med at lære at bruge CSS
-    Grid.
-  </p>
-  <a href="#exercise-1" class="btn">Kom i gang</a> -->
 </header>
 
 {
@@ -36,6 +50,71 @@ const { hasWarning, title } = Astro.props;
 }
 
 <style>
+  nav {
+    grid-column: 2;
+    display: flex;
+    justify-content: center;
+
+    background: #fffc;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    border-radius: 1e5px;
+    padding: var(--space-2);
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.08),
+      0px 2px 2px rgba(0, 0, 0, 0.04);
+    /* box-shadow:
+      rgb(255 255 255) 0px 0px 0px 0px,
+      rgb(51 65 85 / 10%) 0px 0px 0px 1px,
+      rgb(0 0 0 / 5%) 0px 20px 25px -5px,
+      rgb(0 0 0 / 5%) 0px 8px 10px -6px; */
+
+    /* &::before {
+      view-transition-name: current;
+      content: "";
+      display: block;
+      position: absolute;
+      top: anchor(--current top);
+      left: anchor(--current left);
+      right: anchor(--current right);
+      bottom: anchor(--current bottom);
+      background: var(--gray-1000);
+      border-radius: 1e5px;
+    } */
+
+    ul {
+      display: flex;
+      list-style-type: "";
+      line-height: 1.25;
+      a {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-1) var(--space-3);
+        justify-self: start;
+        color: var(--active, var(--gray-800));
+        border-radius: 1e5px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        text-decoration: none;
+        line-height: 1.25;
+        transition: 0.15s;
+
+        &[aria-current] {
+          --active: var(--gray-1000);
+          background: var(--gray-1000);
+          color: var(--gray-100);
+          /* anchor-name: --current; */
+        }
+
+        &:hover:not([aria-current]) {
+          color: var(--gray-1000);
+        }
+      }
+    }
+  }
+
   .main-header {
     position: relative;
     display: grid;
@@ -46,16 +125,20 @@ const { hasWarning, title } = Astro.props;
     gap: var(--space-5) 0;
 
     /* padding-block: var(--space-6); */
-    padding-block: var(--space-5);
+    margin-block: var(--space-5);
 
-    margin-block-end: var(--space-9);
+    margin-block-end: var(--space-7);
 
-    background: #fff;
+    position: sticky;
+    inset-block-start: var(--space-5);
+    z-index: 10;
+
+    /* background: #fff;
     box-shadow:
       rgb(255 255 255) 0px 0px 0px 0px,
       rgb(51 65 85 / 10%) 0px 0px 0px 1px,
       rgb(0 0 0 / 5%) 0px 20px 25px -5px,
-      rgb(0 0 0 / 5%) 0px 8px 10px -6px;
+      rgb(0 0 0 / 5%) 0px 8px 10px -6px; */
 
     /*z-index: 100;*/
     /*pointer-events: none;*/
@@ -91,10 +174,10 @@ const { hasWarning, title } = Astro.props;
     .back:any-link {
       font-family: "Mona Sans", system-ui;
       display: flex;
-      gap: 0.3ch;
+      gap: 1ch;
       align-items: center;
       inline-size: fit-content;
-      font-weight: 600;
+      font-weight: 500;
       font-size: 0.9rem;
       color: var(--gray-900);
       text-decoration: none;

@@ -8,6 +8,16 @@
   font-display: swap;
 }
 
+@view-transition {
+  navigation: auto;
+}
+
+/* ::view-transition-old(current),
+::view-transition-new(current) {
+  block-size: 100%;
+  inline-size: 100%;
+} */
+
 /* @font-face {
   font-family: "Geist Mono";
   src: url("/assets/fonts/GeistMonoVF.woff2") format("woff2 supports variations"),

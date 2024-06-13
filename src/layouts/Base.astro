@@ -4,7 +4,7 @@ import Head from "../components/Head.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
-const { title, hasWarning } = Astro.props;
+const { title, hasWarning, theme } = Astro.props;
 
 const links = {
   Flexbox: {
@@ -24,7 +24,7 @@ const label = links[title].label;
 const link = links[title].link;
 ---
 
-<html lang="da">
+<html lang="da" data-theme={theme}>
   <head>
     <Head title={title} />
     <style is:inline>
@@ -57,6 +57,24 @@ const link = links[title].link;
         src: url("/assets/fonts/flexible-variable.woff2") format("woff2");
         font-stretch: 200% 1000%;
         font-weight: 700;
+      }
+
+      [data-theme="green"] {
+        --ui-primary: hsl(153.07deg 89.8% 80.78% / 95%);
+        --ui-primary-dark: hsl(153.07deg 70% 65%);
+        --ui-primary-border: hsl(153.07deg 79.8% 39.78%);
+      }
+
+      [data-theme="purple"] {
+        --ui-primary: var(--violet-100);
+        --ui-primary-dark: var(--violet-200);
+        --ui-primary-border: var(--violet-400);
+      }
+
+      [data-theme="indigo"] {
+        --ui-primary: oklch(89% 0.07 292.66 / 0.95);
+        --ui-primary-dark: oklch(75% 0.1 292.66);
+        --ui-primary-border: oklch(60% 0.07 292.66);
       }
       body {
         position: relative;

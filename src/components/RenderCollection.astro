@@ -10,10 +10,10 @@ const exEntries = await getCollection(collection);
 const title = collection.charAt(0).toUpperCase() + collection.slice(1);
 ---
 
-<Base {title} {hasWarning}>
+<Base {title} {hasWarning} {theme}>
   {
     exEntries.map((entry, index) => (
-      <Exercises {entry} index={index + 1} total={exEntries.length} {theme} />
+      <Exercises {entry} index={index + 1} total={exEntries.length} />
     ))
   }
 </Base>
