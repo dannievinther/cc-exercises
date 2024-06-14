@@ -105,11 +105,11 @@ const { boxes, theme, startingHTML } = Astro.props;
     }
 
     .output:is(.editor:has(:focus-within) ~ *) {
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E@keyframes ant %7Bto %7Bstroke-dashoffset: -8;%7D%7D%3C/style%3E%3Crect width='100%25' height='100%25' style='stroke: %23a9bcce; stroke-width: 3.75px; fill: none;stroke-dasharray: 5 3; animation: ant 1s infinite linear'/%3E%3C/svg%3E")
+      --marching-ants: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E@keyframes ant %7Bto %7Bstroke-dashoffset: -8;%7D%7D%3C/style%3E%3Crect width='100%25' height='100%25' style='stroke: %23a9bcce; stroke-width: 3.75px; fill: none;stroke-dasharray: 5 3; animation: ant 1s infinite linear'/%3E%3C/svg%3E")
         border-box;
 
-      border-color: transparent;
-      transition: filter 0.15s;
+      /* border-color: transparent; */
+      /* transition: filter 0.15s; */
     }
 
     .output:is(.editor:focus-within + *):hover > .container {
@@ -148,8 +148,11 @@ const { boxes, theme, startingHTML } = Astro.props;
           no-repeat border-box,
         conic-gradient(at 75% 75%, #fff 75%, transparent 0) 100% 101% / 1.6rem
           1.6rem no-repeat border-box,
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E@keyframes ant %7Bto %7Bstroke-dashoffset: -8;%7D%7D%3C/style%3E%3Crect width='100%25' height='100%25' style='stroke: %23a9bcce; stroke-width: 3.75px; fill: none;stroke-dasharray: 5 3; animation: ant 0s infinite linear'/%3E%3C/svg%3E")
-          border-box;
+        var(
+          --marching-ants,
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E@keyframes ant %7Bto %7Bstroke-dashoffset: -8;%7D%7D%3C/style%3E%3Crect width='100%25' height='100%25' style='stroke: %23a9bcce; stroke-width: 3.75px; fill: none;stroke-dasharray: 5 3; animation: ant 0s infinite linear'/%3E%3C/svg%3E")
+            border-box
+        );
       padding: var(--padding);
       margin: calc(var(--padding) * -1);
 
