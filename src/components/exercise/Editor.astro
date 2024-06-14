@@ -6,10 +6,11 @@ const { id, startingCSS, startingHTML, helpLink, helpTopic, boxes } =
   Astro.props;
 
 const labelID = id + "-label";
+const exerciseNumber = id.match(/\d+/)[0];
 ---
 
 <div class="editor">
-  <label for={labelID}><span>CSS</span></label>
+  <label for={labelID}><span>{`exercise-${exerciseNumber}.css`}</span></label>
   <div class="reset-buttons">
     <button class="reset">
       <span class="visually-hidden">Nulstil</span>
@@ -96,25 +97,26 @@ const labelID = id + "-label";
       order: 1;
     }
 
-    & label {
-      content: "css";
+    label {
       display: block;
       inline-size: 100%;
-      font-size: 0.9rem;
-      text-transform: uppercase;
+      font-size: 0.875rem;
       line-height: 0.9;
-      padding: var(--space-4) var(--space-5);
+      /* padding: var(--space-4) var(--space-5); */
+      padding: 0 var(--space-4) var(--space-4) 0;
       font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
         "Roboto", "Helvetica Neue", Arial, sans-serif;
-      font-weight: 700;
+      font-weight: 500;
       color: var(--ui-secondary-a11y);
       border-radius: var(--bdrs-sm) var(--bdrs-sm) 0 0;
+      /* border-bottom: 1px solid #104675; */
 
       & span {
-        background: var(--blue-700);
-        color: var(--blue-500);
-        border-radius: 1e5px;
-        padding: 0.4rem 0.8rem;
+        background: linear-gradient(90deg, var(--blue-900), 90%, transparent);
+        padding: 0.75rem 2rem 0.75rem 1rem;
+        color: var(--blue-muted-comment);
+        border-radius: 0;
+        border-start-start-radius: var(--bdrs-l);
         display: inline-block;
       }
     }
@@ -138,6 +140,7 @@ const labelID = id + "-label";
 
       & span {
         text-decoration: underline;
+        text-decoration-color: var(--blue-500);
       }
 
       & svg {
@@ -150,7 +153,8 @@ const labelID = id + "-label";
         color: #fff;
 
         & span {
-          text-decoration: underline var(--blue-500);
+          text-decoration: underline;
+          text-decoration-color: currentColor;
         }
       }
     }
