@@ -5,7 +5,7 @@ import Button from "./Button.astro";
 <div class="controls">
   <div>
     <Button icon="minus">Fjern boks</Button>
-    <span>.box</span>
+    <span role="presentation"></span>
     <Button icon="plus">Tilføj boks</Button>
   </div>
 </div>
@@ -28,7 +28,7 @@ import Button from "./Button.astro";
         color: var(--gray-1000);
 
         &:hover {
-          background: var(--gray-100);
+          background: var(--gray-200);
         }
       }
 
@@ -53,9 +53,9 @@ import Button from "./Button.astro";
         padding: 0.25rem;
 
         > span {
-          font-weight: 600;
-          font-size: 0.75rem;
-          padding: 0 1rem;
+          /* font-weight: 600;
+          font-size: 0.75rem; */
+          padding: 0.2rem 1rem;
           font-family: var(--font-mono);
           border-radius: 2px;
           background-color: var(--ui-primary);
