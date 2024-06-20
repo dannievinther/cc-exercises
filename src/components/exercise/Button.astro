@@ -34,16 +34,21 @@ const { icon } = Astro.props;
       transition: 0s;
       overflow: clip;
       padding: 0;
+
+      &:hover {
+        background: var(--gray-200);
+      }
     }
     button:not([disabled]):active {
-      background:
+      background: var(--gray-300);
+      /* background:
         linear-gradient(#fff 0%, #fff 100%) padding-box,
         #fff;
       box-shadow:
         rgb(255 255 255) 0px 0px 0px 0px,
         rgb(51 65 85 / 10%) 0px 0px 0px 1px,
         rgb(0 0 0 / 5%) 0px 0px 0px 0px,
-        rgb(0 0 0 / 5%) 0px 0px 0px 0px;
+        rgb(0 0 0 / 5%) 0px 0px 0px 0px; */
     }
     button :global(svg) {
     }
