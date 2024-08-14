@@ -9,7 +9,6 @@ const linkItems = [
   { href: "/grid", text: "Grid" },
   { href: "/subgrid", text: "Subgrid" },
   { href: "/flex", text: "Flexbox" },
-  { href: "/defensive", text: "Defensive CSS" },
 ];
 ---
 
@@ -24,7 +23,7 @@ const linkItems = [
       <ul>
         {
           linkItems.map((item) => (
-            <li hidden={item.href.includes("defensive")}>
+            <li>
               <a
                 aria-current={
                   Astro.url.pathname.replace(/\/$/, "") ===
@@ -53,7 +52,7 @@ const linkItems = [
   )
 }
 
-<script is:inline>
+<!-- <script is:inline>
   const hiddenLink = document.querySelector(".main-header nav li:last-child");
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -72,7 +71,7 @@ const linkItems = [
       window.history.replaceState({}, "", updatedUrl);
     }
   }
-</script>
+</script> -->
 
 <style>
   nav {
