@@ -19,6 +19,9 @@ import Front from "../layouts/Front.astro";
         <li style="--theme: oklch(0.71 0.1 320.74)">
           <a href="/flex"><span>Flexbox</span> exercises</a>
         </li>
+        <li style="--theme: hsl(153.07deg 70% 65%)">
+          <a href="/defensive"><span>Defensive</span> exercises</a>
+        </li>
       </ul>
     </nav>
   </header>
@@ -249,4 +252,17 @@ import Front from "../layouts/Front.astro";
   h1.addEventListener("click", (_) => {
     h1.classList.toggle("toggled");
   });
+
+  const hiddenLink = document.querySelector(
+    ".bento li:last-child"
+  ) as HTMLLIElement;
+  hiddenLink.style.display = "none";
+
+  // get search params, if equal to ?sem=3 then show the last link
+  const urlParams = new URLSearchParams(window.location.search);
+  const sem = urlParams.get("sem");
+
+  if (sem === "3") {
+    hiddenLink.style.display = "block";
+  }
 </script>

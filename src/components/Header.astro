@@ -9,6 +9,7 @@ const linkItems = [
   { href: "/grid", text: "Grid" },
   { href: "/subgrid", text: "Subgrid" },
   { href: "/flex", text: "Flexbox" },
+  { href: "/defensive", text: "Defensive CSS" },
 ];
 ---
 
@@ -51,6 +52,21 @@ const linkItems = [
     </div>
   )
 }
+
+<script>
+  const hiddenLink = document.querySelector(
+    ".main-header nav li:last-child"
+  ) as HTMLLIElement;
+  hiddenLink.style.display = "none";
+
+  // get search params, if equal to ?sem=3 then show the last link
+  const urlParams = new URLSearchParams(window.location.search);
+  const sem = urlParams.get("sem");
+
+  if (sem === "3") {
+    hiddenLink.style.display = "block";
+  }
+</script>
 
 <style>
   nav {
