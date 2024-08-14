@@ -36,6 +36,7 @@ export const collections = {
   grid: exerciseCollection,
   flexbox: exerciseCollection,
   subgrid: exerciseCollection,
+  defensive: exerciseCollection,
 };
 
 // title: Simpelt grid
