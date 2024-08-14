@@ -53,10 +53,9 @@ const linkItems = [
   )
 }
 
-<script>
-  const hiddenLink = document.querySelector(
-    ".main-header nav li:last-child"
-  ) as HTMLLIElement;
+<script is:inline>
+  const hiddenLink = document.querySelector(".main-header nav li:last-child");
+
   const urlParams = new URLSearchParams(window.location.search);
   const sem = urlParams.get("sem");
 
@@ -65,11 +64,13 @@ const linkItems = [
   }
 
   if (localStorage.getItem("sem") === "3") {
-    const updatedUrl = new URL(window.location.href);
-    updatedUrl.searchParams.set("sem", "3");
-    window.history.replaceState({}, "", updatedUrl);
-
     hiddenLink.hidden = false;
+
+    if (!urlParams.has("sem")) {
+      const updatedUrl = new URL(window.location.href);
+      updatedUrl.searchParams.set("sem", "3");
+      window.history.replaceState({}, "", updatedUrl);
+    }
   }
 </script>
 
