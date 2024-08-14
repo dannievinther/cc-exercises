@@ -246,16 +246,9 @@ import Front from "../layouts/Front.astro";
   }
 </style>
 
-<script>
-  const h1 = document.querySelector("h1");
+<script is:inline>
+  const hiddenLink = document.querySelector(".bento li:last-child");
 
-  h1.addEventListener("click", (_) => {
-    h1.classList.toggle("toggled");
-  });
-
-  const hiddenLink = document.querySelector(
-    ".bento li:last-child"
-  ) as HTMLLIElement;
   const urlParams = new URLSearchParams(window.location.search);
   const sem = urlParams.get("sem");
 
@@ -265,5 +258,11 @@ import Front from "../layouts/Front.astro";
 
   if (localStorage.getItem("sem") === "3") {
     hiddenLink.hidden = false;
+
+    if (!urlParams.has("sem")) {
+      const updatedUrl = new URL(window.location.href);
+      updatedUrl.searchParams.set("sem", "3");
+      window.history.replaceState({}, "", updatedUrl);
+    }
   }
 </script>
