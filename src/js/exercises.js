@@ -2,6 +2,8 @@ import { prefix } from "./utils";
 
 const sections = document.querySelectorAll("section");
 
+let exerciseData = JSON.parse(localStorage.getItem("exerciseData")) || {};
+
 sections.forEach((section) => {
   const styleTag = section.querySelector(".editor > style");
   const textarea = section.querySelector(".editor > textarea");
@@ -20,7 +22,10 @@ sections.forEach((section) => {
 
   let boxCount = boxContainer.children.length || 1;
   const maxBoxCount = 12;
-  const saveToLocalStorage = (key, value) => localStorage.setItem(key, value);
+  const saveToLocalStorage = (key, value) => {
+    exerciseData[key] = value;
+    localStorage.setItem("exerciseData", JSON.stringify(exerciseData));
+  };
 
   const reset = section.querySelector(".reset");
   const confirming = section.querySelector(".button-group-confirm");
@@ -41,10 +46,10 @@ sections.forEach((section) => {
   }
 
   function loadLocalStorageBoxes() {
-    const localStorageBoxes = localStorage.getItem(boxKey);
+    const localStorageBoxes = exerciseData[boxKey];
 
     if (localStorageBoxes && localStorageBoxes !== boxCount) {
-      localStorageBoxes == 1 && localStorage.removeItem(boxKey);
+      localStorageBoxes == 1 && delete exerciseData[boxKey];
       boxCount = localStorageBoxes;
       const newBoxes = Array.from({ length: boxCount }, (_, index) =>
         createBox(index + 1)
@@ -58,7 +63,9 @@ sections.forEach((section) => {
     if (boxCount == maxBoxCount) return;
     const count = boxContainer.children.length;
     const newBox = createBox(count + 1);
-    boxContainer.appendChild(newBox);
+    const fragment = document.createDocumentFragment();
+    fragment.appendChild(newBox);
+    boxContainer.appendChild(fragment); // Tilføjelse af fragment til DOM i én operation
 
     boxCount++;
   }
@@ -89,7 +96,7 @@ sections.forEach((section) => {
   });
 
   function setButtonDisabledState(button, isDisabled) {
-    if (!button) return;
+    if (!button || button.disabled === isDisabled) return;
     button.disabled = isDisabled;
   }
 
@@ -103,15 +110,16 @@ sections.forEach((section) => {
   }
 
   function resetUI() {
-    if (localStorage.getItem(exerciseKey) || textarea.value === "") {
-      localStorage.removeItem(exerciseKey);
-      if (localStorage.getItem(`extra-${exerciseKey}`)) {
-        localStorage.removeItem(`extra-${exerciseKey}`);
+    if (exerciseData[exerciseKey] || textarea.value === "") {
+      delete exerciseData[exerciseKey];
+      if (exerciseData[`extra-${exerciseKey}`]) {
+        delete exerciseData[`extra-${exerciseKey}`];
       }
-      if (localStorage.getItem(boxKey)) {
-        localStorage.removeItem(boxKey);
+      if (exerciseData[boxKey]) {
+        delete exerciseData[boxKey];
         boxCount = boxContainer.children.length;
       }
+      localStorage.setItem("exerciseData", JSON.stringify(exerciseData));
       styleTag.innerHTML = null;
       textarea.value = startingCSS;
       textarea.focus(); /* ensure that the UI updates */
@@ -136,12 +144,12 @@ sections.forEach((section) => {
 
     styleTag.innerHTML = prefix(textarea.value, exerciseKey);
 
-    if (localStorage.getItem(exerciseKey)) {
-      textarea.value = localStorage.getItem(exerciseKey);
+    if (exerciseData[exerciseKey]) {
+      textarea.value = exerciseData[exerciseKey];
       styleTag.innerHTML = prefix(textarea.value, exerciseKey);
     }
 
-    if (localStorage.getItem(`extra-${exerciseKey}`)) {
+    if (exerciseData[`extra-${exerciseKey}`]) {
       document.documentElement.dataset.extra = "true";
     }
 
@@ -156,8 +164,9 @@ sections.forEach((section) => {
       }
 
       if (textarea.value === "") {
-        localStorage.removeItem(exerciseKey);
-        localStorage.removeItem(`extra-${exerciseKey}`);
+        delete exerciseData[exerciseKey];
+        delete exerciseData[`extra-${exerciseKey}`];
+        localStorage.setItem("exerciseData", JSON.stringify(exerciseData));
       }
 
       updateResetButtonState();
@@ -195,12 +204,12 @@ sections.forEach((section) => {
       );
       const focusedElement = document.activeElement;
 
+      const closestSection = focusedElement.closest("section");
+      const resetButton = closestSection.querySelector(".reset");
+      const btnGroup = closestSection.querySelectorAll(
+        ".button-group-confirm button"
+      );
       if (focusedElement === textarea) {
-        const closestSection = focusedElement.closest("section");
-        const resetButton = closestSection.querySelector(".reset");
-        const btnGroup = closestSection.querySelectorAll(
-          ".button-group-confirm button"
-        );
         if (!resetButton.disabled) {
           resetButton.focus();
         }
