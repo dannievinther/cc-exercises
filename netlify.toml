@@ -1,25 +1,25 @@
 [[redirects]]
   from = "/*"
-  to = "https://exercises.vercel.app/:splat"
+  to = "https://exercssises.vercel.app/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "/grid"
-  to = "https://exercises.vercel.app/grid"
+  to = "https://exercssises.vercel.app/grid"
   status = 301
 
 [[redirects]]
   from = "/subgrid"
-  to = "https://exercises.vercel.app/subgrid"
+  to = "https://exercssises.vercel.app/subgrid"
   status = 301
 
 [[redirects]]
   from = "/flex"
-  to = "https://exercises.vercel.app/flex"
+  to = "https://exercssises.vercel.app/flex"
   status = 301
 
 [[redirects]]
   from = "/defensive"
-  to = "https://exercises.vercel.app/defensive"
+  to = "https://exercssises.vercel.app/defensive"
   status = 301
