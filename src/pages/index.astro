@@ -197,18 +197,17 @@ import Front from "../layouts/Front.astro";
 
   header {
     --filter: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">\
-    <filter id="f" x="-50%" y="-200%" width="200%" height="500%">\
-    <feGaussianBlur stdDeviation="5"></feGaussianBlur>\
-    <feColorMatrix type="saturate" values="1"></feColorMatrix>\
-    <feComponentTransfer>\
-    <feFuncA type="linear" slope=".75"/>\
-    </feComponentTransfer>\
-    <feComposite in="SourceGraphic"></feComposite>\
-    </filter>\
-    </svg>#f');
+      <filter id="f" x="-50%" y="-200%" width="200%" height="500%">\
+        <feGaussianBlur stdDeviation="5"></feGaussianBlur>\
+        <feColorMatrix type="saturate" values="1"></feColorMatrix>\
+        <feComponentTransfer>\
+          <feFuncA type="linear" slope=".75"/>\
+          </feComponentTransfer>\
+          <feComposite in="SourceGraphic"></feComposite>\
+          </filter>\
+          </svg>#f');
     --elastic: 0.9s
-      linear(
-        0,
+      linear(0,
         0.218 2.1%,
         0.862 6.5%,
         1.114,
