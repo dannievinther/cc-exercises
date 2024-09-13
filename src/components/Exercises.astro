@@ -1,5 +1,5 @@
 ---
-const { entry, index, total, theme } = Astro.props;
+const { entry, index, total, theme, enableExtra = true } = Astro.props;
 const { slug, data, collection } = entry;
 const {
   title,
@@ -30,7 +30,7 @@ import TargetMedia from "./exercise/TargetMedia.astro";
 ---
 
 <section
-  data-extra={isExtra && "true"}
+  data-extra={enableExtra && isExtra && "true"}
   data-exercise-key={exerciseID}
   class={customClass ?? ""}
 >
