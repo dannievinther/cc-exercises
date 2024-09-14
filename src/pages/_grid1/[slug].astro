@@ -4,7 +4,7 @@ import Exercises from "../../components/Exercises.astro";
 import Base from "../../layouts/Base.astro";
 
 export async function getStaticPaths() {
-  const blogEntries = await getCollection("flexbox");
+  const blogEntries = await getCollection("grid");
   const total = blogEntries.length;
   return blogEntries.map((entry, index) => ({
     params: { slug: entry.slug.replace(/^0+/, "") },
@@ -17,6 +17,6 @@ const title =
   entry.collection.charAt(0).toUpperCase() + entry.collection.slice(1);
 ---
 
-<Base title={title} theme="purple">
+<!-- <Base title={title} theme="green">
   <Exercises {entry} enableExtra={false} index={index + 1} total={total} />
-</Base>
+</Base> -->

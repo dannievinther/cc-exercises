@@ -1,0 +1,76 @@
+---
+import { getCollection } from "astro:content";
+import Exercises from "../components/Exercises.astro";
+import Base from "../layouts/Base.astro";
+
+export async function getStaticPaths() {
+  const [grid, flexbox, subgrid] = await Promise.all([
+    getCollection("grid"),
+    getCollection("flexbox"),
+    getCollection("subgrid"),
+  ]);
+
+  const allCollections = [...grid, ...flexbox, ...subgrid];
+
+  return allCollections.map((entry, index) => ({
+    params: { slug: slug(entry) },
+    props: {
+      entry,
+      index: getIndex(entry, index),
+      total: getTotal(entry, grid, flexbox, subgrid),
+      theme: getTheme(entry.collection),
+    },
+  }));
+
+  function getIndex(entry, index) {
+    const collection = entry.collection;
+    const collectionEntries = allCollections.filter(
+      (item) => item.collection === collection
+    );
+    const sortedEntries = collectionEntries.sort((a, b) =>
+      a.slug.localeCompare(b.slug, undefined, { numeric: true })
+    );
+    const entryIndex = sortedEntries.findIndex(
+      (item) => item.slug === entry.slug
+    );
+    return entryIndex + 1;
+  }
+
+  function getTotal(entry, grid, flexbox, subgrid) {
+    const collection = entry.collection;
+    const collectionMap = {
+      grid: grid.length,
+      flexbox: flexbox.length,
+      subgrid: subgrid.length,
+    };
+
+    return collectionMap[collection] || 0;
+  }
+
+  function getTheme(collection) {
+    const themeMap = {
+      grid: "green",
+      flexbox: "purple",
+      subgrid: "indigo",
+    };
+
+    return themeMap[collection];
+  }
+
+  function slug(entry) {
+    if (entry.collection === "flexbox") {
+      return `flex/${entry.slug.replace(/^0+/, "")}`;
+    } else {
+      return `${entry.collection}/${entry.slug.replace(/^0+/, "")}`;
+    }
+  }
+}
+
+const { entry, total, index, theme } = Astro.props;
+const title =
+  entry.collection.charAt(0).toUpperCase() + entry.collection.slice(1);
+---
+
+<Base title={title} theme={theme}>
+  <Exercises {entry} enableExtra={false} index={index} total={total} />
+</Base>
