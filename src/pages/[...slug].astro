@@ -136,7 +136,7 @@ const prevLink = (entry) => {
       box-shadow: inset 0 0 0 2px var(--blue-muted-comment);
       color: var(--blue-900);
       border-radius: var(--bdrs-md);
-      transition: 0s;
+      transition: 0.1s linear;
       text-decoration: none;
       text-transform: uppercase;
       font-variation-settings: "wdth" 120;
@@ -148,18 +148,22 @@ const prevLink = (entry) => {
       letter-spacing: 0.075em;
 
       &.prev {
+        --offset: 0.2rem;
         padding-inline-start: var(--space-5);
       }
       &.next {
+        --offset: -0.2rem;
         padding-inline-end: var(--space-5);
       }
 
       [data-icon] {
         color: var(--chevron-color, var(--blue-muted));
-        translate: 0 -1px;
+        translate: var(--_offset, var(--offset)) -1px;
+        transition: 0.3s;
       }
 
       &:hover {
+        --_offset: 0;
         --chevron-color: var(--blue-500);
         background: var(--blue-900);
         color: #fff;
