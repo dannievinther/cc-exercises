@@ -50,7 +50,7 @@ const containsDigitAfterSlash = Astro.url.pathname.match(/\/\d+$/d) !== null;
       </a> -->
       {
         !containsDigitAfterSlash && (
-          <a href={Astro.url.pathname + "/1"}>
+          <a href={Astro.url.pathname.replace(/\/$/, "") + "/1"}>
             <Icon name="view-single" width={20} height={20} />
           </a>
         )
