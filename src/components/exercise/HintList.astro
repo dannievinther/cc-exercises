@@ -67,6 +67,12 @@ const { hints } = Astro.props;
     font-size: 0.9em;
     color: var(--m, var(--ui-primary));
     border-radius: var(--bdrs-md);
+    cursor: pointer;
+    transition: 0.2s;
+    &:hover {
+      color: var(--blue-500);
+      text-shadow: 0 0 6px hsl(from var(--blue-500) h s l / 50%);
+    }
   }
 
   li::before {
@@ -83,3 +89,41 @@ const { hints } = Astro.props;
     flex-shrink: 0;
   }
 </style>
+
+<script>
+  const copyCode = document.querySelectorAll(
+    ".hints [data-type] code, .exercise-content p code"
+  );
+
+  const insertTextAtCaret = (element, text) => {
+    const { selectionStart, selectionEnd } = element;
+
+    element.setRangeText(text, selectionStart, selectionEnd, "end");
+  };
+
+  copyCode.forEach((item) =>
+    item.addEventListener("click", ({ target }) => {
+      const editor = target
+        .closest("section")
+        .querySelector(".editor textarea");
+      let caretPosition;
+      if (target.tagName === "CODE") {
+        const code = target.innerText;
+        const textToCopy =
+          target.parentElement.dataset.type === "property"
+            ? `${code}: ;`
+            : code;
+        insertTextAtCaret(editor, textToCopy);
+        // caretPosition = editor.value.lastIndexOf(";");
+        caretPosition =
+          target.parentElement.dataset.type === "property"
+            ? editor.value.lastIndexOf(";")
+            : editor.selectionEnd;
+      }
+
+      editor.dispatchEvent(new Event("input"));
+      editor.focus();
+      editor.setSelectionRange(caretPosition, caretPosition);
+    })
+  );
+</script>
