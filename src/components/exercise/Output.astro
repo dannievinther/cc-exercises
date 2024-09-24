@@ -113,10 +113,16 @@ const { boxes, theme, startingHTML } = Astro.props;
     }
 
     .output:is(.editor:focus-within + *):hover > .container {
-      background:
+      /* background:
         repeating-linear-gradient(-45deg, #7740c8 0 1.5px, #938fe2 0 7.5px)
           content-box,
-        #f1eef5;
+        #f1eef5; */
+      background: repeating-linear-gradient(
+          45deg,
+          var(--gray-500) 0 12.5%,
+          #0000 0 50%
+        )
+        0 / 4px 4px;
     }
 
     /* .output:is(.editor:focus-within + *) :global(.box) {
