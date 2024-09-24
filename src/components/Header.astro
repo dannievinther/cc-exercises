@@ -95,21 +95,27 @@ const containsDigitAfterSlash =
 <style>
   @keyframes --fade {
     to {
-      translate: calc(100% + var(--space-1));
+      /* translate: calc(100% + var(--space-1)); */
+      opacity: 0;
+      scale: 0.5;
+      translate: 0 -35%;
     }
   }
 
   .view {
-    margin-left: auto;
-    display: flex;
-    gap: 10px;
+    display: none;
     @supports (animation-timeline: scroll(root)) {
-      @media (width < 768px) {
+      margin-left: auto;
+      display: flex;
+      gap: 10px;
+      transform-origin: 50% 0;
+
+      animation: --fade ease-in-out both;
+      animation-timeline: scroll(root);
+      animation-range: 0 60px;
+      @media (width <= 768px) {
         display: none;
       }
-      animation: --fade both;
-      animation-timeline: scroll(root);
-      animation-range: 0 80px;
     }
 
     a {
