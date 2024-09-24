@@ -117,12 +117,10 @@ const { boxes, theme, startingHTML } = Astro.props;
         repeating-linear-gradient(-45deg, #7740c8 0 1.5px, #938fe2 0 7.5px)
           content-box,
         #f1eef5; */
-      background: repeating-linear-gradient(
-          45deg,
-          var(--gray-500) 0 12.5%,
-          #0000 0 50%
-        )
-        0 / 4px 4px;
+      background:
+        repeating-linear-gradient(-45deg, var(--violet-200) 0 25%, #0000 0 50%)
+          0 / 4px 4px content-box,
+        #f1eef5 border-box;
     }
 
     /* .output:is(.editor:focus-within + *) :global(.box) {
