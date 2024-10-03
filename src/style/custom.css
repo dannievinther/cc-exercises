@@ -147,6 +147,7 @@
 
   /* Border Radius */
   --bdrs-round: 99rem;
+  --bdrs-xl: 1rem;
   --bdrs-l: 0.5rem;
   --bdrs-md: 0.375rem;
   --bdrs-sm: 0.1875rem;
@@ -290,7 +291,7 @@ section {
   padding: var(--space-6);
 
   background: #fff;
-  border-radius: var(--bdrs-l);
+  border-radius: var(--bdrs-xl);
   /* transition: filter 0.2s; */
 
   margin-inline-start: var(--space-6);

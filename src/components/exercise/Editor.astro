@@ -77,7 +77,7 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
     grid-template-rows: min-content 1fr min-content;
     block-size: 100%;
     touch-action: none;
-    border-radius: var(--bdrs-l);
+    border-radius: var(--bdrs-xl);
 
     block-size: calc(100% + 2 * var(--space-6));
     margin-inline-start: calc(-2 * var(--space-6));
@@ -108,7 +108,7 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
         "Roboto", "Helvetica Neue", Arial, sans-serif;
       font-weight: 500;
       color: var(--ui-secondary-a11y);
-      border-radius: var(--bdrs-sm) var(--bdrs-sm) 0 0;
+      /* border-radius: var(--bdrs-sm) var(--bdrs-sm) 0 0; */
       /* border-bottom: 1px solid #104675; */
 
       & span {
@@ -116,7 +116,7 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
         padding: 0.75rem 2rem 0.75rem 1rem;
         color: var(--blue-muted-comment);
         border-radius: 0;
-        border-start-start-radius: var(--bdrs-l);
+        border-start-start-radius: var(--bdrs-xl);
         display: inline-block;
       }
     }
