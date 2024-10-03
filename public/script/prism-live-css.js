@@ -30,8 +30,13 @@ Prism.Live.registerLanguage("css", {
           property = properties[0];
         }
       }
-
-      return `${property}: $1;`;
+      if (property === "dg") {
+        return "display: grid;$1";
+      } else if (property === "df") {
+        return "display: flex;$1";
+      } else {
+        return `${property}: $1;`;
+      }
     },
   },
 });
