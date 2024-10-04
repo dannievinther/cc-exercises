@@ -225,6 +225,10 @@ p {
   /* color: #425466; */
 }
 
+p:has(small) {
+  line-height: 1.25;
+}
+
 [contenteditable] {
   outline: none;
 }
