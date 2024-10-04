@@ -3,6 +3,10 @@ Prism.Live.registerLanguage("css", {
     custom: function (property) {
       // Expand property
       var style = document.documentElement.style;
+      const propertyMap = {
+        dg: "display: grid;\n\t$1",
+        df: "display: flex;\n\t$1",
+      };
 
       if (!/^--/.test(property) && !(property in style)) {
         // Nonexistent property, try as a shortcut
@@ -30,13 +34,8 @@ Prism.Live.registerLanguage("css", {
           property = properties[0];
         }
       }
-      if (property === "dg") {
-        return "display: grid;$1";
-      } else if (property === "df") {
-        return "display: flex;$1";
-      } else {
-        return `${property}: $1;`;
-      }
+
+      return propertyMap[property] ?? `${property}: $1;`;
     },
   },
 });
