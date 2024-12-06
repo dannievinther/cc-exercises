@@ -15,6 +15,7 @@ export async function getStaticPaths() {
 
   return allCollections.map((entry, index) => ({
     params: { slug: slug(entry) },
+    // params: { id: entry.id },
     props: {
       entry,
       index: getIndex(entry, index),
@@ -27,7 +28,7 @@ export async function getStaticPaths() {
   function getCollectionSlugs(collection) {
     return allCollections
       .filter((item) => item.collection === collection)
-      .map((item) => item.slug);
+      .map((item) => item.id);
   }
 
   function getIndex(entry, index) {
@@ -36,11 +37,9 @@ export async function getStaticPaths() {
       (item) => item.collection === collection
     );
     const sortedEntries = collectionEntries.sort((a, b) =>
-      a.slug.localeCompare(b.slug, undefined, { numeric: true })
+      a.id.localeCompare(b.id, undefined, { numeric: true })
     );
-    const entryIndex = sortedEntries.findIndex(
-      (item) => item.slug === entry.slug
-    );
+    const entryIndex = sortedEntries.findIndex((item) => item.id === entry.id);
     return entryIndex + 1;
   }
 
@@ -67,9 +66,9 @@ export async function getStaticPaths() {
 
   function slug(entry) {
     if (entry.collection === "flexbox") {
-      return `flex/${entry.slug.replace(/^0+/, "")}`;
+      return `flex/${entry.id.replace(/^0+/, "")}`;
     } else {
-      return `${entry.collection}/${entry.slug.replace(/^0+/, "")}`;
+      return `${entry.collection}/${entry.id.replace(/^0+/, "")}`;
     }
   }
 }
@@ -78,18 +77,22 @@ const { slug } = Astro.params;
 const { entry, total, index, theme, slugs } = Astro.props;
 const title =
   entry.collection.charAt(0).toUpperCase() + entry.collection.slice(1);
+const sortedSlugs = slugs.sort((a, b) =>
+  a.localeCompare(b, undefined, { numeric: true })
+);
 // Render a link to the next exercise based on the current index of the slugs array
-const nextLink = (entry, total) => {
-  const currentIndex = slugs.indexOf(entry.slug);
+const nextLink = (entry: { id: string }, total: number) => {
+  const currentIndex = sortedSlugs.indexOf(entry.id);
   const nextIndex = currentIndex + 1;
+
   if (nextIndex < total) {
-    return slugs[nextIndex].replace(/^0+/, "");
+    return sortedSlugs[nextIndex].replace(/^0+/, "");
   } else {
     return "/";
   }
 };
 const prevLink = (entry) => {
-  const currentIndex = slugs.indexOf(entry.slug);
+  const currentIndex = slugs.indexOf(entry.id);
   const prevIndex = currentIndex - 1;
   if (prevIndex >= 0) {
     return slugs[prevIndex].replace(/^0+/, "");

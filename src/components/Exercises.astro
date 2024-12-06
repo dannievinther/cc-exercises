@@ -1,9 +1,10 @@
 ---
+import { render } from "astro:content";
 const { entry, index, total, theme, enableExtra = true } = Astro.props;
-const { slug, data, collection } = entry;
+const { id, data, collection } = entry;
+const colID = id.split("/").pop();
 const {
   title,
-  id,
   isExtra,
   hints,
   customClass,
@@ -13,10 +14,13 @@ const {
   canAddBoxes,
   image,
   video,
+  // id
 } = data;
-const { Content } = await entry.render();
+
+const { Content } = await render(entry);
 const boxes = [...Array(data.boxes)];
-const exerciseID = `${collection}-${slug}`;
+// const exerciseID = id;
+const exerciseID = `${collection}-${colID}`;
 
 import ExerciseLabel from "./exercise/ExerciseLabel.astro";
 import BtnControls from "./exercise/BtnControls.astro";
