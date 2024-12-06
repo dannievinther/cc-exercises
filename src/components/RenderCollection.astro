@@ -7,7 +7,7 @@ import Base from "../layouts/Base.astro";
 
 const exEntries = await getCollection(collection);
 
-const sorted = exEntries.toSorted((a: { id: string }, b: { id: string }) =>
+const sorted = exEntries.toSorted((a, b) =>
   a.id.localeCompare(b.id, undefined, { numeric: true })
 );
 
