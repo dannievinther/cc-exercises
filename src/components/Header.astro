@@ -30,6 +30,7 @@ const containsDigitAfterSlash =
           linkItems.map((item, i) => (
             <li>
               <a
+                data-astro-prefetch
                 style={`view-transition-name: --current-link-text-${i};`}
                 aria-current={
                   Astro.url.pathname.replace(/\/$/, "") ===
