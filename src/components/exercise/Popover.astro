@@ -1,7 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
-const { boxes, startingHTML } = Astro.props;
-
+const { id, boxes, startingHTML } = Astro.props;
+const popoverID = id + "-popover";
 const boxCount = boxes
   .map(
     (_, index) => `<div class="box box-${index + 1}">.box-${index + 1}</div>`
@@ -14,12 +14,6 @@ const htmlContentAlt = `<div class="container">
   <div class="box box-1">.box-1</div>
 </div>`;
 
-// const htmlTags =
-//   startingHTML &&
-//   startingHTML
-//     .match(/<\w+.*?>/g)
-//     .map((tag) => tag.replace(/(\s+\w+(?:="[^"]*")?)/g, ""))
-//     .join("\n\t");
 const indentedHTML =
   startingHTML &&
   startingHTML
@@ -37,86 +31,80 @@ const html = startingHTML
   : boxes.length > 1
     ? htmlContent
     : htmlContentAlt;
-
-// console.log(htmlTags);
 ---
 
-<details class="popup">
-  <summary>
-    <Icon name="code" width={22} height={22} stroke-width={1.5} />
-    HTML
-  </summary>
-  <div>
-    <textarea readonly aria-label="HTML code" class="prism-live language-html"
-      >{html}</textarea
-    >
-  </div>
-</details>
+<button popovertarget={popoverID}>
+  <Icon name="code" width={22} height={22} stroke-width={1.5} />
+  HTML
+</button>
+
+<div popover id={popoverID}>
+  <textarea readonly aria-label="HTML code" class="prism-live language-html"
+    >{html}</textarea
+  >
+</div>
 
 <style>
-  .popup {
-    position: relative;
-    color: #fff;
-    z-index: 10;
-    margin-inline-start: auto;
-
-    @media (max-width: 895px) {
-      align-self: flex-end;
-    }
-  }
-
-  .popup summary {
+  button {
+    anchor-name: --btn-code;
     cursor: pointer;
     gap: var(--space-1);
     font-size: 0.8rem;
     font-weight: 700;
     padding: var(--space-2) var(--space-3);
     border-radius: var(--bdrs-sm);
+    margin-left: auto;
     user-select: none;
     display: inline-flex;
     background: var(--blue-700);
     align-items: center;
+    color: #fff;
   }
 
-  .popup summary::marker {
-    content: none;
-  }
-  .popup summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .popup summary svg {
-    /* inline-size: 1.25em;
-    block-size: 1.25em; */
-  }
-
-  .popup[open] summary {
+  button:has(+ :popover-open) {
     background: var(--blue-900);
     box-shadow:
       inset 0 -1px 1px #fff3,
       inset 0px 1px 1px 1px #0000007d;
   }
 
-  .popup summary + div {
-    position: absolute;
-    bottom: 100%;
-    left: calc(var(--space-3) * -1);
-    margin-block-end: var(--space-1);
-    z-index: 10;
+  :global(section) {
+    anchor-scope: all;
+  }
+
+  [popover] {
+    margin: 0;
+    inset: unset;
+    color: #fff;
+    position: fixed;
+    position-anchor: --btn-code;
+    /* position-area: top center; */
+    position-area: top;
+    justify-self: anchor-center;
+    /* left: anchor(left);
+    right: anchor(right);
+    bottom: anchor(top); */
+    /* position-area: right span-top; */
+    /*position-try-fallbacks:
+      left span-bottom,
+      bottom,
+      left span-top;*/
     touch-action: pan-x;
+    background: #0000;
+    border: none;
     filter: drop-shadow(0 1px 0.25px #fff3)
       drop-shadow(2px 4px 12px rgba(0, 0, 0, 0.2666666667))
       drop-shadow(0 1px 2px rgba(0, 0, 0, 0.0666666667));
   }
 
-  .popup :global(pre) {
+  [popover] :global(pre) {
     margin-block: 0;
     -ms-overflow-style: none;
     scrollbar-width: none;
     padding-block: 0.75rem 1.35em;
     --r: 1rem;
     --h: 1rem;
-    --p: 15%;
+    --p: 50%;
     padding: 0.75rem var(--r);
     border-bottom: var(--h) solid #0000;
     background-origin: border-box;
@@ -139,28 +127,14 @@ const html = startingHTML
     -webkit-mask: var(--m);
     mask: var(--m);
     inline-size: max-content;
-    max-inline-size: 400px;
+    /* max-inline-size: 400px; */
 
-    @media (width < 900px) {
-      --p: 82%;
+    @media (max-width: 895px) {
+      --p: 80%;
     }
   }
 
-  @media (max-width: 920px) {
-    .popup summary + div {
-      left: auto;
-      right: -2rem;
-    }
-    .popup pre {
-      --p: 88%;
-    }
-  }
-
-  :global(.popup pre)::-webkit-scrollbar {
+  :global([popover] pre)::-webkit-scrollbar {
     display: none;
   }
 </style>
-
-<script>
-  import "../../js/popup.js";
-</script>

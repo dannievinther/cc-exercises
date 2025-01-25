@@ -43,25 +43,22 @@ const link = links[title].link;
     </main>
 
     <Footer label={label} linkTo={link} />
-    <script is:inline src="/script/bliss.js" fetchpriority="low"></script>
-    <script is:inline src="/script/prism.js" fetchpriority="low"></script>
-    <script is:inline src="/script/prism-live.js" fetchpriority="low"></script>
-    <script is:inline src="/script/prism-live-markup.js" fetchpriority="low"
-    ></script>
-    <script is:inline src="/script/prism-live-css.js" fetchpriority="low"
-    ></script>
-    <script is:inline src="/script/prism-linenumbers.js" fetchpriority="low"
-    ></script>
+    <script src="/script/bliss.js" fetchpriority="high"></script>
+    <script src="/script/prism.js" fetchpriority="high"></script>
+    <script src="/script/prism-live.js" fetchpriority="low"></script>
+    <script src="/script/prism-live-markup.js" fetchpriority="low"></script>
+    <script src="/script/prism-live-css.js" fetchpriority="low"></script>
+    <script src="/script/prism-linenumbers.js" fetchpriority="low"></script>
     <script>
       import "../js/exercises";
     </script>
     <style>
-      @font-face {
+      /* @font-face {
         font-family: flex;
         src: url("/assets/fonts/flexible-variable.woff2") format("woff2");
         font-stretch: 200% 1000%;
         font-weight: 700;
-      }
+      } */
 
       [data-theme="green"] {
         --ui-primary: hsl(153.07deg 89.8% 80.78% / 95%);

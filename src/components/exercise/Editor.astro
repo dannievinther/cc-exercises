@@ -1,6 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
 import Popup from "./Popup.astro";
+import Popover from "./Popover.astro";
 
 const { id, startingCSS, startingHTML, helpLink, helpTopic, boxes } =
   Astro.props;
@@ -55,7 +56,7 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
       ) : null
     }
 
-    <Popup {boxes} {startingHTML} />
+    <Popup {id} {boxes} {startingHTML} />
   </div>
 
   <style is:inline class="style"></style>
@@ -68,6 +69,7 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
     stroke: currentColor;
   }
   .editor {
+    anchor-name: --editor;
     position: relative;
     z-index: 1;
     background: var(--blue-800);

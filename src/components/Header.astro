@@ -27,9 +27,10 @@ const containsDigitAfterSlash =
     <nav>
       <ul>
         {
-          linkItems.map((item) => (
+          linkItems.map((item, i) => (
             <li>
               <a
+                style={`view-transition-name: --current-link-text-${i};`}
                 aria-current={
                   Astro.url.pathname.replace(/\/$/, "") ===
                   item.href.replace(/\/$/, "")
@@ -184,9 +185,23 @@ const containsDigitAfterSlash =
         line-height: 1.25;
         transition: 0.15s;
 
+        position: relative;
+        isolation: isolate;
+
+        &[aria-current]::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 1e5px;
+          background: var(--gray-1000);
+          transition: 0.15s;
+          z-index: -1;
+          view-transition-name: --current-link;
+        }
+
         &[aria-current] {
           --active: var(--gray-1000);
-          background: var(--gray-1000);
+          /* background: var(--gray-1000); */
           color: var(--gray-100);
           /* anchor-name: --current; */
         }

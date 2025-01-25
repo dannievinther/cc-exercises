@@ -16,11 +16,11 @@
   animation-duration: .2s;
 }
 
-/* ::view-transition-old(current),
-::view-transition-new(current) {
+::view-transition-old(--current-link),
+::view-transition-new(--current-link) {
   block-size: 100%;
   inline-size: 100%;
-} */
+}
 
 /* @font-face {
   font-family: "Geist Mono";
@@ -72,7 +72,7 @@
   --gray-1000: #171717;
 
   /* Greens */
-  --green-50: #e4f4ed;
+  /* --green-50: #e4f4ed;
   --green-100: #c2ecd9;
   --green-200: #9ceac7;
   --green-300: #72f1b8;
@@ -81,10 +81,10 @@
   --green-600: #4db687;
   --green-700: #4d9c78;
   --green-800: #4d856c;
-  --green-900: #4a7360;
+  --green-900: #4a7360; */
 
   /* Pinks */
-  --pink-50: #f1e4ec;
+  /* --pink-50: #f1e4ec;
   --pink-100: #e6c4d9;
   --pink-200: #e0a3c8;
   --pink-300: #e17fba;
@@ -93,7 +93,7 @@
   --pink-600: #e32397;
   --pink-700: #bf2d85;
   --pink-800: #9e3675;
-  --pink-900: #853a67;
+  --pink-900: #853a67; */
 
   /* Blues */
   --blue-muted-comment: #a9bcce;
@@ -104,7 +104,7 @@
   --blue-900: #0a2540;
 
   --purple-50: #e4deed;
-  --purple-100: #9c84c1;
+  /* --purple-100: #9c84c1;
   --purple-200: #8b68c0;
   --purple-300: #7a49c4;
   --purple-400: #6a2cc8;
@@ -112,7 +112,7 @@
   --purple-600: #5000ca;
   --purple-700: #4c12a4;
   --purple-800: #471d86;
-  --purple-900: #42246f;
+  --purple-900: #42246f; */
 
   --violet-100: #f3daf8;
   --violet-200: #e2b9ea;
