@@ -18,6 +18,13 @@ const { boxes, theme, startingHTML } = Astro.props;
 
 <style>
   @layer components {
+    .container > :global(div) {
+      @starting-style {
+        opacity: 0;
+      }
+      transition: 0.3s;
+      transition-behavior: allow-discrete;
+    }
     :global(.box, [class|="box"]) {
       /* --ui-primary: hsl(153.07deg 89.8% 80.78% / 95%);
       --ui-primary-border: hsl(153.07deg 79.8% 39.78%); */
