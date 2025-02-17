@@ -3,7 +3,7 @@ import { Icon } from "astro-icon/components";
 import Popup from "./Popup.astro";
 import Popover from "./Popover.astro";
 
-const { id, startingCSS, startingHTML, helpLink, helpTopic, boxes } =
+const { id, startingCSS, hiddenCSS, startingHTML, helpLink, helpTopic, boxes } =
   Astro.props;
 
 const labelID = id + "-label";
@@ -60,6 +60,15 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
   </div>
 
   <style is:inline class="style"></style>
+  {
+    hiddenCSS && (
+      <style
+        is:inline
+        class="style-hidden"
+        set:html={`[data-exercise-key="${id}"] .output ${hiddenCSS}`}
+      />
+    )
+  }
 </div>
 
 <style>

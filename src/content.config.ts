@@ -115,6 +115,7 @@ const defensive = defineCollection({
         })
         .optional(),
       startingCSS: z.string().optional(),
+      hiddenCSS: z.string().optional(),
       startingHTML: z.string().optional(),
       hints: z
         .array(
