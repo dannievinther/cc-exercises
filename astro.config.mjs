@@ -4,15 +4,14 @@ import icon from "astro-icon";
 // https://astro.build/config
 export default defineConfig({
   image: {
-    experimentalLayout: "responsive",
+    responsiveStyles: true,
+    layout: "constrained",
   },
   experimental: {
-    responsiveImages: true,
     clientPrerender: true,
   },
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: "hover",
   },
   integrations: [icon()],
 });
