@@ -170,6 +170,12 @@
     ((100vw - 896px) / (1200 - 896));*/
 }
 
+*,
+::before,
+::after {
+  corner-shape: squircle;
+}
+
 html {
   /* block-size: 100%; */
   scroll-padding-block-start: var(--space-7);
