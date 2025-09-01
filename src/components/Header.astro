@@ -113,6 +113,13 @@ const containsDigitAfterSlash =
       box-shadow:
         0 0 0 1px rgba(0, 0, 0, 0.08),
         0px 2px 2px rgba(0, 0, 0, 0.04);
+
+      &:hover {
+        background: oklch(from currentcolor 95% 0 h);
+      }
+      &:active {
+        scale: 0.97;
+      }
     }
 
     [data-icon] {
@@ -124,7 +131,6 @@ const containsDigitAfterSlash =
     > :not([popover]) {
       display: none;
       @supports (animation-timeline: scroll(root)) {
-        /* margin-left: auto; */
         display: flex;
         gap: 10px;
         transform-origin: 50% 0;
@@ -151,24 +157,6 @@ const containsDigitAfterSlash =
     box-shadow:
       0 0 0 1px rgba(0, 0, 0, 0.08),
       0px 2px 2px rgba(0, 0, 0, 0.04);
-    /* box-shadow:
-      rgb(255 255 255) 0px 0px 0px 0px,
-      rgb(51 65 85 / 10%) 0px 0px 0px 1px,
-      rgb(0 0 0 / 5%) 0px 20px 25px -5px,
-      rgb(0 0 0 / 5%) 0px 8px 10px -6px; */
-
-    /* &::before {
-      view-transition-name: current;
-      content: "";
-      display: block;
-      position: absolute;
-      top: anchor(--current top);
-      left: anchor(--current left);
-      right: anchor(--current right);
-      bottom: anchor(--current bottom);
-      background: var(--gray-1000);
-      border-radius: 1e5px;
-    } */
 
     ul {
       display: flex;
@@ -227,7 +215,6 @@ const containsDigitAfterSlash =
       );
     gap: var(--space-5) 0;
 
-    /* padding-block: var(--space-6); */
     margin-block: var(--space-5);
 
     margin-block-end: var(--space-7);
@@ -236,15 +223,6 @@ const containsDigitAfterSlash =
     inset-block-start: var(--space-5);
     z-index: 10;
 
-    /* background: #fff;
-    box-shadow:
-      rgb(255 255 255) 0px 0px 0px 0px,
-      rgb(51 65 85 / 10%) 0px 0px 0px 1px,
-      rgb(0 0 0 / 5%) 0px 20px 25px -5px,
-      rgb(0 0 0 / 5%) 0px 8px 10px -6px; */
-
-    /*z-index: 100;*/
-    /*pointer-events: none;*/
     &::before {
       content: none;
       position: absolute;
@@ -276,112 +254,6 @@ const containsDigitAfterSlash =
     & > * {
       grid-column: 2;
     }
-
-    /* & p {
-      max-width: 50ch;
-    } */
-
-    .back:any-link {
-      font-family: "Mona Sans", system-ui;
-      display: flex;
-      gap: 1ch;
-      align-items: center;
-      inline-size: fit-content;
-      font-weight: 500;
-      font-size: 0.9rem;
-      color: var(--gray-900);
-      text-decoration: none;
-
-      &:hover,
-      &:hover svg {
-        color: var(--gray-1000);
-      }
-    }
-
-    & [data-icon="chevron-left"] {
-      width: 1.125rem;
-      height: 1.125rem;
-      color: var(--gray-600);
-      stroke-width: 3;
-    }
-
-    .btn:any-link {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      padding: var(--space-3) var(--space-5);
-      background: var(--blue-800);
-      border: 2px solid var(--blue-800);
-      justify-self: start;
-      color: #fff;
-      border-radius: 1e5px;
-      font-weight: 600;
-      text-decoration: none;
-      line-height: 1.25;
-      transition: 0.15s;
-
-      &:hover {
-        color: var(--blue-800);
-        background: transparent;
-      }
-    }
-
-    & h1 {
-      /* text-transform: uppercase; */
-      font-weight: 900;
-      font-variation-settings:
-        "wdth" 105,
-        "wght" 900;
-
-      font-size: 4rem;
-      --min-font: 16;
-      --max-font: 20;
-      font-size: clamp(
-        var(--min-font) * 1px,
-        var(--responsive),
-        var(--max-font) * 1px
-      );
-      line-height: 1.125;
-      color: var(--blue-900);
-      cursor: default;
-
-      /* opacity: 0.1;
-      mix-blend-mode: color-burn;
-      transform: scale(7) translateY(50%); */
-    }
-
-    /*&.is-pinned {
-            position: sticky;
-            top: -1px;
-
-            h1 {
-            transform: translate(25%, 5px) scale(0.5);
-            transition: 0.3s;
-            }
-        }
-
-        .stroke-text {
-            // --c: #72f1b8;
-            // color: var(--c, #72f1b8);
-            --c: var(--primary);
-            color: var(--c, #82f4e1);
-            -webkit-text-fill-color: transparent;
-            -webkit-text-stroke: 2px currentColor;
-            overflow: hidden;
-            max-width: 3.1ch;
-            display: inline-block;
-            vertical-align: bottom;
-            text-decoration: underline var(--c) 4px;
-            text-underline-offset: 4px;
-            transition: 0.3s;
-            will-change: max-width;
-            contain: paint;
-        }
-
-        .toggled {
-            --c: var(--ui-secondary, #fb28a8);
-            max-width: 1.05ch;
-        }*/
   }
 
   .alert {
