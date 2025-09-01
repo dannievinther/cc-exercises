@@ -1,5 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
+import AboutPopup from "./AboutPopup.astro";
+import type { ACTION_ERROR_CODES } from "astro:actions";
 const { hasWarning, title } = Astro.props;
 // import chevronleft from "../icons/chevron-left.svg?raw";
 
@@ -19,11 +21,6 @@ const containsDigitAfterSlash =
 
 <header class="main-header">
   <div class="header-content">
-    <!-- <a class="back" href="/">
-      <Icon name="chevron-left" width={16} height={16} stroke-width={3} />
-      Home
-    </a> -->
-    <!-- <h1>{title}</h1> -->
     <nav>
       <ul>
         {
@@ -47,17 +44,20 @@ const containsDigitAfterSlash =
         }
       </ul>
     </nav>
-    <div class="view">
-      <!-- <a href={allViewURL}>
+    <div class="utils">
+      <AboutPopup class="about-button" />
+      <div class="view">
+        <!-- <a href={allViewURL}>
         <Icon name="view-all" width={20} height={20} />
       </a> -->
-      {
-        !containsDigitAfterSlash && (
-          <a href={Astro.url.pathname.replace(/\/$/, "") + "/1"}>
-            <Icon name="view-single" width={20} height={20} />
-          </a>
-        )
-      }
+        {
+          !containsDigitAfterSlash && (
+            <a href={Astro.url.pathname.replace(/\/$/, "") + "/1"}>
+              <Icon name="view-single" width={20} height={20} />
+            </a>
+          )
+        }
+      </div>
     </div>
   </div>
 </header>
@@ -105,21 +105,6 @@ const containsDigitAfterSlash =
   }
 
   .view {
-    display: none;
-    @supports (animation-timeline: scroll(root)) {
-      margin-left: auto;
-      display: flex;
-      gap: 10px;
-      transform-origin: 50% 0;
-
-      animation: --fade ease-in-out both;
-      animation-timeline: scroll(root);
-      animation-range: 0 60px;
-      @media (width <= 768px) {
-        display: none;
-      }
-    }
-
     a {
       background: #fffc;
       backdrop-filter: blur(4px);
@@ -132,6 +117,25 @@ const containsDigitAfterSlash =
 
     [data-icon] {
       display: block;
+    }
+  }
+
+  .utils {
+    > :not([popover]) {
+      display: none;
+      @supports (animation-timeline: scroll(root)) {
+        /* margin-left: auto; */
+        display: flex;
+        gap: 10px;
+        transform-origin: 50% 0;
+
+        animation: --fade ease-in-out both;
+        animation-timeline: scroll(root);
+        animation-range: 0 60px;
+        @media (width <= 768px) {
+          display: none;
+        }
+      }
     }
   }
   nav {
@@ -261,14 +265,21 @@ const containsDigitAfterSlash =
       grid: auto / 1fr auto 1fr;
       align-items: center;
     }
+    .utils {
+      grid-column-end: -1;
+      display: flex;
+      gap: 1ch;
+      flex-flow: wrap;
+      justify-content: flex-end;
+    }
 
     & > * {
       grid-column: 2;
     }
 
-    & p {
+    /* & p {
       max-width: 50ch;
-    }
+    } */
 
     .back:any-link {
       font-family: "Mona Sans", system-ui;
