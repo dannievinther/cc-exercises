@@ -46,8 +46,7 @@ function getSectionElements(section) {
 
   const elements = {
     styleTag: section.querySelector(".editor > style"),
-    textarea: section.querySelector(".editor > textarea"),
-    popup: section.querySelector(".popup"),
+    textarea: section.querySelector(".editor .tabpanel-css textarea"),
     output: section.querySelector(".output"),
     boxContainer: section.querySelector(".container"),
     btnControlsContainer: section.querySelector(".controls"),
@@ -136,6 +135,8 @@ sections.forEach((section) => {
     action();
     saveToLocalStorage(boxKey, boxCount);
     updateButtonState();
+    // Dispatch event to notify tabs that boxes changed
+    section.dispatchEvent(new CustomEvent("boxeschanged", { bubbles: true }));
   }
 
   btnControlsContainer?.addEventListener("click", (event) => {

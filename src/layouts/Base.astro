@@ -90,9 +90,13 @@ const link = links[title].link;
         { once: true }
       );
 
-      // Also preload on idle if supported
+      // Preload scripts: use requestIdleCallback where supported,
+      // setTimeout fallback for Safari
       if ("requestIdleCallback" in window) {
         requestIdleCallback(loadPrismExtensions, { timeout: 3000 });
+      } else {
+        // Safari fallback - load after short delay
+        setTimeout(loadPrismExtensions, 100);
       }
     </script>
     <script>

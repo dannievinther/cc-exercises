@@ -3,17 +3,78 @@ import RefreshIcon from "../../icons/refresh.svg";
 import CheckIcon from "../../icons/v.svg";
 import XIcon from "../../icons/x.svg";
 import ExternalIcon from "../../icons/external-1.svg";
-import Popup from "./Popup.astro";
+import CodeIcon from "../../icons/code.svg";
+import LockIcon from "../../icons/lock.svg";
+import EyeIcon from "../../icons/eye.svg";
 
 const { id, startingCSS, hiddenCSS, startingHTML, helpLink, helpTopic, boxes } =
   Astro.props;
 
 const labelID = id + "-label";
 const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
+
+// Generate HTML content for the HTML tab
+const boxCount = boxes
+  .map(
+    (_, index) => `<div class="box box-${index + 1}">.box-${index + 1}</div>`
+  )
+  .join("\n\t");
+const htmlContent = `<div class="container">
+\t${boxCount}
+</div>`;
+const htmlContentAlt = `<div class="container">
+\t<div class="box box-1">.box-1</div>
+</div>`;
+
+const indentedHTML =
+  startingHTML &&
+  startingHTML
+    .split("\n")
+    .map((line) => "\t" + line)
+    .join("\n")
+    .trim();
+
+const customContent = `<div class="container">
+\t${indentedHTML}
+</div>`;
+
+const html = startingHTML
+  ? customContent
+  : boxes.length > 1
+    ? htmlContent
+    : htmlContentAlt;
+
+// Unique IDs for tabs
+const cssTabId = `${id}-tab-css`;
+const htmlTabId = `${id}-tab-html`;
+const cssPanelId = `${id}-panel-css`;
+const htmlPanelId = `${id}-panel-html`;
 ---
 
 <div class="editor">
-  <label for={labelID}><span>{`exercise-${exerciseNumber}.css`}</span></label>
+  <div class="editor-tabs" role="tablist" aria-label="Kodevisning">
+    <button
+      id={cssTabId}
+      type="button"
+      role="tab"
+      aria-selected="true"
+      aria-controls={cssPanelId}
+    >
+      <!-- <span class="focus">{`exercise-${exerciseNumber}.css`}</span> -->
+      <span class="focus">styles.css</span>
+    </button>
+    <button
+      id={htmlTabId}
+      type="button"
+      role="tab"
+      aria-selected="false"
+      aria-controls={htmlPanelId}
+      tabindex="-1"
+    >
+      <LockIcon stroke-width={2.5} width={14} height={14} opacity={0.5} />
+      <span class="focus">index.html</span>
+    </button>
+  </div>
   <div class="reset-buttons">
     <button class="reset">
       <span class="visually-hidden">Nulstil</span>
@@ -30,14 +91,37 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
       </button>
     </div>
   </div>
-  <textarea
-    id={labelID}
-    autocorrect="off"
-    autocomplete="off"
-    spellcheck="false"
-    autocapitalize="off"
-    class="prism-live language-css line-numbers">{startingCSS}</textarea
-  >
+
+  <div class="tabpanels">
+    <div
+      id={cssPanelId}
+      role="tabpanel"
+      aria-labelledby={cssTabId}
+      class="tabpanel tabpanel-css"
+    >
+      <textarea
+        id={labelID}
+        autocorrect="off"
+        autocomplete="off"
+        spellcheck="false"
+        autocapitalize="off"
+        class="prism-live language-css line-numbers">{startingCSS}</textarea
+      >
+    </div>
+    <div
+      id={htmlPanelId}
+      role="tabpanel"
+      aria-labelledby={htmlTabId}
+      class="tabpanel tabpanel-html is-hidden"
+    >
+      <textarea
+        readonly
+        aria-label="HTML kode"
+        class="prism-live language-html line-numbers"
+        data-has-custom-html={startingHTML ? "true" : "false"}>{html}</textarea
+      >
+    </div>
+  </div>
 
   <div class="editor-actions">
     {
@@ -56,8 +140,6 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
         </small>
       ) : null
     }
-
-    <Popup {id} {boxes} {startingHTML} />
   </div>
 
   <style is:inline class="style"></style>
@@ -71,6 +153,178 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
     )
   }
 </div>
+
+<script>
+  // Tabs functionality with manual activation (W3C APG pattern)
+  class EditorTabs {
+    private tablistNode: HTMLElement;
+    private tabs: HTMLButtonElement[];
+    private tabpanels: HTMLElement[];
+    private firstTab: HTMLButtonElement | null = null;
+    private lastTab: HTMLButtonElement | null = null;
+
+    constructor(tablistNode: HTMLElement) {
+      this.tablistNode = tablistNode;
+      this.tabs = Array.from(
+        this.tablistNode.querySelectorAll('[role="tab"]')
+      ) as HTMLButtonElement[];
+      this.tabpanels = [];
+
+      // Find the editor container to scope tabpanel queries
+      const editorContainer = this.tablistNode.closest(".editor");
+
+      this.tabs.forEach((tab) => {
+        const panelId = tab.getAttribute("aria-controls");
+        const tabpanel = editorContainer?.querySelector(
+          `#${panelId}`
+        ) as HTMLElement;
+        if (tabpanel) {
+          this.tabpanels.push(tabpanel);
+        }
+
+        tab.addEventListener("keydown", this.onKeydown.bind(this));
+        tab.addEventListener("click", this.onClick.bind(this));
+
+        if (!this.firstTab) {
+          this.firstTab = tab;
+        }
+        this.lastTab = tab;
+      });
+
+      // Listen for box changes to update HTML tab in real-time
+      const section = this.tablistNode.closest("section");
+      section?.addEventListener("boxeschanged", () => {
+        this.updateHTMLIfActive();
+      });
+    }
+
+    updateHTMLIfActive() {
+      // Find the HTML tab and check if it's active
+      const htmlTabIndex = this.tabs.findIndex((tab) =>
+        tab.getAttribute("aria-controls")?.includes("panel-html")
+      );
+      if (
+        htmlTabIndex !== -1 &&
+        this.tabs[htmlTabIndex].getAttribute("aria-selected") === "true"
+      ) {
+        this.updateHTMLContent(this.tabpanels[htmlTabIndex]);
+      }
+    }
+
+    setSelectedTab(currentTab: HTMLButtonElement) {
+      this.tabs.forEach((tab, index) => {
+        if (currentTab === tab) {
+          tab.setAttribute("aria-selected", "true");
+          tab.removeAttribute("tabindex");
+          this.tabpanels[index]?.classList.remove("is-hidden");
+
+          // Update HTML content when switching to HTML tab
+          if (tab.getAttribute("aria-controls")?.includes("panel-html")) {
+            this.updateHTMLContent(this.tabpanels[index]);
+          }
+        } else {
+          tab.setAttribute("aria-selected", "false");
+          tab.tabIndex = -1;
+          this.tabpanels[index]?.classList.add("is-hidden");
+        }
+      });
+    }
+
+    updateHTMLContent(htmlPanel: HTMLElement) {
+      const exercise = this.tablistNode.closest("section");
+      if (!exercise) return;
+
+      const boxContainer = exercise.querySelector(".output .container");
+      const htmlTextarea = htmlPanel.querySelector(
+        "textarea"
+      ) as HTMLTextAreaElement;
+
+      if (!boxContainer || !htmlTextarea) return;
+
+      // Don't update for custom HTML exercises
+      if (htmlTextarea.dataset.hasCustomHtml === "true") return;
+
+      // Read actual DOM state - count only .box elements
+      const boxes = boxContainer.querySelectorAll(
+        ":scope > .box, :scope > [class*='box-']"
+      );
+      const currentBoxCount = boxes.length;
+
+      const boxHTML = Array.from(
+        { length: currentBoxCount },
+        (_, index) =>
+          `<div class="box box-${index + 1}">.box-${index + 1}</div>`
+      ).join("\n\t");
+      const htmlContent = `<div class="container">\n\t${boxHTML}\n</div>`;
+      htmlTextarea.value = htmlContent;
+
+      // Trigger input event to update Prism highlighting
+      htmlTextarea.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+
+    moveFocusToTab(tab: HTMLButtonElement) {
+      tab.focus();
+    }
+
+    moveFocusToPreviousTab(currentTab: HTMLButtonElement) {
+      if (currentTab === this.firstTab) {
+        this.moveFocusToTab(this.lastTab!);
+      } else {
+        const index = this.tabs.indexOf(currentTab);
+        this.moveFocusToTab(this.tabs[index - 1]);
+      }
+    }
+
+    moveFocusToNextTab(currentTab: HTMLButtonElement) {
+      if (currentTab === this.lastTab) {
+        this.moveFocusToTab(this.firstTab!);
+      } else {
+        const index = this.tabs.indexOf(currentTab);
+        this.moveFocusToTab(this.tabs[index + 1]);
+      }
+    }
+
+    onKeydown(event: KeyboardEvent) {
+      const target = event.currentTarget as HTMLButtonElement;
+      let flag = false;
+
+      switch (event.key) {
+        case "ArrowLeft":
+          this.moveFocusToPreviousTab(target);
+          flag = true;
+          break;
+        case "ArrowRight":
+          this.moveFocusToNextTab(target);
+          flag = true;
+          break;
+        case "Home":
+          this.moveFocusToTab(this.firstTab!);
+          flag = true;
+          break;
+        case "End":
+          this.moveFocusToTab(this.lastTab!);
+          flag = true;
+          break;
+      }
+
+      if (flag) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+    }
+
+    onClick(event: MouseEvent) {
+      this.setSelectedTab(event.currentTarget as HTMLButtonElement);
+    }
+  }
+
+  // Initialize all editor tabs
+  document
+    .querySelectorAll('.editor-tabs[role="tablist"]')
+    .forEach((tablist) => {
+      new EditorTabs(tablist as HTMLElement);
+    });
+</script>
 
 <style>
   [data-icon="external-1"] {
@@ -101,38 +355,130 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
       align-items: center;
       gap: var(--space-4);
       border-top: 1px solid hsl(208 76% 26%);
-      padding: var(--space-3) 0;
+      padding: var(--space-4) 0;
       margin-inline: calc(var(--space-2) + var(--space-1));
     }
 
     @media (max-width: 895px) {
       order: 1;
     }
-
-    label {
-      display: block;
-      inline-size: 100%;
-      font-size: 0.875rem;
-      line-height: 0.9;
-      /* padding: var(--space-4) var(--space-5); */
-      padding: 0 var(--space-4) var(--space-4) 0;
-      font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
-        "Roboto", "Helvetica Neue", Arial, sans-serif;
-      font-weight: 500;
-      color: var(--ui-secondary-a11y);
-      /* border-radius: var(--bdrs-sm) var(--bdrs-sm) 0 0; */
-      /* border-bottom: 1px solid #104675; */
-
-      & span {
-        background: linear-gradient(90deg, var(--blue-900) 90%, transparent);
-        padding: 0.75rem 2rem 0.75rem 1rem;
-        color: var(--blue-muted-comment);
-        border-radius: 0;
-        border-start-start-radius: var(--bdrs-xl);
-        display: inline-block;
-      }
-    }
   }
+
+  /* Tabs styling */
+  .editor-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    border-start-start-radius: inherit;
+    border-start-end-radius: inherit;
+    background: var(--blue-900);
+    overflow: clip;
+    margin-block-end: 0.4lh;
+  }
+
+  .editor-tabs [role="tab"] {
+    display: inline flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.875rem;
+    line-height: 0.9;
+    padding: 1lh 1.5lh;
+    font-family: "Mona Sans", system-ui, sans-serif;
+    font-weight: 500;
+    font-variation-settings: "GRAD" 250;
+    color: var(--blue-muted-comment);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    border-radius: 0;
+    box-shadow: unset;
+    border: 0;
+    border-block-width: 2px;
+    border-style: solid;
+    border-block-color: #0000 var(--active-tab, #0000);
+  }
+
+  /* .editor-tabs [role="tab"]:first-child {
+    border-start-start-radius: var(--bdrs-xl);
+  } */
+
+  .editor-tabs [role="tab"][aria-selected="true"] {
+    --active-tab: var(--blue-500);
+    background: var(--blue-800);
+    color: var(--gray-100);
+    font-variation-settings: "GRAD" 600;
+  }
+
+  .editor-tabs [role="tab"][aria-selected="false"]:hover,
+  .editor-tabs [role="tab"][aria-selected="false"]:focus-visible {
+    color: var(--gray-300);
+    background: hsl(208 76% 22%);
+  }
+
+  .editor-tabs [role="tab"]:focus-visible {
+    outline: 2px solid var(--blue-500);
+    outline-offset: -2px;
+  }
+
+  .editor-tabs [role="tab"] .focus {
+    pointer-events: none;
+  }
+
+  .editor-tabs [role="tab"] svg {
+    flex-shrink: 0;
+  }
+
+  /* Tabpanels */
+  .tabpanels {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .tabpanel {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .tabpanel.is-hidden {
+    visibility: hidden;
+    pointer-events: none;
+    height: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .tabpanel-css {
+    z-index: 1;
+  }
+
+  .tabpanel-html {
+    z-index: 0;
+  }
+
+  .tabpanel.is-hidden.tabpanel-css {
+    z-index: 0;
+  }
+
+  .tabpanel:not(.is-hidden).tabpanel-html {
+    z-index: 1;
+    height: auto;
+  }
+
+  .tabpanel textarea {
+    flex: 1;
+  }
+
+  .tabpanel-html textarea {
+    cursor: default;
+  }
+
   small {
     font-size: 0.8rem;
     font-weight: 500;
@@ -143,19 +489,18 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
     flex-wrap: wrap;
     margin-inline-start: var(--space-2);
 
-    & a:any-link {
+    a:any-link {
       text-decoration: none;
-      /* color: var(--blue-500); */
       color: var(--gray-100);
       gap: var(--space-1);
       align-items: center;
 
-      & span {
+      span {
         text-decoration: underline;
         text-decoration-color: var(--blue-500);
       }
 
-      & svg {
+      svg {
         inline-size: 1.15em;
         block-size: 1.15em;
       }
@@ -164,7 +509,7 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
       &:focus-visible {
         color: #fff;
 
-        & span {
+        span {
           text-decoration: underline;
           text-decoration-color: currentColor;
         }
