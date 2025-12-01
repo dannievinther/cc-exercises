@@ -15,10 +15,8 @@ const { class: className } = Astro.props;
     <h2>Om øvelserne</h2>
   </header>
   <p>
-    <strong>
-      Bliv fortrolig med CSS Grid, Flexbox og Subgrid gennem praktiske,
-      interaktive opgaver.
-    </strong>
+    Bliv fortrolig med CSS Grid, Flexbox og Subgrid gennem praktiske,
+    interaktive opgaver.
   </p>
   <p>
     Her kan du øve dine færdigheder i CSS Grid, Flexbox og Subgrid gennem
@@ -99,7 +97,7 @@ const { class: className } = Astro.props;
     &,
     &::backdrop {
       transition: display, overlay, opacity, translate;
-      transition-duration: 0.5s;
+      transition-duration: 0.3s;
       transition-behavior: allow-discrete;
       opacity: 0;
       translate: 0 -2rlh;
@@ -111,15 +109,15 @@ const { class: className } = Astro.props;
       background: #000c;
     }
 
-    &:popover-open {
+    &:where(:popover-open) {
       opacity: 1;
       translate: none;
 
       &::backdrop {
         opacity: 1;
-        backdrop-filter: blur(5px);
-        background: #000c;
-        translate: none;
+        /* backdrop-filter: blur(5px); */
+        /* background: #000c; */
+        /* translate: none; */
       }
     }
 
@@ -189,10 +187,11 @@ const { class: className } = Astro.props;
     p,
     ol {
       color: var(--gray-900);
-    }
-
-    strong {
-      font-weight: 600;
+      font-weight: 420;
+      font-size: 1rem;
+      font-family:
+        Mona Sans,
+        system-ui;
     }
 
     kbd {
