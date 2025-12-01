@@ -245,8 +245,8 @@ import Front from "../layouts/Front.astro";
 <script>
   const h1 = document.querySelector("h1");
 
-  h1.addEventListener("click", (_) => {
-    h1.classList.toggle("toggled");
+  h1?.addEventListener("click", (_) => {
+    h1?.classList.toggle("toggled");
   });
 
   /* const hiddenLink = document.querySelector(".bento li:last-child");

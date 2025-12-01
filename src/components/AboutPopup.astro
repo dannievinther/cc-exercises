@@ -1,11 +1,11 @@
 ---
-import { Icon } from "astro-icon/components";
+import InfoIcon from "../icons/info.svg";
 
 const { class: className } = Astro.props;
 ---
 
 <button class={className} popovertarget="about-box">
-  <Icon name="info" width={20} height={20} stroke-width={2} />
+  <InfoIcon stroke-width={2} width={20} height={20} />
   <span class="visually-hidden">Om øvelserne</span>
 </button>
 

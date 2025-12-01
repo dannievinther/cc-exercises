@@ -2,7 +2,8 @@
 import { getCollection } from "astro:content";
 import Exercises from "../components/Exercises.astro";
 import Base from "../layouts/Base.astro";
-import { Icon } from "astro-icon/components";
+import ChevronLeftIcon from "../icons/chevron-left.svg";
+import ChevronRightIcon from "../icons/chevron-right.svg";
 
 export async function getStaticPaths() {
   const [grid, flexbox, subgrid, defensive] = await Promise.all([
@@ -111,7 +112,7 @@ const prevLink = (entry) => {
     {
       prevLink(entry) && (
         <a href={prevLink(entry)} class="prev">
-          <Icon width={16} height={16} stroke-width={3} name="chevron-left" />
+          <ChevronLeftIcon stroke-width={3} width={16} height={16} />
           <span>Forrige øvelse</span>
         </a>
       )
@@ -120,7 +121,7 @@ const prevLink = (entry) => {
       index < total && (
         <a href={nextLink(entry, total)} class="next">
           <span>Næste øvelse</span>
-          <Icon width={16} height={16} stroke-width={3} name="chevron-right" />
+          <ChevronRightIcon stroke-width={3} width={16} height={16} />
         </a>
       )
     }

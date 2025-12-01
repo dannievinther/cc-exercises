@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon/components";
+import CodeIcon from "../../icons/code.svg";
 const { id, boxes, startingHTML } = Astro.props;
 const popoverID = id + "-popover";
 const boxCount = boxes
@@ -34,7 +34,7 @@ const html = startingHTML
 ---
 
 <button popovertarget={popoverID}>
-  <Icon name="code" width={22} height={22} stroke-width={1.5} />
+  <CodeIcon width={22} height={22} />
   HTML
 </button>
 

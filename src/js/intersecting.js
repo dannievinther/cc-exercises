@@ -5,10 +5,9 @@ const options = {
   }px 0px`,
 };
 
-function callback(entries, observer) {
-  entries.forEach((entry, i) => {
-    const { target, intersectionRatio, boundingClientRect, isIntersecting } =
-      entry;
+function callback(entries) {
+  entries.forEach((entry) => {
+    const { target, intersectionRatio, isIntersecting } = entry;
     if (isIntersecting) {
       target.classList.add("in-view");
     } else if (intersectionRatio <= 0.1) {

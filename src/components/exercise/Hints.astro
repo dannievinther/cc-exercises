@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon/components";
+import ChevronIcon from "../../icons/chevron.svg";
 import HintList from "./HintList.astro";
 const { hints } = Astro.props;
 
@@ -12,13 +12,7 @@ function getHints(type) {
 <details>
   <summary>
     Hints
-    <Icon
-      name="chevron"
-      width={16}
-      height={16}
-      aria-hidden="true"
-      stroke-width={3}
-    />
+    <ChevronIcon stroke-width={3} width={16} height={16} aria-hidden="true" />
   </summary>
   {types.map((type) => <HintList hints={getHints(type)} />)}
 </details>

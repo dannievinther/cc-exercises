@@ -1,5 +1,4 @@
 ---
-import { Icon } from "astro-icon/components";
 const { label = "", linkTo = "/" } = Astro.props;
 const year = new Date().getFullYear();
 
@@ -130,5 +129,18 @@ const notHome = Astro.url.pathname !== "/";
 </style>
 
 <script>
-  import "../js/loadmore";
+  // Load more exercises functionality
+  const loadMoreBtn = document.querySelector(".load-more");
+
+  // Show all exercises if none are marked as extra
+  if (!document.querySelector("section[data-extra='true']")) {
+    document.documentElement.dataset.extra = "true";
+  }
+
+  loadMoreBtn?.addEventListener("click", () => {
+    document.documentElement.dataset.extra = "true";
+    document
+      .querySelectorAll("section[data-extra='true']")[0]
+      ?.scrollIntoView({ behavior: "smooth" });
+  });
 </script>

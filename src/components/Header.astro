@@ -1,9 +1,7 @@
 ---
-import { Icon } from "astro-icon/components";
+import ViewSingleIcon from "../icons/view-single.svg";
 import AboutPopup from "./AboutPopup.astro";
-import type { ACTION_ERROR_CODES } from "astro:actions";
 const { hasWarning, title } = Astro.props;
-// import chevronleft from "../icons/chevron-left.svg?raw";
 
 // current pathname from Astro
 
@@ -47,13 +45,10 @@ const containsDigitAfterSlash =
     <div class="utils">
       <AboutPopup class="about-button" />
       <div class="view">
-        <!-- <a href={allViewURL}>
-        <Icon name="view-all" width={20} height={20} />
-      </a> -->
         {
           !containsDigitAfterSlash && (
             <a href={Astro.url.pathname.replace(/\/$/, "") + "/1"}>
-              <Icon name="view-single" width={20} height={20} />
+              <ViewSingleIcon width={20} height={20} />
             </a>
           )
         }
@@ -122,7 +117,7 @@ const containsDigitAfterSlash =
       }
     }
 
-    [data-icon] {
+    svg {
       display: block;
     }
   }

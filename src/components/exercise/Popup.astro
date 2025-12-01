@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon/components";
+import CodeIcon from "../../icons/code.svg";
 const { boxes, startingHTML } = Astro.props;
 
 const boxCount = boxes
@@ -43,7 +43,7 @@ const html = startingHTML
 
 <details class="popup">
   <summary>
-    <Icon name="code" width={22} height={22} stroke-width={1.5} />
+    <CodeIcon stroke-width={1.5} width={22} height={22} />
     HTML
   </summary>
   <div>
@@ -162,5 +162,68 @@ const html = startingHTML
 </style>
 
 <script>
-  import "../../js/popup.js";
+  // Popup functionality - handles HTML code preview
+  const popups = document.querySelectorAll(".popup");
+
+  function dismiss(details: HTMLDetailsElement) {
+    function handleClick({ target }: MouseEvent) {
+      if (!(target as HTMLElement).closest("summary")) {
+        details.open = false;
+        details.querySelector("summary")!.style.pointerEvents = "auto";
+        document.removeEventListener("click", handleClick);
+      }
+    }
+    document.addEventListener("click", handleClick);
+  }
+
+  function updatePopupHTML(popup: HTMLDetailsElement) {
+    const exercise = popup.closest("section");
+    if (!exercise) return;
+
+    const boxContainer = exercise.querySelector(".output .container");
+    const popupTextarea = popup.querySelector(
+      "textarea"
+    ) as HTMLTextAreaElement;
+
+    if (!boxContainer || !popupTextarea) {
+      return;
+    }
+
+    // Check if this exercise has custom HTML (not just boxes)
+    const output = exercise.querySelector(".output");
+    const hasCustomHTML = output?.getAttribute("data-custom-html") === "true";
+
+    if (hasCustomHTML) {
+      // Don't update for custom HTML exercises
+      return;
+    }
+
+    // Read actual DOM state - count only .box elements
+    const boxes = boxContainer.querySelectorAll(
+      ":scope > .box, :scope > [class*='box-']"
+    );
+    const currentBoxCount = boxes.length;
+
+    const boxHTML = Array.from(
+      { length: currentBoxCount },
+      (_, index) => `<div class="box box-${index + 1}">.box-${index + 1}</div>`
+    ).join("\n\t");
+    const htmlContent = `<div class="container">\n\t${boxHTML}\n</div>`;
+    popupTextarea.value = htmlContent;
+
+    // Trigger input event to update Prism highlighting
+    popupTextarea.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  popups.forEach((popup) => {
+    // Use toggle event to update HTML when popup opens
+    popup.addEventListener("toggle", (e) => {
+      const details = e.target as HTMLDetailsElement;
+      if (details.open) {
+        updatePopupHTML(details);
+        dismiss(details);
+        details.querySelector("summary")!.style.pointerEvents = "none";
+      }
+    });
+  });
 </script>

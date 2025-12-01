@@ -1,11 +1,11 @@
 ---
-import { Icon } from "astro-icon/components";
+import LinkIcon from "../../icons/link.svg";
 const { title, index, total, exerciseID } = Astro.props;
 ---
 
 <h2 class="small-label" id={exerciseID}>
   <a href={`#${exerciseID}`}>
-    <Icon name="link" width={24} height={24} stroke-width="2.25" />
+    <LinkIcon width={24} height={24} />
     {title}
   </a>
   <span>{index} / {total}</span>
@@ -137,5 +137,16 @@ const { title, index, total, exerciseID } = Astro.props;
 </style>
 
 <script>
-  import "../../js/copy";
+  // Copy link to clipboard on click
+  const copyLinks = document.querySelectorAll(".small-label a");
+
+  copyLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      const target = e.target as HTMLAnchorElement;
+      if (target.tagName === "A") {
+        const url = window.location.href.split("#")[0];
+        navigator.clipboard.writeText(`${url}${target.hash}`);
+      }
+    });
+  });
 </script>

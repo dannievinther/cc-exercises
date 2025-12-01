@@ -43,12 +43,58 @@ const link = links[title].link;
     </main>
 
     <Footer label={label} linkTo={link} />
-    <script src="/script/bliss.js" fetchpriority="high"></script>
-    <script src="/script/prism.js" fetchpriority="high"></script>
-    <script src="/script/prism-live.js" fetchpriority="low"></script>
-    <script src="/script/prism-live-markup.js" fetchpriority="low"></script>
-    <script src="/script/prism-live-css.js" fetchpriority="low"></script>
-    <script src="/script/prism-linenumbers.js" fetchpriority="low"></script>
+    <script is:inline src="/script/bliss-minimal.js"></script>
+    <script is:inline src="/script/prism.js"></script>
+    <script is:inline src="/script/prism-linenumbers.js"></script>
+    <script>
+      // Lazy load Prism editor extensions on first textarea interaction
+      let prismLoaded = false;
+
+      async function loadPrismExtensions() {
+        if (prismLoaded) return;
+        prismLoaded = true;
+
+        // Load prism-live.js first and wait for it to complete
+        await new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "/script/prism-live.js";
+          script.onload = resolve;
+          script.onerror = reject;
+          document.body.appendChild(script);
+        });
+
+        // Then load the dependent scripts
+        const dependentScripts = [
+          "/script/prism-live-markup.js",
+          "/script/prism-live-css.js",
+        ];
+
+        dependentScripts.forEach((src) => {
+          const script = document.createElement("script");
+          script.src = src;
+          document.body.appendChild(script);
+        });
+      }
+
+      // Load on first focus of any textarea
+      document.addEventListener(
+        "focusin",
+        (e) => {
+          if (
+            e.target instanceof HTMLTextAreaElement &&
+            e.target.classList.contains("prism-live")
+          ) {
+            loadPrismExtensions();
+          }
+        },
+        { once: true }
+      );
+
+      // Also preload on idle if supported
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(loadPrismExtensions, { timeout: 3000 });
+      }
+    </script>
     <script>
       import "../js/exercises";
     </script>

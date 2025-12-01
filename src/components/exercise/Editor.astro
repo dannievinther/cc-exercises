@@ -1,7 +1,9 @@
 ---
-import { Icon } from "astro-icon/components";
+import RefreshIcon from "../../icons/refresh.svg";
+import CheckIcon from "../../icons/v.svg";
+import XIcon from "../../icons/x.svg";
+import ExternalIcon from "../../icons/external-1.svg";
 import Popup from "./Popup.astro";
-import Popover from "./Popover.astro";
 
 const { id, startingCSS, hiddenCSS, startingHTML, helpLink, helpTopic, boxes } =
   Astro.props;
@@ -15,16 +17,16 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
   <div class="reset-buttons">
     <button class="reset">
       <span class="visually-hidden">Nulstil</span>
-      <Icon name="refresh" width={20} height={20} stroke-width={2} />
+      <RefreshIcon stroke-width={2} width={20} height={20} />
     </button>
     <div class="button-group-confirm">
       <button data-accept="true" data-message="Accepter">
         <span class="visually-hidden">Accepter nulstilling</span>
-        <Icon name="v" stroke-width={2} width={28} height={28} />
+        <CheckIcon stroke-width={2} width={28} height={28} />
       </button>
       <button data-accept="false" data-message="Afvis">
         <span class="visually-hidden">Afvis nulstilling</span>
-        <Icon name="x" stroke-width={2} width={28} height={28} />
+        <XIcon stroke-width={2} width={28} height={28} />
       </button>
     </div>
   </div>
@@ -44,11 +46,10 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
           Har du brug for hjælp?
           <a href={helpLink} target="_blank" rel="noopener">
             <span>Lær mere om {helpTopic}</span>
-            <Icon
-              name="external-1"
+            <ExternalIcon
+              stroke-width={2}
               width={26}
               height={26}
-              stroke-width={2.25}
               aria-label="åbner i nyt vindue."
             />
           </a>
@@ -221,11 +222,6 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
     stroke-width: 3;
   }
 
-  [astro-icon="check"],
-  [astro-icon="x"] {
-    stroke-width: 3;
-  }
-
   button:focus-visible {
     --btn-stroke: 2px;
   }
@@ -290,36 +286,4 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
     }
   }
 </style>
-
-<script>
-  const sections = document.querySelectorAll("section");
-
-  sections.forEach((section) => {
-    const confirmButtons = section.querySelectorAll(
-      ".button-group-confirm button"
-    );
-
-    confirmButtons.forEach((button) => {
-      button.addEventListener("keydown", (event) => {
-        const currentButton = event.target;
-        let newButton;
-
-        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-          event.preventDefault();
-          newButton = currentButton.nextElementSibling || confirmButtons[0];
-        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-          event.preventDefault();
-          newButton =
-            currentButton.previousElementSibling ||
-            confirmButtons[confirmButtons.length - 1];
-        }
-
-        if (newButton) {
-          currentButton.setAttribute("tabindex", "-1");
-          newButton.setAttribute("tabindex", "0");
-          newButton.focus();
-        }
-      });
-    });
-  });
-</script>
+<!-- Arrow key navigation moved to exercises.js for consolidation -->

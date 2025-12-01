@@ -1,42 +1,96 @@
 import { prefix } from "./utils";
 
+// Debounce utility function
+function debounce(fn, delay) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+// Batch DOM updates using requestAnimationFrame
+let pendingUpdates = [];
+let rafScheduled = false;
+
+function scheduleUpdate(updateFn) {
+  pendingUpdates.push(updateFn);
+  if (!rafScheduled) {
+    rafScheduled = true;
+    requestAnimationFrame(() => {
+      const updates = pendingUpdates;
+      pendingUpdates = [];
+      rafScheduled = false;
+      updates.forEach((fn) => fn());
+    });
+  }
+}
+
+// Cache sections once
 const sections = document.querySelectorAll("section");
 
 let exerciseData = JSON.parse(localStorage.getItem("exerciseData")) || {};
 
+// Debounced localStorage save (300ms delay)
+const debouncedSaveToStorage = debounce(() => {
+  localStorage.setItem("exerciseData", JSON.stringify(exerciseData));
+}, 300);
+
+// Cache for DOM elements per section
+const sectionCache = new WeakMap();
+
+function getSectionElements(section) {
+  if (sectionCache.has(section)) {
+    return sectionCache.get(section);
+  }
+
+  const elements = {
+    styleTag: section.querySelector(".editor > style"),
+    textarea: section.querySelector(".editor > textarea"),
+    popup: section.querySelector(".popup"),
+    output: section.querySelector(".output"),
+    boxContainer: section.querySelector(".container"),
+    btnControlsContainer: section.querySelector(".controls"),
+    addBtn: section.querySelector(".plus"),
+    removeBtn: section.querySelector(".minus"),
+    reset: section.querySelector(".reset"),
+    confirming: section.querySelector(".button-group-confirm"),
+    resetBtns: section.querySelector(".reset-buttons"),
+    confirmButtons: section.querySelectorAll(".button-group-confirm button"),
+  };
+
+  sectionCache.set(section, elements);
+  return elements;
+}
+
 sections.forEach((section) => {
-  const styleTag = section.querySelector(".editor > style");
-  const textarea = section.querySelector(".editor > textarea");
-  const popup = section.querySelector(".popup");
-  const output = section.querySelector(".output");
+  const {
+    styleTag,
+    textarea,
+    output,
+    boxContainer,
+    btnControlsContainer,
+    addBtn,
+    removeBtn,
+    reset,
+    confirming,
+    resetBtns,
+    confirmButtons,
+  } = getSectionElements(section);
+
   let startingCSS = textarea.textContent;
   const exerciseKey = section.dataset.exerciseKey;
   const boxKey = `box-${exerciseKey}`;
   const isExtra = section.dataset.extra;
 
-  const boxContainer = section.querySelector(".container");
-
-  const btnControlsContainer = section.querySelector(".controls");
-  const addBtn = section.querySelector(".plus");
-  const removeBtn = section.querySelector(".minus");
-
   let boxCount = boxContainer.children.length || 1;
   const maxBoxCount = 12;
+
   const saveToLocalStorage = (key, value) => {
     exerciseData[key] = value;
-    localStorage.setItem("exerciseData", JSON.stringify(exerciseData));
+    debouncedSaveToStorage();
   };
 
-  const reset = section.querySelector(".reset");
-  const confirming = section.querySelector(".button-group-confirm");
-  const resetBtns = section.querySelector(".reset-buttons");
-
-  // function createBox(count) {
-  //   const box = document.createElement("div");
-  //   box.classList.add("box", `box-${count}`);
-  //   box.textContent = `.box-${count}`;
-  //   return box;
-  // }
   function createBox(count) {
     const box = Object.assign(document.createElement("div"), {
       className: `box box-${count}`,
@@ -49,13 +103,14 @@ sections.forEach((section) => {
     const localStorageBoxes = exerciseData[boxKey];
 
     if (localStorageBoxes && localStorageBoxes !== boxCount) {
-      localStorageBoxes == 1 && delete exerciseData[boxKey];
       boxCount = localStorageBoxes;
       const newBoxes = Array.from({ length: boxCount }, (_, index) =>
         createBox(index + 1)
       );
-      boxContainer.replaceChildren(...newBoxes);
-      updateButtonState();
+      scheduleUpdate(() => {
+        boxContainer.replaceChildren(...newBoxes);
+        updateButtonState();
+      });
     }
   }
 
@@ -63,9 +118,7 @@ sections.forEach((section) => {
     if (boxCount == maxBoxCount) return;
     const count = boxContainer.children.length;
     const newBox = createBox(count + 1);
-    const fragment = document.createDocumentFragment();
-    fragment.appendChild(newBox);
-    boxContainer.appendChild(fragment); // Tilføjelse af fragment til DOM i én operation
+    boxContainer.appendChild(newBox);
 
     boxCount++;
   }
@@ -120,7 +173,7 @@ sections.forEach((section) => {
         boxCount = boxContainer.children.length;
       }
       localStorage.setItem("exerciseData", JSON.stringify(exerciseData));
-      styleTag.innerHTML = null;
+      styleTag.innerHTML = "";
       textarea.value = startingCSS;
       textarea.focus(); /* ensure that the UI updates */
       reset.disabled = true;
@@ -142,12 +195,10 @@ sections.forEach((section) => {
     loadLocalStorageBoxes();
     updateButtonState();
 
-    styleTag.innerHTML = prefix(textarea.value, exerciseKey);
-
     if (exerciseData[exerciseKey]) {
       textarea.value = exerciseData[exerciseKey];
-      styleTag.innerHTML = prefix(textarea.value, exerciseKey);
     }
+    styleTag.innerHTML = prefix(textarea.value, exerciseKey);
 
     if (exerciseData[`extra-${exerciseKey}`]) {
       document.documentElement.dataset.extra = "true";
@@ -197,70 +248,50 @@ sections.forEach((section) => {
     reset.removeAttribute("inert");
   });
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      const resetBtnGroup = section.querySelectorAll(
-        ".button-group-confirm button"
-      );
-      const focusedElement = document.activeElement;
-
-      const closestSection = focusedElement.closest("section");
-      const resetButton = closestSection.querySelector(".reset");
-      const btnGroup = closestSection.querySelectorAll(
-        ".button-group-confirm button"
-      );
-      if (focusedElement === textarea) {
-        if (!resetButton.disabled) {
-          resetButton.focus();
-        }
-        if (resetButton.inert) {
-          btnGroup[0].focus();
-        }
-      }
-      if (
-        focusedElement === reset ||
-        focusedElement === resetBtnGroup[0] ||
-        focusedElement === resetBtnGroup[1]
-      ) {
-        const closestSection = focusedElement.closest("section");
-        const textarea = closestSection.querySelector("textarea");
-        textarea.focus();
-      }
+  // Arrow key navigation for confirm buttons using event delegation
+  confirming.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      event.preventDefault();
+      const currentButton = event.target;
+      const newButton = currentButton.nextElementSibling || confirmButtons[0];
+      currentButton.setAttribute("tabindex", "-1");
+      newButton.setAttribute("tabindex", "0");
+      newButton.focus();
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      event.preventDefault();
+      const currentButton = event.target;
+      const newButton =
+        currentButton.previousElementSibling ||
+        confirmButtons[confirmButtons.length - 1];
+      currentButton.setAttribute("tabindex", "-1");
+      newButton.setAttribute("tabindex", "0");
+      newButton.focus();
     }
   });
 });
 
-// const keySequence = [];
-// let konamiString = "";
-// const konamiCode = [
-//   "ArrowUp",
-//   "ArrowUp",
-//   "ArrowDown",
-//   "ArrowDown",
-//   "ArrowLeft",
-//   "ArrowRight",
-//   "ArrowLeft",
-//   "ArrowRight",
-//   "b",
-//   "a",
-// ];
+// Global Escape key handler using event delegation (single listener instead of per-section)
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
 
-// document.addEventListener("keyup", function (e) {
-//   keySequence.push(e.key);
-//   keySequence.splice(
-//     -konamiCode.length - 1,
-//     keySequence.length - konamiCode.length
-//   );
-//   konamiString = konamiCode.join("");
+  const focusedElement = document.activeElement;
+  const closestSection = focusedElement?.closest("section");
+  if (!closestSection) return;
 
-//   if (
-//     keySequence.join("").includes(konamiString) &&
-//     !document.documentElement.dataset.extra
-//   ) {
-//     document.documentElement.dataset.extra = "true";
+  const { textarea, reset, confirmButtons } =
+    getSectionElements(closestSection);
 
-//     document
-//       .querySelectorAll("section[data-extra='true']")[0]
-//       .scrollIntoView({ behavior: "smooth" });
-//   }
-// });
+  if (focusedElement === textarea) {
+    if (!reset.disabled) {
+      reset.focus();
+    } else if (reset.hasAttribute("inert")) {
+      confirmButtons[0]?.focus();
+    }
+  } else if (
+    focusedElement === reset ||
+    focusedElement === confirmButtons[0] ||
+    focusedElement === confirmButtons[1]
+  ) {
+    textarea.focus();
+  }
+});
