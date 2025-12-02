@@ -1,0 +1,194 @@
+---
+import CodePenIcon from "../../icons/codepen.svg";
+
+interface Props {
+  title?: string;
+}
+
+const { title = "CSS Exercise" } = Astro.props;
+---
+
+<form
+  action="https://codepen.io/pen/define"
+  method="POST"
+  target="_blank"
+  class="codepen-form"
+  data-title={title}
+>
+  <input type="hidden" name="data" value="" />
+  <button type="submit" class="codepen-btn">
+    <span class="visually-hidden">Åbn i CodePen</span>
+    <CodePenIcon stroke-width={1.75} width={20} height={20} />
+  </button>
+</form>
+
+<script>
+  document.querySelectorAll(".codepen-form").forEach((form) => {
+    form.addEventListener("submit", (e) => {
+      const formEl = e.currentTarget as HTMLFormElement;
+      const editor = formEl.closest(".editor");
+      if (!editor) return;
+
+      const cssTextarea = editor.querySelector(
+        ".tabpanel-css textarea"
+      ) as HTMLTextAreaElement;
+      const htmlTextarea = editor.querySelector(
+        ".tabpanel-html textarea"
+      ) as HTMLTextAreaElement;
+
+      if (!cssTextarea || !htmlTextarea) return;
+
+      // Get the theme from the page to determine the color
+      const pageTheme =
+        document.documentElement.dataset.theme ||
+        document.body.closest("[data-theme]")?.getAttribute("data-theme") ||
+        "green";
+
+      // Theme-based custom properties
+      const themeColors: Record<string, { primary: string; border: string }> = {
+        green: {
+          primary: "hsl(153.07deg 89.8% 80.78% / 95%)",
+          border: "hsl(153.07deg 79.8% 39.78%)",
+        },
+        purple: {
+          primary: "#f3daf8",
+          border: "#be8cc8",
+        },
+        indigo: {
+          primary: "oklch(89% 0.07 292.66 / 0.95)",
+          border: "oklch(60% 0.07 292.66)",
+        },
+      };
+
+      const colors = themeColors[pageTheme] || themeColors.green;
+
+      const baseCSS = `
+
+
+      
+
+
+
+
+      
+:root {
+  --ui-primary: ${colors.primary};
+  --ui-primary-border: ${colors.border};
+}
+
+.container {
+    background: #f1eef5;
+}
+
+.box, [class|="box"] {
+  display: grid;
+  place-items: center;
+  border-radius: 3px;
+  background-color: var(--ui-primary);
+  font-size: 1.25rem;
+  font-family: system-ui, sans-serif;
+  line-height: 1.7;
+  border: 1px solid var(--ui-primary-border);
+}
+  
+:is([class|="box"],.box):has(*) {
+  padding: 1rem;
+  place-items: revert;
+}
+:is([class|="box"], .box):has(*) {
+    > :is([class*="box"],h4,p,dt,dd) {
+    background: oklch(75% 0.1 292.66);
+    padding-inline: 0.5rem;
+    }
+}
+    
+dt {
+  color: oklch(75% 0.1 292.66);
+}
+
+dl,
+dt,
+dd {
+margin: 0;
+  padding: 0;
+  text-align: start;
+}`;
+
+      const title = formEl.dataset.title || "CSS Exercise";
+      const exerciseCSS = cssTextarea.value;
+      const css = exerciseCSS + baseCSS;
+      const html = htmlTextarea.value;
+
+      const data = {
+        title,
+        html,
+        css,
+        editors: "110",
+      };
+
+      const input = formEl.querySelector(
+        'input[name="data"]'
+      ) as HTMLInputElement;
+      input.value = JSON.stringify(data);
+    });
+  });
+</script>
+
+<style>
+  .codepen-form {
+    margin-inline-start: auto;
+  }
+
+  .codepen-btn {
+    --btn-stroke: 0;
+    --btn-theme: var(--blue-500);
+    position: relative;
+    color: #fff;
+    padding: 0;
+    inline-size: 28px;
+    block-size: 28px;
+    background: transparent;
+    display: grid;
+    place-content: center;
+    border-radius: var(--bdrs-round);
+    cursor: pointer;
+    border: none;
+  }
+
+  .codepen-btn:focus-visible {
+    --btn-stroke: 2px;
+    outline: none;
+  }
+
+  @media (hover: hover) {
+    .codepen-btn:hover {
+      --btn-stroke: 2px;
+    }
+  }
+
+  .codepen-btn::before {
+    content: "CodePen";
+    text-transform: uppercase;
+    position: absolute;
+    inset-inline-end: 100%;
+    margin-inline-end: var(--space-2);
+    inset-block-start: 0;
+    font-size: 0.7em;
+    font-family: "Mona Sans";
+    font-weight: 700;
+    block-size: 28px;
+    margin-block-start: 0.125em;
+    display: grid;
+    place-content: center;
+    letter-spacing: 0.1em;
+    pointer-events: none;
+    transition: 0.3s;
+    opacity: 0;
+  }
+
+  @media (hover: hover) {
+    .codepen-btn:hover::before {
+      opacity: 1;
+    }
+  }
+</style>
