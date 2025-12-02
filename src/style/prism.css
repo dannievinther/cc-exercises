@@ -194,6 +194,7 @@ div.prism-live {
   display: flex;
   flex-flow: column;
   font-size: 1.08em;
+  block-size: 100%;
 }
 
 textarea.prism-live,
