@@ -155,8 +155,8 @@ const { boxes, theme, startingHTML } = Astro.props;
       user-select: none;
       border-radius: var(--bdrs-sm);
       background:
-        var(--resize-icon) calc(100% + 3px) calc(100% + 3px) / 1.6rem 1.6rem
-          no-repeat border-box,
+        /* var(--resize-icon) calc(100% + 3px) calc(100% + 3px) / 1.6rem 1.6rem
+          no-repeat border-box, */
         conic-gradient(at 75% 75%, #fff 75%, transparent 0) 100% 101% / 1.6rem
           1.6rem no-repeat border-box,
         var(
@@ -169,6 +169,9 @@ const { boxes, theme, startingHTML } = Astro.props;
 
       position: sticky;
       top: 1rem;
+
+      anchor-name: --output;
+      anchor-scope: --output;
 
       @media (max-width: 895px) {
         resize: revert;
@@ -199,16 +202,21 @@ const { boxes, theme, startingHTML } = Astro.props;
       /* display: grid;
       place-content: center;
       font-weight: 900; */
-      position: absolute;
+      /* position: absolute; */
       /* bottom: calc(-1 * var(--space-3));
       right: calc(-1 * var(--space-3));
       inline-size: var(--space-6);
       block-size: var(--space-6); */
       /* border-radius: var(--bdrs-round); */
-      right: -5px;
-      bottom: -5px;
+      /* right: -5px;
+      bottom: -5px; */
       inline-size: 1.6rem;
       block-size: 1.6rem;
+
+      position: fixed;
+      position-anchor: --output;
+      right: calc(anchor(right) - 3px);
+      bottom: calc(anchor(bottom) - 3px);
 
       /* border: 2px solid var(--ui-accent); */
       color: var(--ui-accent);
