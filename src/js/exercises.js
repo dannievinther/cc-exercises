@@ -53,9 +53,8 @@ function getSectionElements(section) {
     addBtn: section.querySelector(".plus"),
     removeBtn: section.querySelector(".minus"),
     reset: section.querySelector(".reset"),
-    confirming: section.querySelector(".button-group-confirm"),
+    resetDialog: section.querySelector(".reset-dialog"),
     resetBtns: section.querySelector(".reset-buttons"),
-    confirmButtons: section.querySelectorAll(".button-group-confirm button"),
   };
 
   sectionCache.set(section, elements);
@@ -72,9 +71,8 @@ sections.forEach((section) => {
     addBtn,
     removeBtn,
     reset,
-    confirming,
+    resetDialog,
     resetBtns,
-    confirmButtons,
   } = getSectionElements(section);
 
   let startingCSS = textarea.textContent;
@@ -231,43 +229,42 @@ sections.forEach((section) => {
     output.hasAttribute("style") && output.removeAttribute("style");
   });
 
-  reset.addEventListener("click", (e) => {
-    if (textarea.value === "") {
+  // Open dialog when reset button is clicked
+  reset?.addEventListener("click", () => {
+    resetDialog?.show();
+  });
+
+  // Handle dialog close - check returnValue to determine action
+  resetDialog?.addEventListener("close", () => {
+    if (resetDialog.returnValue === "yes") {
       resetUI();
     } else {
-      reset.setAttribute("inert", "");
-      resetBtns.classList.add("active");
-      confirming.querySelector(":scope > :first-child").focus();
+      // Delay focus to prevent Enter key from inserting into textarea
+      requestAnimationFrame(() => textarea.focus());
     }
   });
 
-  confirming.addEventListener("click", ({ target }) => {
-    let option = target.dataset.accept;
-    if (option === "true") resetUI();
-    if (option === "false") textarea.focus();
-    resetBtns.classList.remove("active");
-    reset.removeAttribute("inert");
-  });
+  // Roving tabindex for confirm buttons in dialog
+  resetDialog?.addEventListener("keydown", (event) => {
+    const buttons = resetDialog.querySelectorAll(".confirm-btn");
+    const currentIndex = Array.from(buttons).indexOf(document.activeElement);
 
-  // Arrow key navigation for confirm buttons using event delegation
-  confirming.addEventListener("keydown", (event) => {
+    if (currentIndex === -1) return;
+
+    let newIndex;
     if (event.key === "ArrowRight" || event.key === "ArrowDown") {
       event.preventDefault();
-      const currentButton = event.target;
-      const newButton = currentButton.nextElementSibling || confirmButtons[0];
-      currentButton.setAttribute("tabindex", "-1");
-      newButton.setAttribute("tabindex", "0");
-      newButton.focus();
+      newIndex = (currentIndex + 1) % buttons.length;
     } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
       event.preventDefault();
-      const currentButton = event.target;
-      const newButton =
-        currentButton.previousElementSibling ||
-        confirmButtons[confirmButtons.length - 1];
-      currentButton.setAttribute("tabindex", "-1");
-      newButton.setAttribute("tabindex", "0");
-      newButton.focus();
+      newIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+    } else {
+      return;
     }
+
+    buttons[currentIndex].setAttribute("tabindex", "-1");
+    buttons[newIndex].setAttribute("tabindex", "0");
+    buttons[newIndex].focus();
   });
 });
 
@@ -279,20 +276,16 @@ document.addEventListener("keydown", (event) => {
   const closestSection = focusedElement?.closest("section");
   if (!closestSection) return;
 
-  const { textarea, reset, confirmButtons } =
-    getSectionElements(closestSection);
+  const { textarea, reset, resetDialog } = getSectionElements(closestSection);
+
+  // If dialog is open, let it handle Escape naturally
+  if (resetDialog?.open) return;
 
   if (focusedElement === textarea) {
     if (!reset.disabled) {
       reset.focus();
-    } else if (reset.hasAttribute("inert")) {
-      confirmButtons[0]?.focus();
     }
-  } else if (
-    focusedElement === reset ||
-    focusedElement === confirmButtons[0] ||
-    focusedElement === confirmButtons[1]
-  ) {
+  } else if (focusedElement === reset) {
     textarea.focus();
   }
 });

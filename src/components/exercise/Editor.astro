@@ -49,6 +49,7 @@ const cssTabId = `${id}-tab-css`;
 const htmlTabId = `${id}-tab-html`;
 const cssPanelId = `${id}-panel-css`;
 const htmlPanelId = `${id}-panel-html`;
+const resetDialogId = `${id}-reset-dialog`;
 ---
 
 <div class="editor">
@@ -80,16 +81,18 @@ const htmlPanelId = `${id}-panel-html`;
       <span class="visually-hidden">Nulstil</span>
       <RefreshIcon stroke-width={2} width={20} height={20} />
     </button>
-    <div class="button-group-confirm">
-      <button data-accept="true" data-message="Accepter">
-        <span class="visually-hidden">Accepter nulstilling</span>
-        <CheckIcon stroke-width={2} width={28} height={28} />
-      </button>
-      <button data-accept="false" data-message="Afvis">
-        <span class="visually-hidden">Afvis nulstilling</span>
-        <XIcon stroke-width={2} width={28} height={28} />
-      </button>
-    </div>
+    <dialog id={resetDialogId} class="reset-dialog">
+      <form method="dialog">
+        <button value="yes" class="confirm-btn" tabindex="0">
+          <span class="visually-hidden">Accepter nulstilling</span>
+          <CheckIcon stroke-width={2} width={28} height={28} />
+        </button>
+        <button value="no" class="confirm-btn" tabindex="-1">
+          <span class="visually-hidden">Afvis nulstilling</span>
+          <XIcon stroke-width={2} width={28} height={28} />
+        </button>
+      </form>
+    </dialog>
   </div>
 
   <div class="tabpanels">
@@ -522,34 +525,43 @@ const htmlPanelId = `${id}-panel-html`;
     inset-block-start: var(--space-2);
     z-index: 1;
     display: grid;
-    gap: 0 0.4ch;
-    place-items: end;
+    justify-items: end;
     margin-inline-end: var(--space-2);
+    anchor-scope: all;
+
+    > button.reset {
+      anchor-name: --reset-btn;
+      /* display: block; */
+
+      &:has(+ :popover-open),
+      &:has(+ [open]) {
+        opacity: 0;
+      }
+    }
   }
 
-  .reset-buttons > * {
-    grid-area: 1 / 1;
+  .reset-dialog {
+    margin: 0;
+    position: fixed;
+    position-anchor: --reset-btn;
+    position-area: center span-left;
+    /* position-area: span-all span-start; */
+    border: 0;
+    padding: 0;
+    height: fit-content;
+    background: transparent;
+
+    form {
+      display: flex;
+      gap: 0.5ch;
+    }
+
+    &::backdrop {
+      background: transparent;
+    }
   }
 
-  .button-group-confirm {
-    display: flex;
-    gap: 0.5ch;
-    pointer-events: none;
-    opacity: 0;
-    transition: 0.3s opacity;
-  }
-
-  .reset-buttons.active .button-group-confirm {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .reset-buttons.active > button {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  button[data-accept] {
+  .confirm-btn {
     --btn-stroke: 0;
     --btn-theme: var(--blue-500);
     position: relative;
