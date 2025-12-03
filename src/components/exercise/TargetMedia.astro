@@ -1,7 +1,7 @@
 ---
 // import { Image } from "astro:assets";
 import { Picture } from "astro:assets";
-const { index, image, video } = Astro.props;
+const { index, image, video, isSDA = false, videoWidth = 800, videoHeight = 600 } = Astro.props;
 // Use lazy loading for all items except first, and preload="none" for videos below fold
 const isFirst = index === 1;
 ---
@@ -9,15 +9,23 @@ const isFirst = index === 1;
 {
   video ? (
     <picture>
-      <video
-        muted
-        loop
-        autoplay
-        playsinline
-        preload={isFirst ? "metadata" : "none"}
-      >
-        <source src={video} type="video/mp4" />
-      </video>
+      {isSDA ? (
+        <video muted controls playsinline preload="none" width={videoWidth} height={videoHeight}>
+          <source src={video} type="video/mp4" />
+        </video>
+      ) : (
+        <video
+          muted
+          loop
+          autoplay
+          playsinline
+          preload={isFirst ? "metadata" : "none"}
+          width={videoWidth}
+          height={videoHeight}
+        >
+          <source src={video} type="video/mp4" />
+        </video>
+      )}
     </picture>
   ) : image ? (
     <Picture

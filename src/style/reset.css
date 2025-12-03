@@ -98,7 +98,6 @@ a:not([class]) {
 }
 
 @media (pointer: fine) and (hover: hover) {
-
   a:not([class]):hover,
   a:not([class]):focus {
     text-decoration: underline;
@@ -217,7 +216,8 @@ video {
   max-width: 100%;
 }
 
-img {
+img,
+video {
   width: 100%;
   height: auto;
 }
@@ -272,7 +272,6 @@ noscript {
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *:before,
   *:after {

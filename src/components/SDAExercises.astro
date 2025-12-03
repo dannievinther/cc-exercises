@@ -13,6 +13,8 @@ const {
   startingHTML,
   image,
   video,
+  videoWidth,
+  videoHeight,
   boxContent,
   markers,
 } = data;
@@ -43,7 +45,7 @@ import TargetMedia from "./exercise/TargetMedia.astro";
       {hints ? <Hints {hints} /> : <div data-no-hints>Ingen hints</div>}
     </div>
 
-    <TargetMedia {image} {index} {video} />
+    <TargetMedia {image} {index} {video} {videoWidth} {videoHeight} isSDA />
   </article>
 
   <div class="exercise-interactivity">

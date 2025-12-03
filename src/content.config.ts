@@ -135,6 +135,8 @@ const sda = defineCollection({
       title: z.string(),
       id: z.string(),
       video: z.string().optional(),
+      videoWidth: z.number().optional(),
+      videoHeight: z.number().optional(),
       image: image().optional(),
       customClass: z.string().optional(),
       markers: z.boolean().optional(),

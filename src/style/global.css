@@ -28,3 +28,34 @@ symbol {
     }
   }
 }
+
+.sda-result {
+  anchor-scope: --sda-container;
+  anchor-name: --sda-container;
+
+  .container {
+    &::after {
+      transition: 0.3s 0.1s allow-discrete;
+      content: "Scroll ↓";
+      position-anchor: --sda-container;
+      position-area: center;
+      position: fixed;
+      font-weight: 900;
+      display: none;
+      opacity: 0;
+      color: var(--ui-primary-dark);
+      @container not scroll-state(scrollable: top) {
+        display: block;
+        opacity: 1;
+        @starting-style {
+          opacity: 1;
+        }
+      }
+      @container not scroll-state(scrollable: bottom) {
+        display: block;
+        opacity: 1;
+        content: "Scroll ↑";
+      }
+    }
+  }
+}
