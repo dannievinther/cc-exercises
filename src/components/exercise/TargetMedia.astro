@@ -21,11 +21,11 @@ const isFirst = index === 1;
           muted
           controls
           playsinline
-          preload="none"
+          preload="metadata"
           width={videoWidth}
           height={videoHeight}
         >
-          <source src={video} type="video/mp4" />
+          <source src={video + "#t=0.001"} type="video/webm" />
         </video>
       ) : (
         <video

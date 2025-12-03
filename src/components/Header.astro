@@ -10,6 +10,7 @@ const linkItems = [
   { href: "/grid", text: "Grid" },
   { href: "/subgrid", text: "Subgrid" },
   { href: "/flex", text: "Flexbox" },
+  { href: "/sda", text: "SDA", separator: true },
 ];
 
 // const allViewURL = Astro.url.pathname.replace(/\/\d+$/, "");
@@ -24,13 +25,12 @@ const containsDigitAfterSlash =
       <ul>
         {
           linkItems.map((item, i) => (
-            <li>
+            <li class:list={[{ separator: item.separator }]}>
               <a
                 data-astro-prefetch
                 style={`view-transition-name: --current-link-text-${i};`}
                 aria-current={
-                  Astro.url.pathname.replace(/\/$/, "") ===
-                  item.href.replace(/\/$/, "")
+                  Astro.url.pathname.replace(/\/$/, "").startsWith(item.href)
                     ? "page"
                     : undefined
                 }
@@ -176,6 +176,22 @@ const containsDigitAfterSlash =
       gap: 0.3ch;
       list-style-type: "";
       line-height: 1.25;
+
+      li.separator {
+        margin-inline-start: 0.5ch;
+        padding-inline-start: 1ch;
+        position: relative;
+
+        &::before {
+          content: "";
+          position: absolute;
+          inset-inline-start: 0;
+          inset-block: 0.4em;
+          width: 1px;
+          background: var(--gray-300);
+        }
+      }
+
       a {
         position: relative;
         display: flex;
