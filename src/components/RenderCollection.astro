@@ -3,6 +3,7 @@ const { collection, theme, hasWarning } = Astro.props;
 
 import { getCollection } from "astro:content";
 import Exercises from "../components/Exercises.astro";
+import SDAExercises from "../components/SDAExercises.astro";
 import Base from "../layouts/Base.astro";
 
 const exEntries = await getCollection(collection);
@@ -12,12 +13,15 @@ const sorted = exEntries.sort((a: { id: string }, b: { id: string }) =>
 );
 
 const title = collection.charAt(0).toUpperCase() + collection.slice(1);
+
+// Use SDA-specific component for scroll-driven animations
+const ExerciseComponent = collection === "sda" ? SDAExercises : Exercises;
 ---
 
 <Base {title} {hasWarning} {theme}>
   {
     sorted.map((entry, index) => (
-      <Exercises {entry} index={index + 1} total={sorted.length} />
+      <ExerciseComponent {entry} index={index + 1} total={sorted.length} />
     ))
   }
 </Base>

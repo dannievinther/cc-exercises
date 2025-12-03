@@ -23,9 +23,13 @@ const links = {
     link: "/grid",
     label: "CSS Grid",
   },
+  Sda: {
+    link: "/grid",
+    label: "CSS Grid",
+  },
 };
-const label = links[title].label;
-const link = links[title].link;
+const label = links[title]?.label || "CSS Grid";
+const link = links[title]?.link || "/grid";
 ---
 
 <html lang="da" data-theme={theme}>

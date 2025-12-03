@@ -19,7 +19,7 @@ const isFirst = index === 1;
         <source src={video} type="video/mp4" />
       </video>
     </picture>
-  ) : (
+  ) : image ? (
     <Picture
       src={image}
       alt=""
@@ -28,7 +28,7 @@ const isFirst = index === 1;
       format="avif"
       formats={["avif", "webp"]}
     />
-  )
+  ) : null
 }
 
 <style>

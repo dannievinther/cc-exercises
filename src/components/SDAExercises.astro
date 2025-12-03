@@ -1,0 +1,139 @@
+---
+import { render } from "astro:content";
+const { entry, index, total, enableExtra = true } = Astro.props;
+const { id, data, collection } = entry;
+const colID = id.split("/").pop();
+const {
+  title,
+  isExtra,
+  hints,
+  customClass,
+  help,
+  startingCSS,
+  startingHTML,
+  image,
+  video,
+  boxContent,
+  markers,
+} = data;
+
+const { Content } = await render(entry);
+const exerciseID = `${collection}-${colID}`;
+
+// SDA uses a single box by default
+const boxes = [1];
+
+import ExerciseLabel from "./exercise/ExerciseLabel.astro";
+import Editor from "./exercise/Editor.astro";
+import SDAOutput from "./exercise/SDAOutput.astro";
+import Hints from "./exercise/Hints.astro";
+import TargetMedia from "./exercise/TargetMedia.astro";
+---
+
+<section
+  data-extra={enableExtra && isExtra && "true"}
+  data-exercise-key={exerciseID}
+  class:list={["sda-exercise", customClass]}
+>
+  <ExerciseLabel {title} {index} {total} {exerciseID} />
+
+  <article class="exercise-details">
+    <div class="exercise-content">
+      <Content />
+      {hints ? <Hints {hints} /> : <div data-no-hints>Ingen hints</div>}
+    </div>
+
+    <TargetMedia {image} {index} {video} />
+  </article>
+
+  <div class="exercise-interactivity">
+    <Editor
+      id={exerciseID}
+      startingCSS={startingCSS.trim()}
+      {boxes}
+      helpLink={help?.link}
+      helpTopic={help?.topic}
+      {startingHTML}
+    />
+    <SDAOutput {boxContent} {startingHTML} {markers} />
+  </div>
+</section>
+
+<script>
+  import "../js/sda-exercises.js";
+</script>
+
+<style>
+  .sda-exercise {
+    .exercise-details {
+      picture {
+        position: relative;
+        align-self: start;
+
+        &::before,
+        &::after {
+          --offset: 1rlh;
+          content: "";
+          position: absolute;
+          inset: 0 1px;
+          pointer-events: none;
+          border: 1px dashed var(--gray-500);
+        }
+
+        &::before {
+          border-inline-width: 1px;
+          margin-block: calc(-1 * var(--offset));
+          mask: linear-gradient(
+            #0000,
+            #000 var(--offset) calc(100% - var(--offset)),
+            #0000
+          );
+        }
+
+        &::after {
+          border-block-width: 1px;
+          margin-inline: calc(-1 * var(--offset));
+          mask: linear-gradient(
+            90deg,
+            #0000,
+            #000 var(--offset) calc(100% - var(--offset)),
+            #0000
+          );
+        }
+
+        & + &::after {
+          border-block-start-width: 0;
+        }
+
+        &:has(+ &)::after {
+          border-block-end-width: 0;
+        }
+      }
+    }
+
+    .exercise-content {
+      text-wrap: pretty;
+    }
+
+    .exercise-interactivity {
+      display: contents;
+
+      @media (min-width: 895px) {
+        grid-column: 1 / -1;
+        display: inherit;
+        grid-template-columns: inherit;
+        grid-template-rows: min-content 1fr;
+        gap: inherit;
+
+        :global(.editor) {
+          grid-row-end: span 2;
+        }
+
+        :global(.sda-result) {
+          grid-row-start: 2;
+          grid-column-start: 2;
+        }
+      }
+    }
+  }
+</style>

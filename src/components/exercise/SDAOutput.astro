@@ -1,0 +1,83 @@
+---
+const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
+---
+
+<div class="sda-result output">
+  <div class="container" data-markers={markers} set:html={startingHTML} />
+</div>
+
+<style>
+  .sda-result {
+    container: sda-result / size;
+    background: #fff;
+    border-radius: var(--bdrs-xl);
+    min-height: 300px;
+    overflow-y: auto;
+    position: relative;
+    padding: 0.5lh;
+    box-shadow:
+      0 0 0 1px color-mix(in oklch, var(--ui-primary-border) 50%, transparent),
+      inset 0 0 80px -40px var(--ui-primary);
+
+    /* Create scroll space before and after */
+    &::before,
+    &::after {
+      content: "";
+      display: block;
+      block-size: 105%;
+    }
+
+    .container {
+      padding: 1lh;
+
+      .frame {
+        display: grid;
+        place-content: center;
+        place-items: center;
+      }
+    }
+
+    .container[data-markers="true"] {
+      outline: 1px dashed;
+      outline-offset: -1px;
+      position: relative;
+      color: var(--ui-primary-dark);
+      &::before {
+        content: ".container";
+        position: absolute;
+        inset: -1.2cap 0 auto 0;
+        justify-self: center;
+        font-size: 0.8em;
+        background: #fff;
+        padding-inline: 0.5ch;
+        pointer-events: none;
+      }
+      .frame {
+        color: var(--ui-primary-border);
+        outline: 1px dashed;
+        outline-offset: -1px;
+        &::before {
+          content: ".frame";
+          position: absolute;
+          inset: -1.2cap 0 auto 0;
+          justify-self: center;
+          font-size: 0.8em;
+          background: #fff;
+          padding-inline: 0.5ch;
+          pointer-events: none;
+        }
+      }
+    }
+
+    .box {
+      background: var(--ui-primary);
+      color: var(--gray-900);
+      padding: var(--space-4) var(--space-6);
+      border-radius: var(--bdrs-md);
+      font-weight: 600;
+      font-size: 0.875rem;
+      box-shadow: 0 0 0 1px
+        color-mix(in oklch, var(--ui-primary-border) 50%, transparent);
+    }
+  }
+</style>

@@ -1,19 +1,27 @@
 ---
 import { getCollection } from "astro:content";
 import Exercises from "../components/Exercises.astro";
+import SDAExercises from "../components/SDAExercises.astro";
 import Base from "../layouts/Base.astro";
 import ChevronLeftIcon from "../icons/chevron-left.svg";
 import ChevronRightIcon from "../icons/chevron-right.svg";
 
 export async function getStaticPaths() {
-  const [grid, flexbox, subgrid, defensive] = await Promise.all([
+  const [grid, flexbox, subgrid, defensive, sda] = await Promise.all([
     getCollection("grid"),
     getCollection("flexbox"),
     getCollection("subgrid"),
     getCollection("defensive"),
+    getCollection("sda"),
   ]);
 
-  const allCollections = [...grid, ...flexbox, ...subgrid, ...defensive];
+  const allCollections = [
+    ...grid,
+    ...flexbox,
+    ...subgrid,
+    ...defensive,
+    ...sda,
+  ];
 
   return allCollections.map((entry, index) => ({
     params: { slug: slug(entry) },
@@ -21,7 +29,7 @@ export async function getStaticPaths() {
     props: {
       entry,
       index: getIndex(entry, index),
-      total: getTotal(entry, grid, flexbox, subgrid, defensive),
+      total: getTotal(entry, grid, flexbox, subgrid, defensive, sda),
       theme: getTheme(entry.collection),
       slugs: getCollectionSlugs(entry.collection),
     },
@@ -45,13 +53,14 @@ export async function getStaticPaths() {
     return entryIndex + 1;
   }
 
-  function getTotal(entry, grid, flexbox, subgrid, defensive) {
+  function getTotal(entry, grid, flexbox, subgrid, defensive, sda) {
     const collection = entry.collection;
     const collectionMap = {
       grid: grid.length,
       flexbox: flexbox.length,
       subgrid: subgrid.length,
       defensive: defensive.length,
+      sda: sda.length,
     };
 
     return collectionMap[collection] || 0;
@@ -63,6 +72,7 @@ export async function getStaticPaths() {
       flexbox: "purple",
       subgrid: "indigo",
       defensive: "green",
+      sda: "purple",
     };
 
     return themeMap[collection];
@@ -84,6 +94,9 @@ const title =
 const sortedSlugs = slugs.sort((a, b) =>
   a.localeCompare(b, undefined, { numeric: true })
 );
+
+// Use SDA-specific component for scroll-driven animations
+const ExerciseComponent = entry.collection === "sda" ? SDAExercises : Exercises;
 // Render a link to the next exercise based on the current index of the slugs array
 const nextLink = (entry: { id: string }, total: number) => {
   const currentIndex = sortedSlugs.indexOf(entry.id);
@@ -107,7 +120,7 @@ const prevLink = (entry) => {
 ---
 
 <Base title={title} theme={theme}>
-  <Exercises {entry} enableExtra={false} index={index} total={total} />
+  <ExerciseComponent {entry} enableExtra={false} index={index} total={total} />
   <div class="navigation">
     {
       prevLink(entry) && (

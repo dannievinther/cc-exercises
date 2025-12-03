@@ -128,11 +128,42 @@ const defensive = defineCollection({
     }),
 });
 
+const sda = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.md", base: "./src/exercises/sda" }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      id: z.string(),
+      video: z.string().optional(),
+      image: image().optional(),
+      customClass: z.string().optional(),
+      markers: z.boolean().optional(),
+      help: z
+        .object({
+          link: z.string(),
+          topic: z.string(),
+        })
+        .optional(),
+      startingCSS: z.string(),
+      startingHTML: z.string().optional(),
+      boxContent: z.string().optional(),
+      hints: z
+        .array(
+          z.object({
+            type: z.string(),
+            name: z.string(),
+          })
+        )
+        .optional(),
+    }),
+});
+
 export const collections = {
   grid,
   flexbox,
   subgrid,
   defensive,
+  sda,
 };
 
 // title: Simpelt grid

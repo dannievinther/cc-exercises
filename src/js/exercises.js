@@ -26,8 +26,8 @@ function scheduleUpdate(updateFn) {
   }
 }
 
-// Cache sections once
-const sections = document.querySelectorAll("section");
+// Cache sections once - exclude SDA exercises (handled by sda-exercises.js)
+const sections = document.querySelectorAll("section:not(.sda-exercise)");
 
 let exerciseData = JSON.parse(localStorage.getItem("exerciseData")) || {};
 
