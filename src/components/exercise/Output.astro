@@ -215,8 +215,11 @@ const { boxes, theme, startingHTML } = Astro.props;
 
       position: fixed;
       position-anchor: --output;
-      right: calc(anchor(right) - 3px);
-      bottom: calc(anchor(bottom) - 3px);
+      /* right: calc(anchor(right) - 3px);
+      bottom: calc(anchor(bottom) - 3px); */
+      position-area: center;
+      place-self: end;
+      inset: -3px;
 
       /* border: 2px solid var(--ui-accent); */
       color: var(--ui-accent);
@@ -234,7 +237,10 @@ const { boxes, theme, startingHTML } = Astro.props;
       content: "Dobbeltklik for at nulstille højde/bredde";
       font-weight: 500;
       position: absolute;
-      inset: auto 0 0;
+      position-anchor: --output;
+      /* inset: auto 0 0; */
+      position-area: center;
+      place-self: end center;
       inline-size: fit-content;
       font-size: 0.8em;
       padding: 0.2em 0.3em;
@@ -243,14 +249,20 @@ const { boxes, theme, startingHTML } = Astro.props;
       background: hsl(153 50% 98% / 50%);
       border-radius: var(--bdrs-sm);
       pointer-events: none;
-      transform: translateY(100%);
+      /* translate: 0 100%; */
       backdrop-filter: blur(3px);
       z-index: 2;
+      opacity: 0;
+      transition: 0s opacity;
     }
 
     .output[style]::before {
-      transform: none;
-      transition: 0.2s 0.5s transform;
+      /* translate: none; */
+      opacity: 1;
+      transition: 0.2s 0.5s opacity;
+      @starting-style {
+        opacity: 0;
+      }
     }
 
     .output > div {

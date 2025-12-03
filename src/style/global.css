@@ -5,5 +5,26 @@
 path,
 g,
 symbol {
-    stroke-width: inherit !important;
+  stroke-width: inherit !important;
+}
+
+@supports (--w: calc(100cqi / 1px)) {
+  [data-exercise-key="grid-07"] .output {
+    container-type: inline-size;
+    .container {
+      --w: calc((100cqi - (0.25rem * 2)) / 1px);
+      counter-set: --width var(--w);
+      &::after {
+        position: fixed;
+        position-anchor: --output;
+        position-area: top;
+        inset-block-end: -1cap;
+        content: counter(--width) "px";
+        font-size: 0.7rem;
+        font-weight: 600;
+        background: #fff;
+        padding-inline: 0.5ch;
+      }
+    }
+  }
 }
