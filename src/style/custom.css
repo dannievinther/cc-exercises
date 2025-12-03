@@ -12,6 +12,10 @@
   navigation: auto;
 }
 
+::view-transition {
+  pointer-events: none;
+}
+
 ::view-transition-group(root) {
   animation-duration: 0.2s;
 }
@@ -20,6 +24,18 @@
 ::view-transition-new(--current-link) {
   block-size: 100%;
   inline-size: 100%;
+}
+
+::view-transition-group(.current-link-text) {
+  z-index: 2;
+}
+
+::view-transition-old(.current-link-text),
+::view-transition-new(.current-link-text) {
+  height: 100%;
+  object-fit: none;
+  object-position: left;
+  overflow: clip;
 }
 
 /* @font-face {

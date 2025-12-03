@@ -1,5 +1,9 @@
 ---
 import ViewSingleIcon from "../icons/view-single.svg";
+import GridIcon from "../icons/grid.svg";
+import SubgridIcon from "../icons/subgrid.svg";
+import FlexboxIcon from "../icons/flexbox.svg";
+import SdaIcon from "../icons/sda.svg";
 import AboutPopup from "./AboutPopup.astro";
 import Button from "./exercise/Button.astro";
 const { hasWarning, title } = Astro.props;
@@ -7,10 +11,10 @@ const { hasWarning, title } = Astro.props;
 // current pathname from Astro
 
 const linkItems = [
-  { href: "/grid", text: "Grid" },
-  { href: "/subgrid", text: "Subgrid" },
-  { href: "/flex", text: "Flexbox" },
-  { href: "/sda", text: "SDA", separator: true },
+  { href: "/grid", text: "Grid", icon: GridIcon },
+  { href: "/subgrid", text: "Subgrid", icon: SubgridIcon },
+  { href: "/flex", text: "Flexbox", icon: FlexboxIcon },
+  { href: "/sda", text: "SDA", icon: SdaIcon, separator: true },
 ];
 
 // const allViewURL = Astro.url.pathname.replace(/\/\d+$/, "");
@@ -27,6 +31,7 @@ const containsDigitAfterSlash =
           linkItems.map((item, i) => (
             <li class:list={[{ separator: item.separator }]}>
               <a
+                interestfor={`nav-tooltip-${i}`}
                 data-astro-prefetch
                 style={`view-transition-name: --current-link-text-${i};`}
                 aria-current={
@@ -36,8 +41,14 @@ const containsDigitAfterSlash =
                 }
                 href={item.href}
               >
-                {item.text}
+                <span class="nav-icon">
+                  <item.icon width={16} height={16} />
+                </span>
+                <span class="nav-label">{item.text}</span>
               </a>
+              <span popover id={`nav-tooltip-${i}`} class="tooltip">
+                {item.text}
+              </span>
             </li>
           ))
         }
@@ -115,6 +126,24 @@ const containsDigitAfterSlash =
       scale: 0.5;
       translate: 0 -35%;
     }
+  }
+
+  .tooltip[popover] {
+    margin: 0;
+    color: #333;
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.3rem;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+    font-size: 80%;
+    font-weight: 500;
+    position-area: bottom;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    interest-delay: 0.2s;
+  }
+
+  .header-content:has(:interest-source) a {
+    interest-delay-start: 0s;
   }
 
   .view {
@@ -206,6 +235,7 @@ const containsDigitAfterSlash =
         text-decoration: none;
         line-height: 1.25;
         transition: 0.15s;
+        view-transition-class: current-link-text;
 
         position: relative;
         isolation: isolate;
@@ -219,6 +249,14 @@ const containsDigitAfterSlash =
           transition: 0.15s;
           z-index: -1;
           view-transition-name: --current-link;
+        }
+
+        .nav-icon {
+          display: grid;
+        }
+
+        &:not([aria-current="page"]) .nav-label {
+          display: none;
         }
 
         &[aria-current] {
