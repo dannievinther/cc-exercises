@@ -18,9 +18,10 @@ import PauseIcon from "../../icons/pause.svg";
     constructor() {
       super();
       const button = this.querySelector("button");
-      const video = this.closest(".video-wrapper")?.querySelector("video");
+      const wrapper = this.closest(".video-wrapper");
+      const video = wrapper?.querySelector("video");
 
-      if (!button || !video) return;
+      if (!button || !video || !wrapper) return;
 
       // Sync initial state with video
       const updateState = () => {
@@ -36,12 +37,23 @@ import PauseIcon from "../../icons/pause.svg";
       video.addEventListener("play", updateState);
       video.addEventListener("pause", updateState);
 
-      button.addEventListener("click", () => {
+      // Toggle video play/pause
+      const togglePlay = () => {
         if (video.paused) {
           video.play();
         } else {
           video.pause();
         }
+      };
+
+      button.addEventListener("click", togglePlay);
+
+      // Udvid klikområdet til hele wrapperen
+      // A11y: Wrapperen er ikke interaktiv - vi delegerer bare klik til knappen
+      wrapper.addEventListener("click", (e) => {
+        // Undgå at trigge hvis klikket allerede ramte knappen
+        if (e.target === button || button.contains(e.target as Node)) return;
+        togglePlay();
       });
 
       // Set initial state
@@ -67,18 +79,18 @@ import PauseIcon from "../../icons/pause.svg";
     position: absolute;
     inset-block-end: var(--space-2);
     inset-inline-start: var(--space-2);
+    margin: var(--space-2);
     display: grid;
-    place-content: center;
+    place-self: end start;
     padding: var(--space-3);
-    background: #fff;
+    background: oklch(from var(--ui-primary) 0.95 0.035 h);
     border: none;
     border-radius: 999px;
     cursor: pointer;
     color: oklch(from var(--ui-primary) 0.5 0.2 h);
     transition: 0.15s cubic-bezier(0.44, 0, 0.56, 1);
-    box-shadow: 0 0 0 2px #fff;
-    border: 2px solid oklch(from var(--ui-primary) 0.8 0.1 h);
-
+    box-shadow: none;
+    border: 2px solid oklch(from var(--ui-primary) 0.6 0.1 h);
     animation: pulse 1.5s infinite paused;
     animation-composition: accumulate;
 
