@@ -29,7 +29,7 @@ symbol {
   }
 }
 
-.sda-result {
+/* .sda-result {
   anchor-scope: --sda-container;
   anchor-name: --sda-container;
 
@@ -58,4 +58,4 @@ symbol {
       }
     }
   }
-}
+} */

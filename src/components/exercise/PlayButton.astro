@@ -1,0 +1,115 @@
+---
+import PlayIcon from "../../icons/play.svg";
+import PauseIcon from "../../icons/pause.svg";
+---
+
+<button
+  class="play-button"
+  type="button"
+  aria-label="Afspil video"
+  data-playing="true"
+>
+  <PlayIcon class="icon-play" />
+  <PauseIcon class="icon-pause" />
+</button>
+
+<script>
+  class PlayButton extends HTMLElement {
+    constructor() {
+      super();
+      const button = this.querySelector("button");
+      const video = this.closest(".video-wrapper")?.querySelector("video");
+
+      if (!button || !video) return;
+
+      // Sync initial state with video
+      const updateState = () => {
+        const isPlaying = !video.paused;
+        button.dataset.playing = String(isPlaying);
+        button.setAttribute(
+          "aria-label",
+          isPlaying ? "Pause video" : "Afspil video"
+        );
+      };
+
+      // Listen for video play/pause events
+      video.addEventListener("play", updateState);
+      video.addEventListener("pause", updateState);
+
+      button.addEventListener("click", () => {
+        if (video.paused) {
+          video.play();
+        } else {
+          video.pause();
+        }
+      });
+
+      // Set initial state
+      updateState();
+    }
+  }
+
+  customElements.define("play-button", PlayButton);
+</script>
+
+<style>
+  play-button {
+    display: contents;
+  }
+
+  @keyframes pulse {
+    60% {
+      scale: 1.05;
+    }
+  }
+
+  .play-button {
+    position: absolute;
+    inset-block-end: var(--space-2);
+    inset-inline-start: var(--space-2);
+    display: grid;
+    place-content: center;
+    padding: var(--space-3);
+    background: #fff;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    color: oklch(from var(--ui-primary) 0.5 0.2 h);
+    transition: 0.15s cubic-bezier(0.44, 0, 0.56, 1);
+    box-shadow: 0 0 0 2px #fff;
+    border: 2px solid oklch(from var(--ui-primary) 0.8 0.1 h);
+
+    animation: pulse 1.5s infinite paused;
+    animation-composition: accumulate;
+
+    &:active {
+      scale: 0.98;
+    }
+
+    svg {
+      display: block;
+      width: 12px;
+      height: 12px;
+    }
+
+    .icon-pause {
+      display: none;
+    }
+
+    &[data-playing="true"] {
+      .video-wrapper:not(:hover) & {
+        opacity: 0;
+        transition-delay: 0.3s;
+      }
+      .icon-play {
+        display: none;
+      }
+      .icon-pause {
+        display: block;
+      }
+    }
+    &[data-playing="false"] {
+      animation-play-state: running;
+    }
+  }
+</style>

@@ -33,8 +33,17 @@ const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
     &::before,
     &::after {
       content: "";
-      display: block;
-      block-size: 105%;
+      display: grid;
+      place-content: center;
+      block-size: calc(100% + 1rlh);
+      content: "Scroll ↓";
+      translate: 0 -1lh;
+      font-weight: 800;
+      color: var(--ui-primary-dark);
+    }
+    &::after {
+      content: "Scroll ↑"
+      translate: 0 1rlh;
     }
 
     .container {

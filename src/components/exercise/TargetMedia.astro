@@ -1,6 +1,7 @@
 ---
 // import { Image } from "astro:assets";
 import { Picture } from "astro:assets";
+import PlayButton from "./PlayButton.astro";
 const {
   index,
   image,
@@ -17,28 +18,37 @@ const isFirst = index === 1;
   video ? (
     <picture>
       {isSDA ? (
-        <video
-          muted
-          controls
-          playsinline
-          preload="metadata"
-          width={videoWidth}
-          height={videoHeight}
-        >
-          <source src={video + "#t=0.001"} type="video/webm" />
-        </video>
+        <div class="video-wrapper">
+          <video
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            width={videoWidth}
+            height={videoHeight}
+          >
+            <source src={video + "#t=0.001"} type="video/webm" />
+          </video>
+          <play-button>
+            <PlayButton />
+          </play-button>
+        </div>
       ) : (
-        <video
-          muted
-          loop
-          autoplay
-          playsinline
-          preload={isFirst ? "metadata" : "none"}
-          width={videoWidth}
-          height={videoHeight}
-        >
-          <source src={video} type="video/mp4" />
-        </video>
+        <div class="video-wrapper">
+          <video
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            width={videoWidth}
+            height={videoHeight}
+          >
+            <source src={video + "#t=0.001"} type="video/mp4" />
+          </video>
+          <play-button>
+            <PlayButton />
+          </play-button>
+        </div>
       )}
     </picture>
   ) : image ? (
@@ -59,5 +69,8 @@ const isFirst = index === 1;
   }
   img {
     background: #f1eef5;
+  }
+  .video-wrapper {
+    position: relative;
   }
 </style>
