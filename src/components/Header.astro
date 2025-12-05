@@ -25,7 +25,9 @@ const containsDigitAfterSlash =
 
 <header class="main-header">
   <div class="header-content">
-    <a href="/" class="logo">CSS<span>xs</span><span class="dev">.dev</span></a>
+    <a href="/" class="logo"
+      ><span>CSS<span>xs</span></span><span class="dev">.dev</span></a
+    >
     <nav>
       <ul>
         {
@@ -418,40 +420,40 @@ const containsDigitAfterSlash =
         0.998 86.7%,
         1
       );
-    color: var(--gray-1000);
-    display: inline flex;
-    align-items: baseline;
-    width: fit-content;
     font-family: flex;
-    font-variation-settings:
-      "wdth" 400,
-      "HGHT" 500;
     font-size: 1.6rem;
     letter-spacing: 0.03em;
     line-height: 1;
     font-weight: 700;
-    margin-block-start: -0.3em;
-    cursor: pointer;
-    text-decoration: none;
-    transform: skewY(-5deg);
-    transition: var(--elastic);
-
-    &:hover {
-      transform: skewY(0deg);
-    }
-
-    span:not(.dev) {
-      color: var(--ui-primary-border);
-      color: oklch(from var(--ui-primary-border) 0.7 0.2 h);
+    width: fit-content;
+    > :first-child {
+      font-variation-settings:
+        "wdth" 400,
+        "HGHT" 500;
+      color: var(--gray-1000);
+      display: inline flex;
+      align-items: baseline;
+      margin-block-start: -0.3em;
+      cursor: pointer;
+      text-decoration: none;
+      transform: skewY(-5deg);
+      transition: var(--elastic);
+      .logo:hover & {
+        transform: skewY(0deg);
+      }
+      span {
+        color: var(--ui-primary-border);
+        color: oklch(from var(--ui-primary-border) 0.7 0.2 h);
+      }
     }
 
     .dev {
       display: inline-block;
-      font-size: 0.6em;
+      font-size: 0.65em;
       font-variation-settings:
-        "wdth" 300,
-        "HGHT" 600;
-      color: var(--gray-600);
+        "wdth" 350,
+        "HGHT" 500;
+      color: var(--gray-700);
       clip-path: inset(0 100% 0 0);
       transition: 0.3s clip-path;
 
