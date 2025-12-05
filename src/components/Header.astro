@@ -25,6 +25,7 @@ const containsDigitAfterSlash =
 
 <header class="main-header">
   <div class="header-content">
+    <a href="/" class="logo">CSS<span>xs</span></a>
     <nav>
       <ul>
         {
@@ -380,5 +381,28 @@ const containsDigitAfterSlash =
 
   .exercise-logo svg {
     display: block;
+  }
+
+  .logo {
+    color: var(--gray-1000);
+    display: inline-block;
+    width: fit-content;
+    font-family: flex;
+    font-variation-settings:
+      "wdth" 400,
+      "HGHT" 500;
+    font-size: 1.6rem;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    font-weight: 700;
+    margin-block-start: -0.3em;
+    cursor: pointer;
+    text-decoration: none;
+    transform: skewY(-5deg);
+
+    span {
+      color: var(--ui-primary-border);
+      color: oklch(from var(--ui-primary-border) 0.7 0.2 h);
+    }
   }
 </style>
