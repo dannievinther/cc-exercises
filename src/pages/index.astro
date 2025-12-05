@@ -28,13 +28,6 @@ import Front from "../layouts/Front.astro";
 </Front>
 
 <style>
-  @font-face {
-    font-family: flex;
-    src: url("/assets/fonts/flexible-variable.woff2") format("woff2");
-    font-stretch: 200% 1000%;
-    font-weight: 700;
-  }
-
   header {
     display: grid;
     gap: 3rlh;
@@ -59,7 +52,7 @@ import Front from "../layouts/Front.astro";
   }
 
   h1 {
-    font-family: flex;
+    font-family: var(--font-flex);
     font-variation-settings:
       "wdth" 200,
       "HGHT" 500;
