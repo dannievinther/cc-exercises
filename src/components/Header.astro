@@ -206,18 +206,25 @@ const containsDigitAfterSlash =
       list-style-type: "";
       line-height: 1.25;
 
-      li.separator {
-        margin-inline-start: 0.5ch;
-        padding-inline-start: 1ch;
-        position: relative;
+      li {
+        &.separator {
+          margin-inline-start: 0.5ch;
+          padding-inline-start: 1ch;
+          position: relative;
 
-        &::before {
-          content: "";
-          position: absolute;
-          inset-inline-start: 0;
-          inset-block: 0.4em;
-          width: 1px;
-          background: var(--gray-300);
+          li:has([aria-current="page"]) + & {
+            margin-inline-start: 1ch;
+            padding-inline-start: 0;
+          }
+
+          &::before {
+            content: "";
+            position: absolute;
+            inset-inline-start: 0;
+            inset-block: 0.3em;
+            width: 1px;
+            background: var(--gray-300);
+          }
         }
       }
 
