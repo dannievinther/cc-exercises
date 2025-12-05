@@ -192,6 +192,7 @@ const containsDigitAfterSlash =
     justify-content: center;
 
     background: #fffc;
+    view-transition-name: nav-background;
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     border-radius: 1e5px;
@@ -208,22 +209,15 @@ const containsDigitAfterSlash =
 
       li {
         &.separator {
-          margin-inline-start: 0.5ch;
-          padding-inline-start: 1ch;
           position: relative;
-
-          li:has([aria-current="page"]) + & {
-            margin-inline-start: 1ch;
-            padding-inline-start: 0;
-          }
 
           &::before {
             content: "";
             position: absolute;
-            inset-inline-start: 0;
-            inset-block: 0.3em;
+            inset-inline-start: -1.5px;
+            inset-block: 0.4em;
             width: 1px;
-            background: var(--gray-300);
+            background: var(--gray-400);
           }
         }
       }
@@ -251,6 +245,7 @@ const containsDigitAfterSlash =
           content: "";
           position: absolute;
           inset: 0;
+          inset-inline-start: 0.2ch;
           border-radius: 1e5px;
           background: var(--gray-1000);
           transition: 0.15s;

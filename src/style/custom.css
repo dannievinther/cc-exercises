@@ -21,7 +21,9 @@
 }
 
 ::view-transition-old(--current-link),
-::view-transition-new(--current-link) {
+::view-transition-new(--current-link),
+::view-transition-old(nav-background),
+::view-transition-new(nav-background) {
   block-size: 100%;
   inline-size: 100%;
 }
