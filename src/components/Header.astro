@@ -28,7 +28,7 @@ const containsDigitAfterSlash =
     <a href="/" class="logo"
       ><span>CSS<span>xs</span></span><span class="dev">.dev</span></a
     >
-    <nav>
+    <!-- <nav>
       <ul>
         {
           linkItems.map((item, i) => (
@@ -56,7 +56,7 @@ const containsDigitAfterSlash =
           ))
         }
       </ul>
-    </nav>
+    </nav> -->
     <div class="utils">
       <AboutPopup class="about-button" />
       <div class="view">
@@ -71,6 +71,36 @@ const containsDigitAfterSlash =
     </div>
   </div>
 </header>
+
+<nav>
+  <ul>
+    {
+      linkItems.map((item, i) => (
+        <li class:list={[{ separator: item.separator }]}>
+          <a
+            interestfor={`nav-tooltip-${i}`}
+            data-astro-prefetch
+            style={`view-transition-name: --current-link-text-${i};`}
+            aria-current={
+              Astro.url.pathname.replace(/\/$/, "").startsWith(item.href)
+                ? "page"
+                : undefined
+            }
+            href={item.href}
+          >
+            <span class="nav-icon">
+              <item.icon width={16} height={16} />
+            </span>
+            <span class="nav-label">{item.text}</span>
+          </a>
+          <span popover id={`nav-tooltip-${i}`} class="tooltip">
+            {item.text}
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
 
 <!-- {
   hasWarning && (
@@ -172,7 +202,7 @@ const containsDigitAfterSlash =
     }
   }
 
-  .utils {
+  /* .utils {
     > :not([popover]) {
       display: none;
       @supports (animation-timeline: scroll(root)) {
@@ -188,8 +218,23 @@ const containsDigitAfterSlash =
         }
       }
     }
+  } */
+  .utils > :not([popover]) {
+    display: flex;
+    gap: 10px;
   }
   nav {
+    position-anchor: --header;
+    position: fixed;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
+    inset-block-start: calc(
+      anchor(--header, top) + anchor(--header, height) + var(--space-3)
+    );
+    inset-block-start: var(--space-5);
+    z-index: 10;
+    justify-self: center;
+
     grid-column: 2;
     display: flex;
     justify-content: center;
@@ -230,7 +275,7 @@ const containsDigitAfterSlash =
         display: flex;
         align-items: center;
         gap: var(--space-2);
-        padding: var(--space-1) var(--space-4);
+        padding: var(--space-1) 0.75rem var(--space-1) 0.7rem;
         justify-self: start;
         color: var(--active, var(--gray-800));
         border-radius: 1e5px;
@@ -248,7 +293,6 @@ const containsDigitAfterSlash =
           content: "";
           position: absolute;
           inset: 0;
-          inset-inline-start: 0.2ch;
           border-radius: 1e5px;
           background: var(--gray-1000);
           transition: 0.15s;
@@ -279,6 +323,7 @@ const containsDigitAfterSlash =
   }
 
   .main-header {
+    anchor-name: --header;
     position: relative;
     display: grid;
     grid: auto/minmax(var(--space-5), 1fr) minmax(auto, 1200px) minmax(
@@ -291,9 +336,9 @@ const containsDigitAfterSlash =
 
     margin-block-end: var(--space-7);
 
-    position: sticky;
+    /* position: sticky;
     inset-block-start: var(--space-5);
-    z-index: 10;
+    z-index: 10; */
 
     &::before {
       content: none;
@@ -325,6 +370,15 @@ const containsDigitAfterSlash =
 
     & > * {
       grid-column: 2;
+    }
+  }
+
+  .main-header {
+    pointer-events: none;
+    a,
+    nav,
+    .utils > * {
+      pointer-events: all;
     }
   }
 
@@ -421,11 +475,12 @@ const containsDigitAfterSlash =
         1
       );
     font-family: flex;
-    font-size: 1.6rem;
+    font-size: 1.7rem;
     letter-spacing: 0.03em;
     line-height: 1;
     font-weight: 700;
     width: fit-content;
+    margin-block-start: -0.3em;
     > :first-child {
       font-variation-settings:
         "wdth" 400,
@@ -433,7 +488,6 @@ const containsDigitAfterSlash =
       color: oklch(from var(--ui-primary) 0.2 0.2 h);
       display: inline flex;
       align-items: baseline;
-      margin-block-start: -0.3em;
       cursor: pointer;
       text-decoration: none;
       transform: skewY(-5deg);
