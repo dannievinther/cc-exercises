@@ -1,0 +1,62 @@
+---
+
+---
+
+<dialog class="alert">
+  <script is:inline>
+    const supportsPositionAnchor = CSS.supports(
+      "position-area: span-all span-start"
+    );
+    if (!supportsPositionAnchor) {
+      document.currentScript.closest("dialog")?.showModal();
+    }
+  </script>
+  <p>
+    <strong>OBS:</strong> Øvelserne virker pt. ikke optimalt i denne browser.
+  </p>
+  <form method="dialog">
+    <button class="dialog-close">OK</button>
+  </form>
+</dialog>
+
+<style>
+  .alert {
+    width: fit-content;
+    margin: auto;
+    padding: 1rem;
+    background: oklch(0.98 0.08 22.38);
+    border-radius: var(--bdrs-l);
+    border: 2px solid oklch(0.75 90% 29.62);
+
+    &::backdrop {
+      background: oklch(0.28 0.03 22.38 / 0.9);
+    }
+
+    > p {
+      color: oklch(0.3 0.14 29.24);
+      font-size: 0.9rem;
+    }
+
+    .dialog-close {
+      background: #fff;
+      box-shadow:
+        0 0 0 1px #00000014,
+        0 2px 2px #0000000a;
+      border-radius: var(--bdrs-round);
+      padding: 0.15rlh 0.5rlh;
+
+      &:hover {
+        background: oklch(from currentcolor 95% 0 h);
+      }
+      &:active {
+        scale: 0.97;
+      }
+    }
+  }
+
+  @supports (position-area: span-all span-start) {
+    .alert {
+      display: none;
+    }
+  }
+</style>
