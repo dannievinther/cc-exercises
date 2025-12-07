@@ -8,10 +8,12 @@ import Base from "../layouts/Base.astro";
 
 const exEntries = await getCollection(collection);
 
-// Filtrer drafts fra i produktion
+// Vis drafts i dev-mode eller på staging branch (Vercel)
+const isStaging = process.env.VERCEL_GIT_COMMIT_REF === "staging";
+const showDrafts = import.meta.env.DEV || isStaging;
+
 const filtered = exEntries.filter(
-  (entry: { data: { draft?: boolean } }) =>
-    import.meta.env.DEV || !entry.data.draft
+  (entry: { data: { draft?: boolean } }) => showDrafts || !entry.data.draft
 );
 
 const sorted = filtered.sort((a: { id: string }, b: { id: string }) =>
