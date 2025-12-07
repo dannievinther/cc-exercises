@@ -5,6 +5,7 @@ const { id, data, collection } = entry;
 const colID = id.split("/").pop();
 const {
   title,
+  draft,
   hints,
   customClass,
   help,
@@ -32,9 +33,11 @@ import TargetMedia from "./exercise/TargetMedia.astro";
 ---
 
 <section
+  data-draft={draft ? "true" : undefined}
   data-exercise-key={exerciseID}
   class:list={["sda-exercise", customClass]}
 >
+  {draft && <div class="draft-label">DRAFT</div>}
   <ExerciseLabel {title} {index} {total} {exerciseID} />
 
   <article class="exercise-details">
@@ -109,6 +112,26 @@ import TargetMedia from "./exercise/TargetMedia.astro";
           border-block-end-width: 0;
         }
       }
+    }
+
+    .draft-label {
+      :has(> &) {
+        anchor-name: --section;
+        anchor-scope: --section;
+      }
+      position: fixed;
+      position-anchor: --section;
+      position-area: center;
+      place-self: start end;
+      margin-inline-end: -1cap;
+      margin-block-start: -1cap;
+      background: oklch(from var(--ui-primary) 0.4 100% h);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 1cap;
+      text-box: cap alphabetic;
+      border-radius: inherit;
     }
 
     .exercise-content {
