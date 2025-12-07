@@ -332,9 +332,11 @@ const containsDigitAfterSlash =
       );
     gap: var(--space-5) 0;
 
-    margin-block: var(--space-5);
+    /* margin-block: var(--space-5); */
+    margin-block: 1.25rem;
 
-    margin-block-end: var(--space-7);
+    /* margin-block-end: var(--space-7); */
+    margin-block-end: 3rem;
 
     /* position: sticky;
     inset-block-start: var(--space-5);
@@ -373,14 +375,14 @@ const containsDigitAfterSlash =
     }
   }
 
-  .main-header {
+  /* .main-header {
     pointer-events: none;
     a,
     nav,
     .utils > * {
       pointer-events: all;
     }
-  }
+  } */
 
   .alert {
     width: fit-content;
@@ -489,7 +491,6 @@ const containsDigitAfterSlash =
       display: inline flex;
       align-items: baseline;
       cursor: pointer;
-      text-decoration: none;
       transform: skewY(-5deg);
       transition: var(--elastic);
       .logo:hover & {
