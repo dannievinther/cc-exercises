@@ -78,7 +78,6 @@ sections.forEach((section) => {
   let startingCSS = textarea.textContent;
   const exerciseKey = section.dataset.exerciseKey;
   const boxKey = `box-${exerciseKey}`;
-  const isExtra = section.dataset.extra;
 
   let boxCount = boxContainer.children.length || 1;
   const maxBoxCount = 12;
@@ -164,9 +163,6 @@ sections.forEach((section) => {
   function resetUI() {
     if (exerciseData[exerciseKey] || textarea.value === "") {
       delete exerciseData[exerciseKey];
-      if (exerciseData[`extra-${exerciseKey}`]) {
-        delete exerciseData[`extra-${exerciseKey}`];
-      }
       if (exerciseData[boxKey]) {
         delete exerciseData[boxKey];
         boxCount = boxContainer.children.length;
@@ -199,23 +195,14 @@ sections.forEach((section) => {
     }
     styleTag.innerHTML = prefix(textarea.value, exerciseKey);
 
-    if (exerciseData[`extra-${exerciseKey}`]) {
-      document.documentElement.dataset.extra = "true";
-    }
-
     updateResetButtonState();
 
     textarea.addEventListener("input", (e) => {
       styleTag.innerHTML = prefix(e.target.value, exerciseKey);
       saveToLocalStorage(exerciseKey, textarea.value);
 
-      if (isExtra) {
-        saveToLocalStorage(`extra-${exerciseKey}`, true);
-      }
-
       if (textarea.value === "") {
         delete exerciseData[exerciseKey];
-        delete exerciseData[`extra-${exerciseKey}`];
         localStorage.setItem("exerciseData", JSON.stringify(exerciseData));
       }
 

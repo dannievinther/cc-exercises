@@ -1,11 +1,10 @@
 ---
 import { render } from "astro:content";
-const { entry, index, total, enableExtra = true } = Astro.props;
+const { entry, index, total } = Astro.props;
 const { id, data, collection } = entry;
 const colID = id.split("/").pop();
 const {
   title,
-  isExtra,
   hints,
   customClass,
   help,
@@ -33,7 +32,6 @@ import TargetMedia from "./exercise/TargetMedia.astro";
 ---
 
 <section
-  data-extra={enableExtra && isExtra && "true"}
   data-exercise-key={exerciseID}
   class:list={["sda-exercise", customClass]}
 >

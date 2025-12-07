@@ -26,7 +26,6 @@ const baseExerciseSchema = (image: Function) =>
     draft: z.boolean().optional(),
     boxes: z.number(),
     canAddBoxes: z.boolean(),
-    isExtra: z.boolean(),
     video: z.string().optional(),
     image: image().optional(),
     isVideoThumb: z.boolean().optional(),

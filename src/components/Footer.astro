@@ -5,13 +5,13 @@ const year = new Date().getFullYear();
 const notHome = Astro.url.pathname !== "/";
 ---
 
-{
+<!-- {
   notHome && (
     <div>
       <button class="load-more">Indlæs flere</button>
     </div>
   )
-}
+} -->
 <footer>
   {
     notHome && (
@@ -26,10 +26,6 @@ const notHome = Astro.url.pathname !== "/";
 </footer>
 
 <style>
-  :global(html:not([data-extra="true"])) .more-exercises {
-    display: none;
-  }
-
   button {
     all: unset;
     cursor: pointer;

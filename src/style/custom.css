@@ -489,7 +489,3 @@ code {
   font-weight: 126;
   font-feature-settings: "ss03" on; */
 }
-
-html:not([data-extra="true"]) section[data-extra="true"] {
-  display: none;
-}
