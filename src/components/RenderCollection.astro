@@ -8,7 +8,13 @@ import Base from "../layouts/Base.astro";
 
 const exEntries = await getCollection(collection);
 
-const sorted = exEntries.sort((a: { id: string }, b: { id: string }) =>
+// Filtrer drafts fra i produktion
+const filtered = exEntries.filter(
+  (entry: { data: { draft?: boolean } }) =>
+    import.meta.env.DEV || !entry.data.draft
+);
+
+const sorted = filtered.sort((a: { id: string }, b: { id: string }) =>
   a.id.localeCompare(b.id, undefined, { numeric: true })
 );
 

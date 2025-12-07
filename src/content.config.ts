@@ -1,162 +1,81 @@
 import { z, defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 
-const grid = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.md", base: "./src/exercises/grid" }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      id: z.string(),
-      boxes: z.number(),
-      canAddBoxes: z.boolean(),
-      isExtra: z.boolean(),
-      video: z.string().optional(),
-      image: image().optional(),
-      isVideoThumb: z.boolean().optional(),
-      customClass: z.string().optional(),
-      help: z
-        .object({
-          link: z.string(),
-          topic: z.string(),
-        })
-        .optional(),
-      startingCSS: z.string().optional(),
-      startingHTML: z.string().optional(),
-      hints: z
-        .array(
-          z.object({
-            type: z.string(),
-            name: z.string(),
-          })
-        )
-        .optional(),
-    }),
-});
+// Shared schema parts
+const helpSchema = z
+  .object({
+    link: z.string(),
+    topic: z.string(),
+  })
+  .optional();
 
-const flexbox = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.md", base: "./src/exercises/flexbox" }),
-  schema: ({ image }) =>
+const hintsSchema = z
+  .array(
     z.object({
-      title: z.string(),
-      id: z.string(),
-      boxes: z.number(),
-      canAddBoxes: z.boolean(),
-      isExtra: z.boolean(),
-      video: z.string().optional(),
-      image: image().optional(),
-      isVideoThumb: z.boolean().optional(),
-      customClass: z.string().optional(),
-      help: z
-        .object({
-          link: z.string(),
-          topic: z.string(),
-        })
-        .optional(),
-      startingCSS: z.string().optional(),
-      startingHTML: z.string().optional(),
-      hints: z
-        .array(
-          z.object({
-            type: z.string(),
-            name: z.string(),
-          })
-        )
-        .optional(),
-    }),
-});
-const subgrid = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.md", base: "./src/exercises/subgrid" }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      id: z.string(),
-      boxes: z.number(),
-      canAddBoxes: z.boolean(),
-      isExtra: z.boolean(),
-      video: z.string().optional(),
-      image: image().optional(),
-      isVideoThumb: z.boolean().optional(),
-      customClass: z.string().optional(),
-      help: z
-        .object({
-          link: z.string(),
-          topic: z.string(),
-        })
-        .optional(),
-      startingCSS: z.string().optional(),
-      startingHTML: z.string().optional(),
-      hints: z
-        .array(
-          z.object({
-            type: z.string(),
-            name: z.string(),
-          })
-        )
-        .optional(),
-    }),
-});
+      type: z.string(),
+      name: z.string(),
+    })
+  )
+  .optional();
+
+// Base schema for standard exercises (grid, flexbox, subgrid)
+const baseExerciseSchema = (image: Function) =>
+  z.object({
+    title: z.string(),
+    id: z.string(),
+    draft: z.boolean().optional(),
+    boxes: z.number(),
+    canAddBoxes: z.boolean(),
+    isExtra: z.boolean(),
+    video: z.string().optional(),
+    image: image().optional(),
+    isVideoThumb: z.boolean().optional(),
+    customClass: z.string().optional(),
+    help: helpSchema,
+    startingCSS: z.string().optional(),
+    startingHTML: z.string().optional(),
+    hints: hintsSchema,
+  });
+
+// Helper to create standard exercise collection
+const createExerciseCollection = (base: string) =>
+  defineCollection({
+    loader: glob({ pattern: "**/[^_]*.md", base }),
+    schema: ({ image }) => baseExerciseSchema(image),
+  });
+
+const grid = createExerciseCollection("./src/exercises/grid");
+const flexbox = createExerciseCollection("./src/exercises/flexbox");
+const subgrid = createExerciseCollection("./src/exercises/subgrid");
+
+// Defensive has extra hiddenCSS field
 const defensive = defineCollection({
   loader: glob({ pattern: "**/[^_]*.md", base: "./src/exercises/defensive" }),
   schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      id: z.string(),
-      boxes: z.number(),
-      canAddBoxes: z.boolean(),
-      isExtra: z.boolean(),
-      video: z.string().optional(),
-      image: image().optional(),
-      isVideoThumb: z.boolean().optional(),
-      customClass: z.string().optional(),
-      help: z
-        .object({
-          link: z.string(),
-          topic: z.string(),
-        })
-        .optional(),
-      startingCSS: z.string().optional(),
+    baseExerciseSchema(image).extend({
       hiddenCSS: z.string().optional(),
-      startingHTML: z.string().optional(),
-      hints: z
-        .array(
-          z.object({
-            type: z.string(),
-            name: z.string(),
-          })
-        )
-        .optional(),
     }),
 });
 
+// SDA has different structure
 const sda = defineCollection({
   loader: glob({ pattern: "**/[^_]*.md", base: "./src/exercises/sda" }),
   schema: ({ image }) =>
     z.object({
       title: z.string(),
       id: z.string(),
+      draft: z.boolean().optional(),
       video: z.string().optional(),
       videoWidth: z.number().optional(),
       videoHeight: z.number().optional(),
       image: image().optional(),
       customClass: z.string().optional(),
       markers: z.boolean().optional(),
-      help: z
-        .object({
-          link: z.string(),
-          topic: z.string(),
-        })
-        .optional(),
+      help: helpSchema,
       startingCSS: z.string(),
       startingHTML: z.string().optional(),
       boxContent: z.string().optional(),
-      hints: z
-        .array(
-          z.object({
-            type: z.string(),
-            name: z.string(),
-          })
-        )
-        .optional(),
+      hints: hintsSchema,
     }),
 });
 
@@ -167,28 +86,3 @@ export const collections = {
   defensive,
   sda,
 };
-
-// title: Simpelt grid
-// id: grid-1
-// image { path: ./img/grid-ex-1.png, width: 1046, height: 254, type: "img" }
-// boxes: 9
-// canAddBoxes: false
-// isExtra: false
-// isVideoThumb: false
-// customClass: ""
-// help:
-//   {
-//     link: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout#the_fr_unit,
-//     topic: fr unit,
-//   }
-// startingCSS: |
-//   .container {
-//     display: ;
-//     grid-template-columns: ;
-//   }
-// hints:
-//   - { type: property, name: display }
-//   - { type: property, name: grid-template-columns }
-//   - { type: property, name: gap }
-//   - { type: value, name: grid }
-//   - { type: value, name: "1fr" }
