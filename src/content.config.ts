@@ -30,6 +30,7 @@ const baseExerciseSchema = (image: Function) =>
     image: image().optional(),
     isVideoThumb: z.boolean().optional(),
     customClass: z.string().optional(),
+    showOutputSize: z.boolean().optional(),
     help: helpSchema,
     startingCSS: z.string().optional(),
     startingHTML: z.string().optional(),

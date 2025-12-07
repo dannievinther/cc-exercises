@@ -21,7 +21,7 @@ function getHints(type) {
   @layer components {
     :global([data-no-hints]) {
       text-transform: uppercase;
-      font-family: "Mona Sans", system-ui;
+      font-family: var(--font-mona);
       font-size: 0.7em;
       font-weight: 600;
       color: var(--gray-900);
@@ -95,7 +95,7 @@ function getHints(type) {
       inline-size: max-content;
       text-transform: uppercase;
       font-variation-settings: "wdth" 120;
-      font-family: "Mona Sans", system-ui;
+      font-family: var(--font-mona);
       font-size: 0.7em;
       font-weight: 700;
       cursor: pointer;

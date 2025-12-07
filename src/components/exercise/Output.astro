@@ -1,8 +1,12 @@
 ---
-const { boxes, theme, startingHTML } = Astro.props;
+const { boxes, theme, startingHTML, showOutputSize } = Astro.props;
 ---
 
-<div class="output" data-custom-html={startingHTML ? "true" : "false"}>
+<div
+  class="output"
+  data-custom-html={startingHTML ? "true" : "false"}
+  data-show-output-size={showOutputSize ? "true" : undefined}
+>
   <div class="container">
     {
       startingHTML ? (
@@ -317,6 +321,27 @@ const { boxes, theme, startingHTML } = Astro.props;
       line-height: 1.2;
       font-size: 2rem;
       font-weight: 900;
+    }
+
+    @supports (--w: calc(100cqi / 1px)) {
+      .output[data-show-output-size="true"] {
+        container-type: inline-size;
+        .container {
+          --w: calc((100cqi - (0.25rem * 2)) / 1px);
+          counter-set: --width var(--w);
+          &::after {
+            position: fixed;
+            position-anchor: --output;
+            position-area: top;
+            inset-block-end: -1cap;
+            content: counter(--width) "px";
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: #fff;
+            padding-inline: 0.5ch;
+          }
+        }
+      }
     }
   }
 </style>

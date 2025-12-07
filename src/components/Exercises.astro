@@ -7,6 +7,7 @@ const {
   title,
   hints,
   customClass,
+  showOutputSize,
   help,
   startingCSS,
   hiddenCSS,
@@ -69,7 +70,7 @@ import TargetMedia from "./exercise/TargetMedia.astro";
     />
 
     {canAddBoxes && <BtnControls />}
-    <Output {boxes} {startingHTML} />
+    <Output {boxes} {startingHTML} {showOutputSize} />
   </div>
 </section>
 
