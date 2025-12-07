@@ -8,6 +8,40 @@ symbol {
   stroke-width: inherit !important;
 }
 
+/* .main-header {
+    anchor-name: --header;
+  position: relative;
+  display: grid;
+  grid: auto / minmax(var(--space-5), 1fr) minmax(auto, 1200px) minmax(var(--space-5), 1fr);
+  gap: var(--space-5) 0;
+  margin-block: 1rlh;
+  margin-block-end: 3rlh;
+  border-bottom: 1px solid #0002;
+  padding-bottom: 1rlh;
+} */
+
+/* .header-content {
+    anchor-scope: --header-content;
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    border-left: 1px solid #0002;
+    position-anchor: --header-content;
+    left: calc(anchor(left) - 1px - 1rem);
+  }
+  &::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    border-right: 1px solid #0002;
+    position-anchor: --header-content;
+    left: calc(anchor(right) + 1rem + 1px);
+  }
+} */
+
 /* .sda-result {
   anchor-scope: --sda-container;
   anchor-name: --sda-container;
