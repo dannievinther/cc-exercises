@@ -28,7 +28,7 @@ const containsDigitAfterSlash =
     <a href="/" class="logo"
       ><span>CSS<span>xs</span></span><span class="dev">.dev</span></a
     >
-    <!-- <nav>
+    <nav>
       <ul>
         {
           linkItems.map((item, i) => (
@@ -56,7 +56,7 @@ const containsDigitAfterSlash =
           ))
         }
       </ul>
-    </nav> -->
+    </nav>
     <div class="utils">
       <AboutPopup class="about-button" />
       <div class="view">
@@ -71,36 +71,6 @@ const containsDigitAfterSlash =
     </div>
   </div>
 </header>
-
-<nav>
-  <ul>
-    {
-      linkItems.map((item, i) => (
-        <li class:list={[{ separator: item.separator }]}>
-          <a
-            interestfor={`nav-tooltip-${i}`}
-            data-astro-prefetch
-            style={`view-transition-name: --current-link-text-${i};`}
-            aria-current={
-              Astro.url.pathname.replace(/\/$/, "").startsWith(item.href)
-                ? "page"
-                : undefined
-            }
-            href={item.href}
-          >
-            <span class="nav-icon">
-              <item.icon width={16} height={16} />
-            </span>
-            <span class="nav-label">{item.text}</span>
-          </a>
-          <span popover id={`nav-tooltip-${i}`} class="tooltip">
-            {item.text}
-          </span>
-        </li>
-      ))
-    }
-  </ul>
-</nav>
 
 <!-- {
   hasWarning && (
@@ -442,40 +412,7 @@ const containsDigitAfterSlash =
   }
 
   .logo {
-    --elastic: 0.9s
-      linear(
-        0,
-        0.218 2.1%,
-        0.862 6.5%,
-        1.114,
-        1.296 10.7%,
-        1.346,
-        1.37 12.9%,
-        1.373,
-        1.364 14.5%,
-        1.315 16.2%,
-        1.032 21.8%,
-        0.941 24%,
-        0.891 25.9%,
-        0.877,
-        0.869 27.8%,
-        0.87,
-        0.882 30.7%,
-        0.907 32.4%,
-        0.981 36.4%,
-        1.012 38.3%,
-        1.036,
-        1.046 42.7% 44.1%,
-        1.042 45.7%,
-        0.996 53.3%,
-        0.988,
-        0.984 57.5%,
-        0.985 60.7%,
-        1.001 68.1%,
-        1.006 72.2%,
-        0.998 86.7%,
-        1
-      );
+    --smooth: 0.2s cubic-bezier(0.4, 0, 0.2, 1) font-variation-settings;
     font-family: var(--font-flex);
     font-size: 1.7rem;
     letter-spacing: 0.03em;
@@ -492,9 +429,12 @@ const containsDigitAfterSlash =
       align-items: baseline;
       cursor: pointer;
       transform: skewY(-5deg);
-      transition: var(--elastic);
+      transition: var(--smooth);
       .logo:hover & {
-        transform: skewY(0deg);
+        font-variation-settings:
+          "wdth" 400,
+          "HGHT" 450;
+        /* transform: skewY(0deg); */
       }
       span {
         color: var(--ui-primary-border);
