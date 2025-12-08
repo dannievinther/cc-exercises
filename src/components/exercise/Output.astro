@@ -123,20 +123,16 @@ const { boxes, theme, startingHTML, showOutputSize } = Astro.props;
       /* transition: filter 0.15s; */
     }
 
-    .output:is(.editor:focus-within + *):hover > .container {
-      /* background:
-        repeating-linear-gradient(-45deg, #7740c8 0 1.5px, #938fe2 0 7.5px)
-          content-box,
-        #f1eef5; */
+    .output:is(.editor:focus-within ~ *):hover > .container {
       background:
-        repeating-linear-gradient(-45deg, var(--violet-200) 0 25%, #0000 0 50%)
+        repeating-linear-gradient(
+            -45deg,
+            oklch(from var(--ui-primary) calc(l * 0.9) 0.05 h) 0 25%,
+            #0000 0 50%
+          )
           0 / 4px 4px content-box,
         var(--surface-tertiary) border-box;
     }
-
-    /* .output:is(.editor:focus-within + *) :global(.box) {
-      filter: brightness(0.95);
-    } */
 
     .output:is(section.gap-reset *) > div {
       gap: 1px 0;
@@ -151,8 +147,7 @@ const { boxes, theme, startingHTML, showOutputSize } = Astro.props;
       max-inline-size: calc(100% + (var(--padding) * 2));
       max-block-size: 500px;
       border: 2px dashed transparent;
-      font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
-        "Roboto", "Helvetica Neue", Arial, sans-serif;
+      font-family: system-ui, sans-serif;
       resize: both;
       overflow: hidden;
 

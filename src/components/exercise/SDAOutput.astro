@@ -8,23 +8,33 @@ const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
 
 <style>
   .sda-result {
+    --padding: var(--space-2);
     overscroll-behavior: contain;
     container: sda-result / size var(--scroll-state-not-supported, scroll-state);
     background:
+      var(
+        --marching-ants,
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E@keyframes ant %7Bto %7Bstroke-dashoffset: -8;%7D%7D%3C/style%3E%3Crect width='100%25' height='100%25' style='stroke: %23a9bcce; stroke-width: 3.75px; fill: none;stroke-dasharray: 5 3; animation: ant 0s infinite linear'/%3E%3C/svg%3E")
+          border-box
+      ),
       conic-gradient(
           from 90deg at 1px 1px,
           #0000 25%,
-          oklch(from var(--ui-primary) 0.97 0.05 h) 0
-        ) -0.5px -1px / 25px 25px round local,
-      var(--ui-surface);
-    border-radius: var(--bdrs-xl);
+          oklch(from var(--ui-primary) 0.95 0.025 h) 0
+        ) -0.5px 0px / 25px 25px round local content-box,
+      oklch(from var(--ui-primary) 0.99 0.01 h) content-box;
+    border-radius: var(--bdrs-sm);
     min-height: 300px;
     overflow-y: auto;
     position: relative;
     padding: 0.5lh;
-    box-shadow:
-      0 0 0 1px color-mix(in oklch, var(--ui-primary-border) 50%, transparent),
-      inset 0 0 80px -40px var(--ui-primary);
+    border: 2px dashed transparent;
+    padding: var(--padding);
+    margin: calc(var(--padding) * -1);
+
+    position: sticky;
+    top: 1rem;
+
     @supports not (container: sda-result / size scroll-state) {
       --scroll-state-not-supported: ;
     }
@@ -86,15 +96,23 @@ const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
       }
     }
 
+    .output:is(.editor:has(:focus-within) ~ &) {
+      --marching-ants: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E@keyframes ant %7Bto %7Bstroke-dashoffset: -8;%7D%7D%3C/style%3E%3Crect width='100%25' height='100%25' style='stroke: %23a9bcce; stroke-width: 3.75px; fill: none;stroke-dasharray: 5 3; animation: ant 1s infinite linear'/%3E%3C/svg%3E")
+        border-box;
+
+      /* border-color: transparent; */
+      /* transition: filter 0.15s; */
+    }
+
     .box {
       background: var(--ui-primary);
-      color: var(--gray-900);
+      color: var(--ui-primary-border);
       padding: var(--space-4) var(--space-6);
       border-radius: var(--bdrs-md);
       font-weight: 600;
       font-size: 0.875rem;
       box-shadow:
-        0 0 0 1px var(--ui-primary-border),
+        0 0 0 1px var(--ui-primary-dark),
         0 2px 2px rgba(0, 90, 250, 0.05),
         0 4px 4px rgba(0, 90, 250, 0.05),
         0 8px 8px rgba(0, 90, 250, 0.05),

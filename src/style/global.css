@@ -20,6 +20,12 @@ summary {
   font-feature-settings: "ss01";
 }
 
+.output {
+  * {
+    font-feature-settings: normal;
+  }
+}
+
 path,
 g,
 symbol {

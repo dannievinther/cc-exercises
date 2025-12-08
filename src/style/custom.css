@@ -124,9 +124,7 @@ h3 {
 }
 
 p {
-  /* font-family: var(--font-mona), "Wotfard", Segoe UI, system-ui, -apple-system,
-    sans-serif; */
-  font-family: system-ui, Segoe UI, -apple-system, sans-serif;
+  font-family: var(--font-mona);
   font-weight: 430;
   font-feature-settings: "ss01" on;
   /* font-family: "Geist";
