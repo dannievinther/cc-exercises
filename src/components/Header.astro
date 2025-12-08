@@ -124,6 +124,7 @@ const containsDigitAfterSlash =
   }
 
   .main-header {
+    view-transition-name: --main-header;
     anchor-name: --header;
     position: relative;
     display: grid;
@@ -135,6 +136,7 @@ const containsDigitAfterSlash =
     padding-block: 1.5rlh;
     margin-block-end: 2.5rlh;
     background: var(--ui-surface);
+    z-index: 100;
 
     &::before {
       content: "";
