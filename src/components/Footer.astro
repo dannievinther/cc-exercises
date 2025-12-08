@@ -39,7 +39,7 @@ const notHome = Astro.url.pathname !== "/";
     /* display: flex;
     gap: var(--space-1);
     align-items: center; */
-    color: #fff;
+    color: var(--ui-surface);
     text-decoration: none;
     /* padding: var(--space-3) var(--space-3) var(--space-3) var(--space-5); */
     font-size: 1.2rem;
@@ -67,14 +67,14 @@ const notHome = Astro.url.pathname !== "/";
     }
 
     & :global(svg) {
-      color: #a9bcce;
+      color: var(--blue-muted-comment);
       display: inline-block;
       vertical-align: middle;
       transition: inherit;
     }
 
     &:hover {
-      border-color: #a9bcce;
+      border-color: var(--blue-muted-comment);
       color: var(--blue-500);
 
       & :global(svg) {

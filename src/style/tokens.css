@@ -1,0 +1,153 @@
+:root {
+  /* ========================================
+     PRIMITIVES - Raw color values
+     ======================================== */
+
+  /* Neutrals */
+  --gray-100: #f2f2f2;
+  --gray-200: #ebebeb;
+  --gray-300: #e6e6e6;
+  --gray-400: #dbdbdb;
+  --gray-500: #c9c9c9;
+  --gray-600: #a8a8a8;
+  --gray-700: #8f8f8f;
+  --gray-800: #7d7d7d;
+  --gray-900: #555555;
+  --gray-1000: #171717;
+
+  /* Blues */
+  --blue-muted-comment: #a9bcce;
+  --blue-muted: #55718d;
+  --blue-500: #2ee5e5;
+  --blue-700: #0e395e;
+  --blue-800: #0d2e4e;
+  --blue-900: #0a2540;
+
+  /* Greens */
+  --green-100: oklch(92% 0.08 153);
+  --green-200: oklch(75% 0.14 153);
+  --green-300: #72f1b8;
+  --green-400: oklch(52% 0.14 153);
+
+  /* Purples */
+  --purple-50: #e4deed;
+  --purple-600: #5000ca;
+
+  /* Violets / Indigo */
+  --violet-100: #f3daf8;
+  --violet-200: #e2b9ea;
+  --violet-400: #be8cc8;
+  --indigo-100: oklch(89% 0.07 292.66 / 0.95);
+  --indigo-200: oklch(75% 0.1 292.66);
+  --indigo-400: oklch(60% 0.07 292.66);
+
+  /* Pinks */
+  --pink-100: oklch(88% 0.08 320);
+  --pink-200: oklch(71% 0.1 320);
+  --pink-400: oklch(52% 0.12 320);
+  --pink-900: #853a67;
+
+  /* Aquamarine */
+  --aquamarine-300: #82f4e1;
+
+  /* Periwinkle */
+  --periwinkle-100: oklch(88% 0.08 265);
+  --periwinkle-200: oklch(72% 0.13 265);
+  --periwinkle-400: oklch(52% 0.16 265);
+
+  /* ========================================
+     THEME COLORS - Used for exercise themes
+     ======================================== */
+  --theme-grid: var(--green-200);
+  --theme-subgrid: var(--indigo-200);
+  --theme-flex: var(--pink-200);
+  --theme-sda: var(--periwinkle-200);
+
+  /* ========================================
+     ALIAS TOKENS - Semantic naming
+     ======================================== */
+
+  /* Surfaces */
+  --surface-primary: #fff;
+  --surface-secondary: #e9eef4;
+  --surface-tertiary: #f1eef5;
+  --surface-elevated: #fffc;
+  --surface-overlay: #fff3;
+  --surface-backdrop: #000c;
+  --ui-surface: var(--surface-primary);
+
+  /* UI Colors */
+  --ui-primary: var(--green-300);
+  --ui-primary-border: hsl(153.07deg 70% 65%);
+  --ui-primary-dark: hsl(153.07deg 79.8% 39.78%);
+  --ui-secondary: #ffa956;
+  --ui-accent: var(--blue-700);
+
+  /* Text */
+  --text-primary: var(--gray-900);
+  --text-secondary: var(--gray-700);
+  --text-muted: var(--gray-600);
+  --text-inverted: var(--gray-100);
+
+  /* ========================================
+     SHADOWS
+     ======================================== */
+  --shadow-border: rgb(51 65 85 / 10%) 0 0 0 1px;
+  --shadow-sm: 0 0 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: rgb(51 65 85 / 10%) 0 0 0 1px, rgb(0 0 0 / 5%) 0 20px 25px -5px,
+    rgb(0 0 0 / 5%) 0 8px 10px -6px;
+  --shadow-code: inset #33415526 0 0 0 1px, #0000000d 0 20px 25px -5px;
+  --shadow-ui: 0 0 0 1px #00000014, 0 2px 2px #0000000a;
+
+  /* ========================================
+     SPACING - Fluid scale
+     ======================================== */
+  --space-1: 0.25rem;
+  --space-2: 0.375rem;
+  --space-3: 0.5rem;
+  --space-4: clamp(0.31rem, calc(0.15rem + 0.8vw), 0.75rem);
+  --space-5: clamp(0.69rem, calc(0.53rem + 0.8vw), 1.13rem);
+  --space-6: clamp(1rem, calc(0.55rem + 2.27vw), 2.25rem);
+  --space-7: clamp(1.31rem, calc(0.7rem + 3.07vw), 3rem);
+  --space-8: clamp(2rem, calc(1.09rem + 4.55vw), 4.5rem);
+  --space-9: clamp(3.94rem, calc(3.19rem + 3.75vw), 6rem);
+
+  /* ========================================
+     TYPOGRAPHY - Static font sizes
+     ======================================== */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 0.9rem;
+  --font-size-lg: 1.2rem;
+  --font-size-xl: 1.7rem;
+
+  /* ========================================
+     BORDER RADIUS
+     ======================================== */
+  --bdrs-sm: 0.1875rem;
+  --bdrs-md: 0.375rem;
+  --bdrs-l: 0.5rem;
+  --bdrs-xl: 1rem;
+  --bdrs-round: 99rem;
+
+  /* ========================================
+     COMPONENT TOKENS - Button
+     ======================================== */
+  --btn-bg: var(--surface-secondary);
+  --btn-icon: var(--blue-muted);
+  --btn-stroke: 1px;
+  --btn-theme: var(--ui-accent);
+
+  /* ========================================
+     MISC
+     ======================================== */
+  --resize-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'%3E%3Cpath fill='%23909090' d='M9.75 16.5a6.75 6.75 0 0 0 6.75-6.75v-4.5a2.25 2.25 0 0 1 4.5 0v4.5A11.25 11.25 0 0 1 9.75 21h-4.5a2.25 2.25 0 0 1 0-4.5h4.5Z'/%3E%3C/svg%3E%0A");
+}
+
+@supports (color: oklch(88.9% 0.192 194.87)) {
+  :root {
+    --blue-500: oklch(83.9% 0.192 194.87);
+    --ui-secondary: oklch(80.43% 0.177 62.35757074232738);
+  }
+}

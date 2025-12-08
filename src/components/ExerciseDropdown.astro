@@ -49,11 +49,18 @@ const { currentItem, exercises } = Astro.props;
     display: grid;
     place-items: center;
     padding: 0.15rem;
-    margin-inline: -0.5rem 0.25rem;
+    margin-inline: -0.5rem 0.15rem;
     border-radius: 2rem;
     color: var(--gray-100);
     transition: background 0.15s;
     z-index: 1;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -0.15rlh;
+    }
 
     &:hover {
       background: rgba(255, 255, 255, 0.15);
@@ -76,12 +83,10 @@ const { currentItem, exercises } = Astro.props;
     margin: 0;
     margin-block-start: 0.25rem;
     padding: 0.5rem;
-    background: #fff;
+    background: var(--ui-surface);
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 0.75rem;
-    box-shadow:
-      0 4px 12px rgba(0, 0, 0, 0.08),
-      0 0 0 1px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--shadow-md);
     min-width: 200px;
     bottom: 0;
     block-size: stretch;
@@ -92,6 +97,7 @@ const { currentItem, exercises } = Astro.props;
       list-style-type: "";
       padding: 0;
       display: grid;
+      scroll-target-group: auto;
     }
 
     .exercise-list-item {
@@ -110,10 +116,15 @@ const { currentItem, exercises } = Astro.props;
       color: var(--gray-900);
       font-size: 0.9rem;
       font-weight: 500;
+      inline-size: 100%;
       transition: background 0.1s;
 
       &:hover {
         background: var(--gray-100);
+      }
+      &:target-current,
+      &:active {
+        background: var(--gray-200);
       }
     }
 

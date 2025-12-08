@@ -59,111 +59,6 @@ nav {
   font-display: fallback;
 } */
 
-:root {
-  --resize-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'%3E%3Cpath fill='%23909090' d='M9.75 16.5a6.75 6.75 0 0 0 6.75-6.75v-4.5a2.25 2.25 0 0 1 4.5 0v4.5A11.25 11.25 0 0 1 9.75 21h-4.5a2.25 2.25 0 0 1 0-4.5h4.5Z'/%3E%3C/svg%3E%0A");
-
-  /* Neutrals */
-  --gray-100: #f2f2f2;
-  --gray-200: #ebebeb;
-  --gray-300: #e6e6e6;
-  --gray-400: #dbdbdb;
-  --gray-500: #c9c9c9;
-  --gray-600: #a8a8a8;
-  --gray-700: #8f8f8f;
-  --gray-800: #7d7d7d;
-  --gray-900: #555555;
-  --gray-1000: #171717;
-
-  /* Greens */
-  /* --green-50: #e4f4ed;
-  --green-100: #c2ecd9;
-  --green-200: #9ceac7;
-  --green-300: #72f1b8;
-  --green-400: #61dea6;
-  --green-500: #55ca96;
-  --green-600: #4db687;
-  --green-700: #4d9c78;
-  --green-800: #4d856c;
-  --green-900: #4a7360; */
-
-  /* Pinks */
-  /* --pink-50: #f1e4ec;
-  --pink-100: #e6c4d9;
-  --pink-200: #e0a3c8;
-  --pink-300: #e17fba;
-  --pink-400: #e957b0;
-  --pink-500: #fb37ad;
-  --pink-600: #e32397;
-  --pink-700: #bf2d85;
-  --pink-800: #9e3675;
-  --pink-900: #853a67; */
-
-  /* Blues */
-  --blue-muted-comment: #a9bcce;
-  --blue-muted: #55718d;
-  --blue-500: #2ee5e5;
-  --blue-700: #0e395e;
-  --blue-800: #0d2e4e;
-  --blue-900: #0a2540;
-
-  --purple-50: #e4deed;
-  /* --purple-100: #9c84c1;
-  --purple-200: #8b68c0;
-  --purple-300: #7a49c4;
-  --purple-400: #6a2cc8;
-  --purple-500: #5d16c8;
-  --purple-600: #5000ca;
-  --purple-700: #4c12a4;
-  --purple-800: #471d86;
-  --purple-900: #42246f; */
-
-  --violet-100: #f3daf8;
-  --violet-200: #e2b9ea;
-  --violet-300: #d0a0da;
-  --violet-400: #be8cc8;
-  --violet-500: #ac7cb5;
-  --violet-600: #9b6fa4;
-  --violet-700: #8b6692;
-
-  --primary: var(--aquamarine-300);
-
-  --ui-primary: var(--green-300);
-  --ui-secondary: #ffa956;
-  --ui-secondary-a11y: hsl(29 100% 57%);
-  --ui-surface: #fff;
-  --ui-bg: hsl(267, 30%, 18%);
-  --ui-bg-2: hsl(266, 30%, 15%);
-  --ui-bg-3: hsl(289, 27%, 19%);
-  --ui-accent: var(--blue-700);
-
-  /* Spacing */
-  --space-3: 0.5rem;
-  --space-2: 0.375rem;
-  --space-1: 0.25rem;
-
-  --space-9: clamp(3.94rem, calc(3.19rem + 3.75vw), 6rem);
-  --space-8: clamp(2rem, calc(1.09rem + 4.55vw), 4.5rem);
-  --space-7: clamp(1.31rem, calc(0.7rem + 3.07vw), 3rem);
-  --space-6: clamp(1rem, calc(0.55rem + 2.27vw), 2.25rem);
-  --space-5: clamp(0.69rem, calc(0.53rem + 0.8vw), 1.13rem);
-  --space-4: clamp(0.31rem, calc(0.15rem + 0.8vw), 0.75rem);
-
-  /* Border Radius */
-  --bdrs-round: 99rem;
-  --bdrs-xl: 1rem;
-  --bdrs-l: 0.5rem;
-  --bdrs-md: 0.375rem;
-  --bdrs-sm: 0.1875rem;
-}
-
-@supports (color: oklch(88.9% 0.192 194.87)) {
-  :root {
-    --blue-500: oklch(83.9% 0.192 194.87);
-
-    --ui-secondary: oklch(80.43% 0.177 62.35757074232738);
-  }
-}
-
 * {
   --max-screen-size: var(--screen-max, 1200);
   --min-screen-size: var(--screen-min, 375);
@@ -320,7 +215,7 @@ section {
   position: relative;
   padding: var(--space-6);
 
-  background: #fff;
+  background: var(--ui-surface);
   border-radius: var(--bdrs-xl);
   /* transition: filter 0.2s; */
 
@@ -335,8 +230,8 @@ section {
     #fff;
   border: 1px solid transparent; */
 
-  box-shadow: rgb(51 65 85 / 10%) 0px 0px 0px 1px;
-  background: #fff;
+  box-shadow: var(--shadow-border);
+  background: var(--ui-surface);
   view-timeline: --t;
   animation: --a both linear;
   animation-timeline: --t;
@@ -402,10 +297,10 @@ button {
   gap: var(--space-1);
   border-radius: var(--bdrs-l);
   border: 0;
-  background: #e9eef4;
+  background: var(--btn-bg);
   color: var(--blue-900);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(--font-size-md);
   padding: 0.25em 0.75em 0.25em 0.6em;
   cursor: pointer;
   box-shadow: var(--btn-theme, var(--ui-accent)) 0 0 0 var(--btn-stroke, 1px)
@@ -435,7 +330,7 @@ button[disabled] {
 }
 
 .exercise-details p > code {
-  --m: #fff;
+  --m: var(--ui-surface);
   display: inline-block;
   padding-inline: var(--space-2);
   padding-block: 0;
@@ -446,8 +341,8 @@ button[disabled] {
   /* color: var(--blue-800) !important; */
   /* background: #e9eef4; */
   color: var(--gray-1000);
-  background: #fff;
-  box-shadow: inset #33415526 0 0 0 1px, #0000000d 0 20px 25px -5px;
+  background: var(--ui-surface);
+  box-shadow: var(--shadow-code);
   cursor: pointer;
   transition: 0.2s;
 

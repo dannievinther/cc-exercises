@@ -10,16 +10,16 @@ import Front from "../layouts/Front.astro";
     </div>
     <nav class="bento">
       <ul>
-        <li style="--theme: hsl(153.07deg 70% 65%)">
+        <li style="--theme: var(--theme-grid)">
           <a href="/grid"><span>Grid</span> exercises</a>
         </li>
-        <li style="--theme: oklch(75% .1 292.66)">
+        <li style="--theme: var(--theme-subgrid)">
           <a href="/subgrid"><span>Subgrid</span> exercises</a>
         </li>
-        <li style="--theme: oklch(0.71 0.1 320.74)">
+        <li style="--theme: var(--theme-flex)">
           <a href="/flex"><span>Flexbox</span> exercises</a>
         </li>
-        <li style="--theme: oklch(0.75 0.15 280)">
+        <li style="--theme: var(--theme-sda)">
           <a href="/sda"><span>Scroll-Driven</span> animations</a>
         </li>
       </ul>

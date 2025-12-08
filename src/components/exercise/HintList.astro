@@ -32,7 +32,7 @@ const { hints } = Astro.props;
     /* margin-block-start: calc(var(--space-4) * -1); */
     margin-block-start: -0.4rem;
 
-    background: #fff;
+    background: var(--ui-surface);
 
     & ~ .hints {
       margin-block-start: -0.85rem;
@@ -40,7 +40,7 @@ const { hints } = Astro.props;
   }
 
   [data-type="property"] {
-    --m: #fff;
+    --m: var(--ui-surface);
     --mbg: var(--blue-700);
   }
 

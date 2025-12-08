@@ -16,7 +16,7 @@ const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
           #0000 25%,
           oklch(from var(--ui-primary) 0.97 0.05 h) 0
         ) -0.5px -1px / 25px 25px round local,
-      #fff;
+      var(--ui-surface);
     border-radius: var(--bdrs-xl);
     min-height: 300px;
     overflow-y: auto;
@@ -65,7 +65,7 @@ const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
         inset: -1.2cap 0 auto 0;
         justify-self: center;
         font-size: 0.8em;
-        background: #fff;
+        background: var(--ui-surface);
         padding-inline: 0.5ch;
         pointer-events: none;
       }
@@ -79,7 +79,7 @@ const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
           inset: -1.2cap 0 auto 0;
           justify-self: center;
           font-size: 0.8em;
-          background: #fff;
+          background: var(--ui-surface);
           padding-inline: 0.5ch;
           pointer-events: none;
         }

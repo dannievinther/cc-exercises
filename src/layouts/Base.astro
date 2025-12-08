@@ -36,7 +36,7 @@ const link = links[title]?.link || "/grid";
   <head>
     <Head title={title} />
     <style is:inline>
-      @layer reset, prism, custom, components;
+      @layer reset, prism, custom, tokens, components;
     </style>
   </head>
   <body>
@@ -108,9 +108,9 @@ const link = links[title]?.link || "/grid";
     </script>
     <style>
       [data-theme="green"] {
-        --ui-primary: hsl(153.07deg 89.8% 80.78% / 95%);
-        --ui-primary-dark: hsl(153.07deg 70% 65%);
-        --ui-primary-border: hsl(153.07deg 79.8% 39.78%);
+        --ui-primary: var(--green-100);
+        --ui-primary-dark: var(--green-200);
+        --ui-primary-border: var(--green-400);
       }
 
       [data-theme="purple"] {
@@ -120,9 +120,21 @@ const link = links[title]?.link || "/grid";
       }
 
       [data-theme="indigo"] {
-        --ui-primary: oklch(89% 0.07 292.66 / 0.95);
-        --ui-primary-dark: oklch(75% 0.1 292.66);
-        --ui-primary-border: oklch(60% 0.07 292.66);
+        --ui-primary: var(--indigo-100);
+        --ui-primary-dark: var(--indigo-200);
+        --ui-primary-border: var(--indigo-400);
+      }
+
+      [data-theme="periwinkle"] {
+        --ui-primary: var(--periwinkle-100);
+        --ui-primary-dark: var(--periwinkle-200);
+        --ui-primary-border: var(--periwinkle-400);
+      }
+
+      [data-theme="pink"] {
+        --ui-primary: var(--pink-100);
+        --ui-primary-dark: var(--pink-200);
+        --ui-primary-border: var(--pink-400);
       }
       body {
         position: relative;
