@@ -14,7 +14,7 @@ const linkItems = [
   { href: "/grid", text: "Grid", icon: GridIcon },
   { href: "/subgrid", text: "Subgrid", icon: SubgridIcon },
   { href: "/flex", text: "Flexbox", icon: FlexboxIcon },
-  { href: "/sda", text: "SDA", icon: SdaIcon, separator: true },
+  { href: "/sda", text: "Scroll", icon: SdaIcon, separator: true },
 ];
 
 // const allViewURL = Astro.url.pathname.replace(/\/\d+$/, "");
@@ -293,13 +293,13 @@ const containsDigitAfterSlash =
     /* margin-block: 1.75rem 3rem; */
     padding-block: 1.5rlh;
     margin-block-end: 2.5rlh;
-    overflow-inline: clip;
+    /* overflow-inline: clip;
     background: repeating-linear-gradient(
         -45deg,
         oklch(from var(--ui-primary) l 0.012 h / 0.4) 0 22.5%,
         transparent 0 50%
       )
-      0 0 / 4px 4px;
+      0 0 / 4px 4px; */
 
     &::before {
       content: "";
@@ -307,10 +307,19 @@ const containsDigitAfterSlash =
       bottom: 0;
       inset-inline-start: 0;
       inset-inline-end: 0;
-      margin-inline: calc((50% - 1200px / 2) - 4lh);
+      /* margin-inline: calc((50% - 1200px / 2) - 4lh);
       border-bottom: 1px dashed
         oklch(from var(--ui-primary) calc(l * 0.98) 0.012 h);
-      mask: linear-gradient(90deg, #0000, #000 2lh calc(100% - 2lh), #0000);
+      mask: linear-gradient(90deg, #0000, #000 2lh calc(100% - 2lh), #0000); */
+      block-size: 1px;
+      background: linear-gradient(
+        90deg,
+        var(--gray-400),
+        var(--gray-400) 50%,
+        transparent 0,
+        transparent
+      );
+      background-size: 8px 1px;
     }
 
     /* position: sticky;
@@ -322,7 +331,7 @@ const containsDigitAfterSlash =
       grid: auto / 1fr auto 1fr;
       align-items: center;
 
-      /* anchor-name: --header-content;
+      anchor-name: --header-content;
 
       &::before,
       &::after {
@@ -330,19 +339,27 @@ const containsDigitAfterSlash =
         content: "";
         position: fixed;
         top: 0;
-        bottom: calc(anchor(--footer top) - 3lh);
+        bottom: anchor(--footer top);
         position-anchor: --header-content;
-        --border-style: dashed;
-        mask: linear-gradient(#0000, #000 2lh calc(100% - 2lh), #0000);
+        /* --border-style: dashed;
+        mask: linear-gradient(#0000, #000 2lh calc(100% - 2lh), #0000); */
+        inline-size: 1px;
+        /* background: linear-gradient(
+          180deg,
+          var(--gray-400),
+          var(--gray-400) 50%,
+          transparent 0,
+          transparent
+        );
+        background-size: 1px 8px; */
+        background: var(--gray-300);
       }
       &::before {
-        border-left: 1px var(--border-style) var(--border-color);
         left: calc(anchor(left) - 1px - 1rem);
       }
       &::after {
-        border-right: 1px var(--border-style) var(--border-color);
         left: calc(anchor(right) + 1rem + 1px);
-      } */
+      }
     }
     .utils {
       grid-column-end: -1;
