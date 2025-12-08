@@ -67,6 +67,9 @@ import TargetMedia from "./exercise/TargetMedia.astro";
 </script>
 
 <style>
+  [data-draft="true"] {
+    outline: 2px dashed oklch(from var(--ui-primary) 0.4 100% h);
+  }
   .sda-exercise {
     .exercise-details {
       picture {
@@ -125,10 +128,9 @@ import TargetMedia from "./exercise/TargetMedia.astro";
       place-self: start end;
       margin-inline-end: -1cap;
       margin-block-start: -1cap;
-      border: 1px solid oklch(from var(--ui-primary) 0.3 90% h);
+      border: 2px solid;
       color: oklch(from var(--ui-primary) 0.4 100% h);
       background: oklch(from var(--ui-primary) 0.95 20% h);
-      outline: 2px dashed oklch(from var(--ui-primary) 0.4 100% h);
       font-size: 0.75rem;
       font-weight: 700;
       padding: 1cap;
