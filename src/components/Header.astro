@@ -14,7 +14,13 @@ const linkItems = [
   { href: "/grid", text: "Grid", icon: GridIcon },
   { href: "/subgrid", text: "Subgrid", icon: SubgridIcon },
   { href: "/flex", text: "Flexbox", icon: FlexboxIcon },
-  { href: "/sda", text: "Scroll", icon: SdaIcon, separator: true },
+  {
+    href: "/sda",
+    text: "Scroll",
+    longText: "Scroll Animations",
+    icon: SdaIcon,
+    separator: true,
+  },
 ];
 
 // const allViewURL = Astro.url.pathname.replace(/\/\d+$/, "");
@@ -50,7 +56,7 @@ const containsDigitAfterSlash =
                 <span class="nav-label">{item.text}</span>
               </a>
               <span popover id={`nav-tooltip-${i}`} class="tooltip">
-                {item.text}
+                {item.longText ?? item.text}
               </span>
             </li>
           ))
