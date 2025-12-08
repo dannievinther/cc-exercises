@@ -1,0 +1,125 @@
+---
+import ChevronIcon from "../icons/chevron.svg";
+import type { Exercise, NavItem } from "../data/navigation";
+
+interface Props {
+  currentItem: NavItem;
+  exercises: Exercise[];
+}
+
+const { currentItem, exercises } = Astro.props;
+---
+
+<button popovertarget="exercise-list" class="exercise-dropdown">
+  <ChevronIcon width={16} height={16} stroke-width={2} />
+</button>
+
+<div popover id="exercise-list" class="exercise-popover">
+  <ol>
+    {
+      exercises.map((exercise, index) => {
+        const num = exercise.id.split("/").pop();
+        const hashId = `${currentItem.collection}-${num}`;
+        return (
+          <li class="exercise-list-item">
+            <a href={`#${hashId}`}>
+              <span class="exercise-num">{index + 1}.</span>
+              <span>{exercise.data.title}</span>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ol>
+</div>
+
+<script>
+  const popover = document.getElementById("exercise-list");
+  popover?.addEventListener("click", (e) => {
+    if ((e.target as HTMLElement).closest("a")) {
+      popover.hidePopover();
+    }
+  });
+</script>
+
+<style>
+  .exercise-dropdown {
+    all: unset;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    padding: 0.15rem;
+    margin-inline: -0.5rem 0.25rem;
+    border-radius: 2rem;
+    color: var(--gray-100);
+    transition: background 0.15s;
+    z-index: 1;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    svg {
+      display: block;
+      transition: rotate 0.2s;
+    }
+  }
+
+  .exercise-dropdown:has(+ .exercise-popover:popover-open) svg {
+    rotate: 180deg;
+  }
+
+  .exercise-popover {
+    position: fixed;
+    position-anchor: --nav;
+    position-area: bottom;
+    margin: 0;
+    margin-block-start: 0.25rem;
+    padding: 0.5rem;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.75rem;
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(0, 0, 0, 0.04);
+    min-width: 200px;
+    bottom: 0;
+    block-size: stretch;
+    max-height: fit-content;
+    overflow-y: auto;
+
+    ol {
+      list-style-type: "";
+      padding: 0;
+      display: grid;
+    }
+
+    .exercise-list-item {
+      display: grid;
+
+      &::marker {
+        font-family: system-ui;
+      }
+    }
+
+    li a {
+      font-family: var(--font-mona);
+      padding: 0.4rem 0.6rem;
+      border-radius: 0.4rem;
+      text-decoration: none;
+      color: var(--gray-900);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.1s;
+
+      &:hover {
+        background: var(--gray-100);
+      }
+    }
+
+    .exercise-num {
+      color: var(--gray-700);
+      font-variant-numeric: tabular-nums;
+    }
+  }
+</style>

@@ -1,0 +1,119 @@
+---
+import type { Exercise, NavItem } from "../data/navigation";
+import { isCurrentPath } from "../data/navigation";
+import ExerciseDropdown from "./ExerciseDropdown.astro";
+
+interface Props {
+  item: NavItem;
+  index: number;
+  exercises: Exercise[];
+  currentItem: NavItem | undefined;
+}
+
+const { item, index, exercises, currentItem } = Astro.props;
+const isCurrent = isCurrentPath(Astro.url.pathname, item.href);
+const showDropdown = isCurrent && exercises.length > 0 && currentItem;
+---
+
+<li class:list={["nav-link", { separator: item.separator }]}>
+  <a
+    interestfor={`nav-tooltip-${index}`}
+    data-astro-prefetch
+    style={`view-transition-name: --current-link-text-${index};`}
+    aria-current={isCurrent ? "page" : undefined}
+    href={item.href}
+  >
+    <span class="nav-icon">
+      <item.icon width={16} height={16} stroke-width={2} />
+    </span>
+    <span class="nav-label">{item.text}</span>
+  </a>
+  {showDropdown && <ExerciseDropdown {currentItem} {exercises} />}
+  <span popover="hint" id={`nav-tooltip-${index}`} class="tooltip">
+    {item.longText ?? item.text}
+  </span>
+</li>
+
+<style>
+  .nav-link {
+    display: flex;
+    align-items: center;
+    anchor-name: --nav-link;
+    anchor-scope: --nav-link;
+
+    &.separator {
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        inset-inline-start: -1.5px;
+        inset-block: 0.4em;
+        width: 1px;
+        background: var(--gray-400);
+      }
+    }
+
+    a {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-1) 0.75rem var(--space-1) 0.7rem;
+      justify-self: start;
+      color: var(--active, var(--gray-800));
+      border-radius: 1e5px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-decoration: none;
+      line-height: 1.25;
+      transition: 0.15s;
+      view-transition-class: current-link-text;
+      isolation: isolate;
+
+      &[aria-current]::before {
+        content: "";
+        position: fixed;
+        position-anchor: --nav-link;
+        position-area: center;
+        place-self: stretch;
+        border-radius: 1e5px;
+        background: var(--gray-1000);
+        transition: 0.15s;
+        z-index: -1;
+        view-transition-name: --current-link;
+      }
+
+      .nav-icon {
+        display: grid;
+      }
+
+      &:not([aria-current="page"]) .nav-label {
+        display: none;
+      }
+
+      &[aria-current] {
+        --active: var(--gray-1000);
+        color: var(--gray-100);
+      }
+
+      &:hover:not([aria-current]) {
+        color: var(--gray-1000);
+      }
+    }
+  }
+
+  .tooltip[popover] {
+    margin: 0;
+    color: #333;
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.3rem;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+    font-size: 80%;
+    font-weight: 500;
+    position-area: bottom;
+    margin-block: 1cap;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    interest-delay: 0.2s;
+  }
+</style>

@@ -1,29 +1,34 @@
 ---
+import { getCollection } from "astro:content";
 import ViewSingleIcon from "../icons/view-single.svg";
-import GridIcon from "../icons/grid2.svg";
-import SubgridIcon from "../icons/subgrid2.svg";
-import FlexboxIcon from "../icons/flex.svg";
-import SdaIcon from "../icons/sda2.svg";
 import AboutPopup from "./AboutPopup.astro";
 import BrowserAlert from "./BrowserAlert.astro";
+import Logo from "./Logo.astro";
+import NavItem from "./NavItem.astro";
+import { navItems, isCurrentPath, type Exercise } from "../data/navigation";
+
 const { hasWarning, title } = Astro.props;
 
-// current pathname from Astro
+// Find current collection based on pathname
+const currentItem = navItems.find((item) =>
+  isCurrentPath(Astro.url.pathname, item.href)
+);
 
-const linkItems = [
-  { href: "/grid", text: "Grid", icon: GridIcon },
-  { href: "/subgrid", text: "Subgrid", icon: SubgridIcon },
-  { href: "/flex", text: "Flexbox", icon: FlexboxIcon },
-  {
-    href: "/sda",
-    text: "Scroll",
-    longText: "Scroll Animations",
-    icon: SdaIcon,
-    separator: true,
-  },
-];
+// Fetch exercises for current collection
+let exercises: Exercise[] = [];
+if (currentItem) {
+  const isStaging = process.env.VERCEL_GIT_COMMIT_REF === "staging";
+  const showDrafts = import.meta.env.DEV || isStaging;
 
-// const allViewURL = Astro.url.pathname.replace(/\/\d+$/, "");
+  const allExercises = (await getCollection(
+    currentItem.collection as any
+  )) as Exercise[];
+  exercises = allExercises
+    .filter((entry: Exercise) => showDrafts || !entry.data.draft)
+    .sort((a: Exercise, b: Exercise) =>
+      a.id.localeCompare(b.id, undefined, { numeric: true })
+    );
+}
 
 const containsDigitAfterSlash =
   Astro.url.pathname.replace(/\/$/, "").match(/\/\d+$/) !== null;
@@ -31,34 +36,12 @@ const containsDigitAfterSlash =
 
 <header class="main-header">
   <div class="header-content">
-    <a href="/" class="logo"
-      ><span>CSS<span>xs</span></span><span class="dev">.dev</span></a
-    >
+    <Logo />
     <nav>
       <ul>
         {
-          linkItems.map((item, i) => (
-            <li class:list={[{ separator: item.separator }]}>
-              <a
-                interestfor={`nav-tooltip-${i}`}
-                data-astro-prefetch
-                style={`view-transition-name: --current-link-text-${i};`}
-                aria-current={
-                  Astro.url.pathname.replace(/\/$/, "").startsWith(item.href)
-                    ? "page"
-                    : undefined
-                }
-                href={item.href}
-              >
-                <span class="nav-icon">
-                  <item.icon width={16} height={16} stroke-width={2} />
-                </span>
-                <span class="nav-label">{item.text}</span>
-              </a>
-              <span popover id={`nav-tooltip-${i}`} class="tooltip">
-                {item.longText ?? item.text}
-              </span>
-            </li>
+          navItems.map((item, i) => (
+            <NavItem {item} index={i} {exercises} {currentItem} />
           ))
         }
       </ul>
@@ -78,64 +61,9 @@ const containsDigitAfterSlash =
   </div>
 </header>
 
-<!-- {
-  hasWarning && (
-    <div class="alert">
-      <p>
-        <strong>Advarsel:</strong> Følgende øvelser virker pt. ikke optimalt i
-        Firefox.
-      </p>
-    </div>
-  )
-} -->
-
 <BrowserAlert />
 
-<!-- <script is:inline>
-  const hiddenLink = document.querySelector(".main-header nav li:last-child");
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const sem = urlParams.get("sem");
-
-  if (sem === "3") {
-    localStorage.setItem("sem", sem);
-  }
-
-  if (localStorage.getItem("sem") === "3") {
-    hiddenLink.hidden = false;
-
-    if (!urlParams.has("sem")) {
-      const updatedUrl = new URL(window.location.href);
-      updatedUrl.searchParams.set("sem", "3");
-      window.history.replaceState({}, "", updatedUrl);
-    }
-  }
-</script> -->
-
 <style>
-  @keyframes --fade {
-    to {
-      /* translate: calc(100% + var(--space-1)); */
-      opacity: 0;
-      scale: 0.5;
-      translate: 0 -35%;
-    }
-  }
-
-  .tooltip[popover] {
-    margin: 0;
-    color: #333;
-    padding: 0.3rem 0.5rem;
-    border-radius: 0.3rem;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-    font-size: 80%;
-    font-weight: 500;
-    position-area: bottom;
-    margin-block: 1cap;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    interest-delay: 0.2s;
-  }
-
   .header-content:has(:interest-source) a {
     interest-delay-start: 0s;
   }
@@ -163,43 +91,23 @@ const containsDigitAfterSlash =
     }
   }
 
-  /* .utils {
-    > :not([popover]) {
-      display: none;
-      @supports (animation-timeline: scroll(root)) {
-        display: flex;
-        gap: 10px;
-        transform-origin: 50% 0;
-
-        animation: --fade ease-in-out both;
-        animation-timeline: scroll(root);
-        animation-range: 0 60px;
-        @media (width <= 768px) {
-          display: none;
-        }
-      }
-    }
-  } */
   .utils > :not([popover]) {
     display: flex;
     gap: 10px;
   }
+
   nav {
+    anchor-name: --nav;
     position-anchor: --header;
     position: fixed;
     inset-inline-start: 0;
     inset-inline-end: 0;
-    inset-block-start: calc(
-      anchor(--header, top) + anchor(--header, height) + var(--space-3)
-    );
     inset-block-start: 1.6rem;
     z-index: 10;
     justify-self: center;
-
     grid-column: 2;
     display: flex;
     justify-content: center;
-
     background: #fffc;
     view-transition-name: nav-background;
     -webkit-backdrop-filter: blur(4px);
@@ -215,71 +123,6 @@ const containsDigitAfterSlash =
       gap: 0.3ch;
       list-style-type: "";
       line-height: 1.25;
-
-      li {
-        &.separator {
-          position: relative;
-
-          &::before {
-            content: "";
-            position: absolute;
-            inset-inline-start: -1.5px;
-            inset-block: 0.4em;
-            width: 1px;
-            background: var(--gray-400);
-          }
-        }
-      }
-
-      a {
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: var(--space-2);
-        padding: var(--space-1) 0.75rem var(--space-1) 0.7rem;
-        justify-self: start;
-        color: var(--active, var(--gray-800));
-        border-radius: 1e5px;
-        font-weight: 500;
-        font-size: 0.9rem;
-        text-decoration: none;
-        line-height: 1.25;
-        transition: 0.15s;
-        view-transition-class: current-link-text;
-
-        position: relative;
-        isolation: isolate;
-
-        &[aria-current]::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          border-radius: 1e5px;
-          background: var(--gray-1000);
-          transition: 0.15s;
-          z-index: -1;
-          view-transition-name: --current-link;
-        }
-
-        .nav-icon {
-          display: grid;
-        }
-
-        &:not([aria-current="page"]) .nav-label {
-          display: none;
-        }
-
-        &[aria-current] {
-          --active: var(--gray-1000);
-          /* background: var(--gray-1000); */
-          color: var(--gray-100);
-          /* anchor-name: --current; */
-        }
-
-        &:hover:not([aria-current]) {
-          color: var(--gray-1000);
-        }
-      }
     }
   }
 
@@ -292,20 +135,8 @@ const containsDigitAfterSlash =
         1fr
       );
     gap: var(--space-5) 0;
-
-    /* margin-block: var(--space-5); */
-    /* margin-block-end: var(--space-7); */
-
-    /* margin-block: 1.75rem 3rem; */
     padding-block: 1.5rlh;
     margin-block-end: 2.5rlh;
-    /* overflow-inline: clip;
-    background: repeating-linear-gradient(
-        -45deg,
-        oklch(from var(--ui-primary) l 0.012 h / 0.4) 0 22.5%,
-        transparent 0 50%
-      )
-      0 0 / 4px 4px; */
     background: #fff;
 
     &::before {
@@ -314,10 +145,6 @@ const containsDigitAfterSlash =
       bottom: 0;
       inset-inline-start: 0;
       inset-inline-end: 0;
-      /* margin-inline: calc((50% - 1200px / 2) - 4lh);
-      border-bottom: 1px dashed
-        oklch(from var(--ui-primary) calc(l * 0.98) 0.012 h);
-      mask: linear-gradient(90deg, #0000, #000 2lh calc(100% - 2lh), #0000); */
       block-size: 1px;
       background: linear-gradient(
         90deg,
@@ -329,15 +156,10 @@ const containsDigitAfterSlash =
       background-size: 8px 1px;
     }
 
-    /* position: sticky;
-    inset-block-start: var(--space-5);
-    z-index: 10; */
-
     .header-content {
       display: grid;
       grid: auto / 1fr auto 1fr;
       align-items: center;
-
       anchor-name: --header-content;
 
       &::before,
@@ -348,17 +170,7 @@ const containsDigitAfterSlash =
         top: 0;
         bottom: anchor(--footer top);
         position-anchor: --header-content;
-        /* --border-style: dashed;
-        mask: linear-gradient(#0000, #000 2lh calc(100% - 2lh), #0000); */
         inline-size: 1px;
-        /* background: linear-gradient(
-          180deg,
-          var(--gray-400),
-          var(--gray-400) 50%,
-          transparent 0,
-          transparent
-        );
-        background-size: 1px 8px; */
         background: var(--gray-300);
       }
       &::before {
@@ -368,6 +180,7 @@ const containsDigitAfterSlash =
         left: calc(anchor(right) + 1rem + 1px);
       }
     }
+
     .utils {
       grid-column-end: -1;
       display: flex;
@@ -378,78 +191,6 @@ const containsDigitAfterSlash =
 
     & > * {
       grid-column: 2;
-    }
-  }
-
-  /* .main-header {
-    pointer-events: none;
-    a,
-    nav,
-    .utils > * {
-      pointer-events: all;
-    }
-  } */
-
-  .exercise-logo {
-    max-width: min-content;
-    padding: 0.8rem;
-    border: 5px double #dedee0;
-    border-radius: 1e5px;
-    color: var(--blue-700);
-    background:
-      radial-gradient(#fff 0 0) content-box,
-      hsl(209deg 27% 93%) padding-box;
-    aspect-ratio: 1;
-  }
-
-  .exercise-logo svg {
-    display: block;
-  }
-
-  .logo {
-    --smooth: 0.2s cubic-bezier(0.4, 0, 0.2, 1) font-variation-settings;
-    font-family: var(--font-flex);
-    font-size: 1.7rem;
-    letter-spacing: 0.03em;
-    line-height: 1;
-    font-weight: 700;
-    width: fit-content;
-    margin-block-start: -0.3em;
-    > :first-child {
-      font-variation-settings:
-        "wdth" 400,
-        "HGHT" 500;
-      color: oklch(from var(--ui-primary) 0.3 0.1 h);
-      display: inline flex;
-      align-items: baseline;
-      cursor: pointer;
-      transform: skewY(-5deg);
-      transition: var(--smooth);
-      .logo:hover & {
-        font-variation-settings:
-          "wdth" 400,
-          "HGHT" 450;
-        /* transform: skewY(0deg); */
-      }
-      span {
-        color: var(--ui-primary-border);
-        color: oklch(from var(--ui-primary) 0.7 0.2 h);
-      }
-    }
-
-    .dev {
-      display: inline-block;
-      font-size: 0.65em;
-      font-variation-settings:
-        "wdth" 350,
-        "HGHT" 500;
-      color: oklch(from var(--ui-primary) 0.7 0.03 h);
-      clip-path: inset(0 100% 0 0);
-      transition: 0.3s clip-path;
-
-      .logo:hover & {
-        clip-path: inset(0);
-      }
     }
   }
 </style>

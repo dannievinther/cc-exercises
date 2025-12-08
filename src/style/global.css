@@ -2,6 +2,23 @@
 @import "./prism.css" layer(prism);
 @import "./custom.css" layer(custom);
 
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a,
+li,
+label,
+button,
+summary {
+  font-feature-settings: "ss01";
+}
+
 path,
 g,
 symbol {
