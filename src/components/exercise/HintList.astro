@@ -30,9 +30,13 @@ const { hints } = Astro.props;
     /* background: #e9eef4; */
     border-radius: var(--bdrs-l);
     /* margin-block-start: calc(var(--space-4) * -1); */
-    margin-block-start: -0.7rem;
+    margin-block-start: -0.4rem;
 
     background: #fff;
+
+    & ~ .hints {
+      margin-block-start: -0.85rem;
+    }
   }
 
   [data-type="property"] {
