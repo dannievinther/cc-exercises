@@ -123,4 +123,20 @@ function getHints(type) {
       display: none;
     }
   }
+  @supports (height: calc-size(auto, size)) {
+    details {
+      .hints:first-of-type {
+        margin-top: 0;
+      }
+      &::details-content {
+        overflow: clip;
+        height: 0;
+        transition: 0.3s allow-discrete;
+        margin-top: -0.4rem;
+      }
+      &[open]::details-content {
+        height: calc-size(auto, size);
+      }
+    }
+  }
 </style>

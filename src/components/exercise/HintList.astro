@@ -40,13 +40,11 @@ const { hints } = Astro.props;
   }
 
   [data-type="property"] {
-    --m: var(--ui-surface);
-    --mbg: var(--blue-700);
+    --type-color: #fff;
   }
 
   [data-type="value"] {
-    --m: var(--ui-secondary);
-    --mbg: var(--pink-900);
+    --type-color: #ffd493;
   }
 
   li[data-type] {
@@ -70,7 +68,7 @@ const { hints } = Astro.props;
     padding-inline: var(--space-2);
     padding-block: 0;
     font-size: 0.9em;
-    color: var(--m, var(--ui-primary));
+    color: var(--type-color);
     border-radius: var(--bdrs-md);
     cursor: pointer;
     transition: 0.2s;
@@ -78,20 +76,6 @@ const { hints } = Astro.props;
       color: var(--blue-500);
       text-shadow: 0 0 6px hsl(from var(--blue-500) h s l / 50%);
     }
-  }
-
-  li::before {
-    content: "";
-    content: none;
-    color: var(--m, currentColor);
-    box-shadow: 0 0 0px black;
-    inline-size: var(--space-2);
-    block-size: var(--space-2);
-    border-radius: 50%;
-    background: var(--m);
-    margin-inline-end: var(--space-3);
-    box-shadow: 0 0 0 1px var(--mbg);
-    flex-shrink: 0;
   }
 </style>
 
