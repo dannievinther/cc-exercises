@@ -1,10 +1,10 @@
 ---
 import { getCollection } from "astro:content";
-import ViewSingleIcon from "../icons/view-single.svg";
 import AboutPopup from "./AboutPopup.astro";
 import BrowserAlert from "./BrowserAlert.astro";
 import Logo from "./Logo.astro";
 import NavItem from "./NavItem.astro";
+import ViewToggle from "./ViewToggle.astro";
 import { navItems, isCurrentPath, type Exercise } from "../data/navigation";
 
 const { hasWarning, title } = Astro.props;
@@ -30,8 +30,10 @@ if (currentItem) {
     );
 }
 
-const containsDigitAfterSlash =
+const isSingleView =
   Astro.url.pathname.replace(/\/$/, "").match(/\/\d+$/) !== null;
+const baseHref = currentItem?.href || "/grid";
+const singleHref = baseHref.replace(/\/$/, "") + "/1";
 ---
 
 <header class="main-header">
@@ -48,15 +50,7 @@ const containsDigitAfterSlash =
     </nav>
     <div class="utils">
       <AboutPopup class="about-button" />
-      <div class="view">
-        {
-          !containsDigitAfterSlash && (
-            <a href={Astro.url.pathname.replace(/\/$/, "") + "/1"}>
-              <ViewSingleIcon width={20} height={20} />
-            </a>
-          )
-        }
-      </div>
+      <ViewToggle {isSingleView} {baseHref} {singleHref} />
     </div>
   </div>
 </header>
@@ -64,37 +58,6 @@ const containsDigitAfterSlash =
 <BrowserAlert />
 
 <style>
-  .header-content:has(:interest-source) a {
-    interest-delay-start: 0s;
-  }
-
-  .view {
-    a {
-      background: var(--surface-elevated);
-      backdrop-filter: blur(4px);
-      border-radius: 1e5px;
-      padding: var(--space-1);
-      corner-shape: squircle;
-      box-shadow: var(--shadow-ui);
-
-      &:hover {
-        background: oklch(from currentcolor 95% 0 h);
-      }
-      &:active {
-        scale: 0.97;
-      }
-    }
-
-    svg {
-      display: block;
-    }
-  }
-
-  .utils > :not([popover]) {
-    display: flex;
-    gap: 10px;
-  }
-
   nav {
     anchor-name: --nav;
     position-anchor: --header;

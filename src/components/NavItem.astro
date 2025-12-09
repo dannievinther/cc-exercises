@@ -2,6 +2,7 @@
 import type { Exercise, NavItem } from "../data/navigation";
 import { isCurrentPath } from "../data/navigation";
 import ExerciseDropdown from "./ExerciseDropdown.astro";
+import Tooltip from "./Tooltip.astro";
 
 interface Props {
   item: NavItem;
@@ -13,11 +14,12 @@ interface Props {
 const { item, index, exercises, currentItem } = Astro.props;
 const isCurrent = isCurrentPath(Astro.url.pathname, item.href);
 const showDropdown = isCurrent && exercises.length > 0 && currentItem;
+const tooltipId = `nav-tooltip-${index}`;
 ---
 
 <li class:list={["nav-link", { separator: item.separator }]}>
   <a
-    interestfor={`nav-tooltip-${index}`}
+    interestfor={tooltipId}
     data-astro-prefetch
     style={`view-transition-name: --current-link-text-${index};`}
     aria-current={isCurrent ? "page" : undefined}
@@ -29,9 +31,7 @@ const showDropdown = isCurrent && exercises.length > 0 && currentItem;
     <span class="nav-label">{item.text}</span>
   </a>
   {showDropdown && <ExerciseDropdown {currentItem} {exercises} />}
-  <span popover="hint" id={`nav-tooltip-${index}`} class="tooltip">
-    {item.longText ?? item.text}
-  </span>
+  <Tooltip id={tooltipId} text={item.longText ?? item.text} />
 </li>
 
 <style>
@@ -101,19 +101,5 @@ const showDropdown = isCurrent && exercises.length > 0 && currentItem;
         color: var(--gray-1000);
       }
     }
-  }
-
-  .tooltip[popover] {
-    margin: 0;
-    color: #333;
-    padding: 0.3rem 0.5rem;
-    border-radius: 0.3rem;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-    font-size: 80%;
-    font-weight: 500;
-    position-area: bottom;
-    margin-block: 1cap;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    interest-delay: 0.2s;
   }
 </style>

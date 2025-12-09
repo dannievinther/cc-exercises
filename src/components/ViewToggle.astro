@@ -1,0 +1,92 @@
+---
+import ViewSingleIcon from "../icons/view-single.svg";
+import ViewAllIcon from "../icons/view-all.svg";
+import Tooltip from "./Tooltip.astro";
+
+interface Props {
+  isSingleView: boolean;
+  baseHref: string;
+  singleHref: string;
+}
+
+const { isSingleView, baseHref, singleHref } = Astro.props;
+const tooltipText = isSingleView
+  ? "Vis alle øvelser"
+  : "Vis én øvelse ad gangen";
+---
+
+<a
+  href={isSingleView ? baseHref : singleHref}
+  class="view-toggle"
+  data-view={isSingleView ? "single" : "all"}
+  data-astro-prefetch
+  interestfor="view-tooltip"
+>
+  <span class="icon-single" aria-hidden="true">
+    <ViewSingleIcon width={20} height={20} />
+  </span>
+  <span class="icon-all" aria-hidden="true">
+    <ViewAllIcon width={20} height={20} stroke-width={2} />
+  </span>
+</a>
+<Tooltip id="view-tooltip" text={tooltipText} />
+
+<style>
+  .view-toggle {
+    color: inherit;
+    display: grid;
+    background: var(--surface-elevated);
+    backdrop-filter: blur(4px);
+    border-radius: 1e5px;
+    padding: var(--space-1);
+    corner-shape: squircle;
+    box-shadow: var(--shadow-ui);
+
+    &:hover {
+      background: oklch(from currentcolor 95% 0 h);
+    }
+    &:active {
+      scale: 0.97;
+    }
+
+    svg {
+      display: block;
+    }
+
+    .icon-single,
+    .icon-all {
+      grid-area: 1 / 1;
+      display: grid;
+      transition: opacity 0.15s;
+    }
+
+    /* Default: show single icon (go to single view) */
+    .icon-single {
+      opacity: 1;
+
+      svg {
+        transform-box: fill-box;
+        > * {
+          transition: 0.3s;
+
+          .view-toggle:hover &:nth-child(2) {
+            translate: 15% -15%;
+          }
+        }
+      }
+    }
+    .icon-all {
+      opacity: 0;
+    }
+
+    /* In single view: show all icon (to go back) */
+    &[data-view="single"] {
+      .icon-single {
+        opacity: 0;
+      }
+      .icon-all {
+        opacity: 1;
+      }
+    }
+  }
+</style>

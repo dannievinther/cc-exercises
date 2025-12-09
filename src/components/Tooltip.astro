@@ -1,0 +1,41 @@
+---
+interface Props {
+  id: string;
+  text: string;
+  class?: string;
+}
+
+const { id, text, class: className } = Astro.props;
+---
+
+<span popover="hint" id={id} class:list={["tooltip", className]}>
+  {text}
+</span>
+
+<style>
+  /* Default delay for tooltip triggers */
+  :global([interestfor]) {
+    --interest-delay-start: 0.2s;
+    --interest-delay-end: 0.2s;
+    interest-delay: var(--interest-delay-start) var(--interest-delay-end);
+  }
+
+  /* When a tooltip is already showing in a container, remove delay for siblings */
+  :global(:has(:interest-source) [interestfor]) {
+    interest-delay-start: 0s;
+  }
+
+  .tooltip[popover] {
+    margin: 0;
+    color: #333;
+    padding: 0.3rem 0.5rem;
+    justify-self: anchor-center;
+    border-radius: 0.3rem;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+    font-size: 80%;
+    font-weight: 500;
+    position-area: bottom;
+    margin-block: 1cap;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+  }
+</style>

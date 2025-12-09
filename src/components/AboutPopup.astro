@@ -1,13 +1,20 @@
 ---
 import InfoIcon from "../icons/info.svg";
+import Tooltip from "./Tooltip.astro";
 
 const { class: className } = Astro.props;
 ---
 
-<button class={className} popovertarget="about-box">
+<button
+  class={className}
+  popovertarget="about-box"
+  interestfor="about-box-interest"
+>
   <InfoIcon stroke-width={2} width={20} height={20} />
   <span class="visually-hidden">Om øvelserne</span>
 </button>
+
+<Tooltip id="about-box-interest" text="Om øvelserne" />
 
 <div popover id="about-box">
   <header>
@@ -74,7 +81,7 @@ const { class: className } = Astro.props;
 
 <style>
   .about-button {
-    all: unset;
+    color: unset;
     background: var(--surface-elevated);
     border-radius: 1e5px;
     corner-shape: squircle;

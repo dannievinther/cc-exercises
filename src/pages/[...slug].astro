@@ -7,6 +7,10 @@ import ChevronLeftIcon from "../icons/chevron-left.svg";
 import ChevronRightIcon from "../icons/chevron-right.svg";
 
 export async function getStaticPaths() {
+  // Vis drafts i dev-mode eller på staging branch (Vercel)
+  const isStaging = process.env.VERCEL_GIT_COMMIT_REF === "staging";
+  const showDrafts = import.meta.env.DEV || isStaging;
+
   const [grid, flexbox, subgrid, defensive, sda] = await Promise.all([
     getCollection("grid"),
     getCollection("flexbox"),
@@ -15,12 +19,23 @@ export async function getStaticPaths() {
     getCollection("sda"),
   ]);
 
+  // Filter out drafts unless in dev mode or on staging
+  const filterDrafts = <T extends { data: { draft?: boolean } }>(
+    entries: T[]
+  ): T[] => entries.filter((entry) => showDrafts || !entry.data.draft);
+
+  const filteredGrid = filterDrafts(grid);
+  const filteredFlexbox = filterDrafts(flexbox);
+  const filteredSubgrid = filterDrafts(subgrid);
+  const filteredDefensive = filterDrafts(defensive);
+  const filteredSda = filterDrafts(sda);
+
   const allCollections = [
-    ...grid,
-    ...flexbox,
-    ...subgrid,
-    ...defensive,
-    ...sda,
+    ...filteredGrid,
+    ...filteredFlexbox,
+    ...filteredSubgrid,
+    ...filteredDefensive,
+    ...filteredSda,
   ];
 
   return allCollections.map((entry, index) => ({
@@ -29,7 +44,7 @@ export async function getStaticPaths() {
     props: {
       entry,
       index: getIndex(entry, index),
-      total: getTotal(entry, grid, flexbox, subgrid, defensive, sda),
+      total: getTotal(entry),
       theme: getTheme(entry.collection),
       slugs: getCollectionSlugs(entry.collection),
     },
@@ -53,14 +68,14 @@ export async function getStaticPaths() {
     return entryIndex + 1;
   }
 
-  function getTotal(entry, grid, flexbox, subgrid, defensive, sda) {
+  function getTotal(entry) {
     const collection = entry.collection;
     const collectionMap = {
-      grid: grid.length,
-      flexbox: flexbox.length,
-      subgrid: subgrid.length,
-      defensive: defensive.length,
-      sda: sda.length,
+      grid: filteredGrid.length,
+      flexbox: filteredFlexbox.length,
+      subgrid: filteredSubgrid.length,
+      defensive: filteredDefensive.length,
+      sda: filteredSda.length,
     };
 
     return collectionMap[collection] || 0;
