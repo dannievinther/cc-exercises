@@ -44,40 +44,67 @@ const { title = "CSS Exercise" } = Astro.props;
         document.body.closest("[data-theme]")?.getAttribute("data-theme") ||
         "green";
 
-      // Theme-based custom properties
-      const themeColors: Record<string, { primary: string; border: string }> = {
+      // Theme-based custom properties matching site tokens
+      const themeColors: Record<
+        string,
+        { primary: string; border: string; secondary: string }
+      > = {
         green: {
           primary: "hsl(153.07deg 89.8% 80.78% / 95%)",
+          secondary: "hsl(153.07deg 70% 65%)",
           border: "hsl(153.07deg 79.8% 39.78%)",
         },
         purple: {
           primary: "#f3daf8",
+          secondary: "#e2b9ea",
           border: "#be8cc8",
         },
         indigo: {
           primary: "oklch(89% 0.07 292.66 / 0.95)",
+          secondary: "oklch(75% 0.1 292.66)",
           border: "oklch(60% 0.07 292.66)",
+        },
+        periwinkle: {
+          primary: "oklch(88% 0.08 265)",
+          secondary: "oklch(72% 0.13 265)",
+          border: "oklch(52% 0.16 265)",
+        },
+        pink: {
+          primary: "oklch(88% 0.08 320)",
+          secondary: "oklch(71% 0.1 320)",
+          border: "oklch(52% 0.12 320)",
         },
       };
 
       const colors = themeColors[pageTheme] || themeColors.green;
 
-      const baseCSS = `
+      // Determine exercise type from URL path
+      const path = window.location.pathname;
+      const isSDA = path.includes("/sda");
+      const isGrid = path.includes("/grid");
+      const isSubgrid = path.includes("/subgrid");
+      const isFlex = path.includes("/flex");
+
+      // Base CSS shared across all exercise types
+      const sharedCSS = `
 
 
-      
 
 
 
 
-      
+
+
+
+
 :root {
   --ui-primary: ${colors.primary};
   --ui-primary-border: ${colors.border};
+  --ui-primary-dark: ${colors.secondary};
 }
 
 .container {
-    background: #f1eef5;
+  background: #f1eef5;
 }
 
 .box, [class|="box"] {
@@ -90,29 +117,77 @@ const { title = "CSS Exercise" } = Astro.props;
   line-height: 1.7;
   border: 1px solid var(--ui-primary-border);
 }
-  
-:is([class|="box"],.box):has(*) {
+
+:is([class|="box"], .box):has(*) {
   padding: 1rem;
   place-items: revert;
 }
+
 :is([class|="box"], .box):has(*) {
-    > :is([class*="box"],h4,p,dt,dd) {
-    background: oklch(75% 0.1 292.66);
+  > :is([class*="box"], h4, p, dt, dd) {
+    background: var(--ui-primary-dark);
     padding-inline: 0.5rem;
-    }
-}
-    
-dt {
-  color: oklch(75% 0.1 292.66);
+  }
 }
 
-dl,
-dt,
-dd {
-margin: 0;
+dt {
+  color: var(--ui-primary-dark);
+}
+
+dl, dt, dd {
+  margin: 0;
   padding: 0;
   text-align: start;
 }`;
+
+      // SDA-specific CSS with scroll container setup
+      const sdaCSS = `html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: conic-gradient(from 90deg at 1px 1px,#0000 25%,oklch(from var(--ui-primary) 0.95 0.025 h) 0) -0.5px 0px / 25px 25px round local content-box,oklch(from var(--ui-primary) 0.99 0.01 h) content-box;
+  font-family: system-ui, sans-serif;
+  &::before,
+  &::after {
+    content: "";
+    display: grid;
+    place-content: center;
+    block-size: 100%;
+    content: "Scroll ↓";
+    font-weight: 800;
+    color: var(--ui-primary-dark);
+  }
+  &::after {
+    content: "Scroll ↑";
+  }
+}
+
+.container {
+  background: unset;
+}
+
+.container:has(.frame) {
+  padding: 1lh;
+  background: unset;
+  outline: 1px dashed var(--ui-primary-dark);
+  outline-offset: -2px;
+}
+
+.frame {
+  color: var(--ui-primary-border);
+  outline: 1px dashed var(--ui-primary-border);
+  outline-offset: -2px;
+  display: grid;
+}
+`;
+
+      // Compose final baseCSS based on exercise type
+      let baseCSS = sharedCSS;
+      if (isSDA) {
+        baseCSS += sdaCSS;
+      }
 
       const title = formEl.dataset.title || "CSS Exercise";
       const exerciseCSS = cssTextarea.value;
