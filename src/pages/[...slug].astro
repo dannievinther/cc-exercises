@@ -141,14 +141,14 @@ const prevLink = (entry) => {
       prevLink(entry) && (
         <a href={prevLink(entry)} class="prev">
           <ChevronLeftIcon stroke-width={3} width={16} height={16} />
-          <span>Forrige øvelse</span>
+          <span>Forrige</span>
         </a>
       )
     }
     {
       index < total && (
         <a href={nextLink(entry, total)} class="next">
-          <span>Næste øvelse</span>
+          <span>Næste</span>
           <ChevronRightIcon stroke-width={3} width={16} height={16} />
         </a>
       )
@@ -189,13 +189,21 @@ const prevLink = (entry) => {
         #fff;
       border: 1px solid transparent;
 
+      color: unset;
+      background: var(--surface-elevated);
+      border-radius: 1e5px;
+      corner-shape: squircle;
+      padding: var(--space-4) var(--space-5);
+      box-shadow: var(--shadow-ui);
+      cursor: pointer;
+
       &.prev {
         --offset: 0.2rem;
-        padding-inline-start: var(--space-5);
+        padding-inline-start: var(--space-4);
       }
       &.next {
         --offset: -0.2rem;
-        padding-inline-end: var(--space-5);
+        padding-inline-end: var(--space-4);
       }
 
       [data-icon] {
