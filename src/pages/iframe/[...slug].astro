@@ -1,0 +1,267 @@
+---
+import { getCollection } from "astro:content";
+import { Font } from "astro:assets";
+import Editor from "../../components/exercise/Editor.astro";
+import Output from "../../components/exercise/Output.astro";
+import SDAOutput from "../../components/exercise/SDAOutput.astro";
+import "/src/style/global.css";
+
+export async function getStaticPaths() {
+  // Vis drafts i dev-mode eller på staging branch (Vercel)
+  const isStaging = process.env.VERCEL_GIT_COMMIT_REF === "staging";
+  const showDrafts = import.meta.env.DEV || isStaging;
+
+  const [grid, flexbox, subgrid, defensive, sda] = await Promise.all([
+    getCollection("grid"),
+    getCollection("flexbox"),
+    getCollection("subgrid"),
+    getCollection("defensive"),
+    getCollection("sda"),
+  ]);
+
+  // Filter out drafts unless in dev mode or on staging
+  const filterDrafts = <T extends { data: { draft?: boolean } }>(
+    entries: T[]
+  ): T[] => entries.filter((entry) => showDrafts || !entry.data.draft);
+
+  const filteredGrid = filterDrafts(grid);
+  const filteredFlexbox = filterDrafts(flexbox);
+  const filteredSubgrid = filterDrafts(subgrid);
+  const filteredDefensive = filterDrafts(defensive);
+  const filteredSda = filterDrafts(sda);
+
+  const allCollections = [
+    ...filteredGrid,
+    ...filteredFlexbox,
+    ...filteredSubgrid,
+    ...filteredDefensive,
+    ...filteredSda,
+  ];
+
+  return allCollections.map((entry) => ({
+    params: { slug: slug(entry) },
+    props: {
+      entry,
+      theme: getTheme(entry.collection),
+    },
+  }));
+
+  function getTheme(collection) {
+    const themeMap = {
+      grid: "green",
+      flexbox: "purple",
+      subgrid: "indigo",
+      defensive: "green",
+      sda: "periwinkle",
+    };
+
+    return themeMap[collection];
+  }
+
+  function slug(entry) {
+    if (entry.collection === "flexbox") {
+      return `flex/${entry.id.replace(/^0+/, "")}`;
+    } else {
+      return `${entry.collection}/${entry.id.replace(/^0+/, "")}`;
+    }
+  }
+}
+
+const { entry, theme } = Astro.props;
+const { id, data, collection } = entry;
+const colID = id.split("/").pop();
+const exerciseID = `${collection}-${colID}`;
+
+// Determine collection type for conditional property access
+const isSDA = collection === "sda";
+const isDefensive = collection === "defensive";
+
+// Extract properties with proper fallbacks based on collection type
+const startingCSS = data.startingCSS ?? "";
+const startingHTML = data.startingHTML;
+const help = data.help;
+
+// SDA-specific properties
+const boxContent = isSDA && "boxContent" in data ? data.boxContent : undefined;
+const markers = isSDA && "markers" in data ? data.markers : undefined;
+
+// Standard/Defensive-specific properties
+const hiddenCSS =
+  isDefensive && "hiddenCSS" in data ? data.hiddenCSS : undefined;
+const canAddBoxes =
+  !isSDA && "canAddBoxes" in data ? data.canAddBoxes : undefined;
+const showOutputSize =
+  !isSDA && "showOutputSize" in data ? data.showOutputSize : undefined;
+
+// Box count - SDA uses 1 by default, others use data.boxes
+const boxes = isSDA ? [1] : [...Array("boxes" in data ? data.boxes : 1)];
+---
+
+<!doctype html>
+<html lang="da" data-theme={theme}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{data.title} - Iframe</title>
+    <Font cssVariable="--font-mona" preload />
+    <Font cssVariable="--font-mono" preload />
+    <Font cssVariable="--font-flex" preload />
+    <style is:inline>
+      @layer reset, prism, custom, tokens, components;
+    </style>
+  </head>
+  <body data-iframe>
+    <section
+      data-exercise-key={exerciseID}
+      class:list={[isSDA && "sda-exercise", "iframe-container"]}
+    >
+      <Editor
+        id={exerciseID}
+        startingCSS={startingCSS.trim()}
+        hiddenCSS={hiddenCSS}
+        {boxes}
+        helpLink={help?.link}
+        helpTopic={help?.topic}
+        {startingHTML}
+      />
+      {
+        isSDA ? (
+          <SDAOutput {boxContent} {startingHTML} {markers} />
+        ) : (
+          <Output {boxes} {startingHTML} {showOutputSize} />
+        )
+      }
+    </section>
+
+    <script is:inline src="/script/bliss-minimal.js"></script>
+    <script is:inline src="/script/prism.js"></script>
+    <script is:inline src="/script/prism-linenumbers.js"></script>
+    <script>
+      // Load Prism editor extensions
+      let prismLoaded = false;
+
+      async function loadPrismExtensions() {
+        if (prismLoaded) return;
+        prismLoaded = true;
+
+        await new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "/script/prism-live.js";
+          script.onload = resolve;
+          script.onerror = reject;
+          document.body.appendChild(script);
+        });
+
+        const dependentScripts = [
+          "/script/prism-live-markup.js",
+          "/script/prism-live-css.js",
+        ];
+
+        dependentScripts.forEach((src) => {
+          const script = document.createElement("script");
+          script.src = src;
+          document.body.appendChild(script);
+        });
+      }
+
+      document.addEventListener(
+        "focusin",
+        (e) => {
+          if (
+            e.target instanceof HTMLTextAreaElement &&
+            e.target.classList.contains("prism-live")
+          ) {
+            loadPrismExtensions();
+          }
+        },
+        { once: true }
+      );
+
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(loadPrismExtensions, { timeout: 3000 });
+      } else {
+        setTimeout(loadPrismExtensions, 100);
+      }
+    </script>
+
+    <script>
+      // Import the appropriate exercise script based on exercise type
+      // Both are imported but only one will find matching sections
+      import "../../js/exercises.js";
+      import "../../js/sda-exercises.js";
+    </script>
+  </body>
+</html>
+
+<style>
+  [data-theme="green"] {
+    --ui-primary: var(--green-100);
+    --ui-primary-dark: var(--green-200);
+    --ui-primary-border: var(--green-400);
+  }
+
+  [data-theme="purple"] {
+    --ui-primary: var(--violet-100);
+    --ui-primary-dark: var(--violet-200);
+    --ui-primary-border: var(--violet-400);
+  }
+
+  [data-theme="indigo"] {
+    --ui-primary: var(--indigo-100);
+    --ui-primary-dark: var(--indigo-200);
+    --ui-primary-border: var(--indigo-400);
+  }
+
+  [data-theme="periwinkle"] {
+    --ui-primary: var(--periwinkle-100);
+    --ui-primary-dark: var(--periwinkle-200);
+    --ui-primary-border: var(--periwinkle-400);
+  }
+
+  [data-theme="pink"] {
+    --ui-primary: var(--pink-100);
+    --ui-primary-dark: var(--pink-200);
+    --ui-primary-border: var(--pink-400);
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+  body {
+    background: var(--ui-surface, #fff);
+    font-family: system-ui, sans-serif;
+  }
+
+  .iframe-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    height: 100%;
+    box-sizing: border-box;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr 1fr;
+    }
+  }
+
+  /* Override default section styles for iframe */
+  section.iframe-container {
+    margin: 0;
+    max-width: none;
+  }
+</style>
+
+<style is:global>
+  @layer iframe {
+    .editor {
+      margin: 0;
+      block-size: auto;
+    }
+  }
+</style>

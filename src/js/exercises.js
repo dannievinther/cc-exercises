@@ -29,11 +29,15 @@ function scheduleUpdate(updateFn) {
 // Cache sections once - exclude SDA exercises (handled by sda-exercises.js)
 const sections = document.querySelectorAll("section:not(.sda-exercise)");
 
-let exerciseData = JSON.parse(localStorage.getItem("exerciseData")) || {};
+// Use separate localStorage namespace for iframe embeds
+const isIframe = document.body.hasAttribute("data-iframe");
+const storageKey = isIframe ? "exerciseData-iframe" : "exerciseData";
+
+let exerciseData = JSON.parse(localStorage.getItem(storageKey)) || {};
 
 // Debounced localStorage save (300ms delay)
 const debouncedSaveToStorage = debounce(() => {
-  localStorage.setItem("exerciseData", JSON.stringify(exerciseData));
+  localStorage.setItem(storageKey, JSON.stringify(exerciseData));
 }, 300);
 
 // Cache for DOM elements per section

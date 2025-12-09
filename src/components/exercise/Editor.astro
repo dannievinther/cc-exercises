@@ -332,321 +332,323 @@ const resetDialogId = `${id}-reset-dialog`;
 </script>
 
 <style>
-  [data-icon="external-1"] {
-    vertical-align: middle;
-    margin-inline-start: 0.1em;
-    stroke: currentColor;
-  }
-  .editor {
-    anchor-name: --editor;
-    position: relative;
-    z-index: 1;
-    background: var(--blue-800);
-    margin: 0;
-    justify-self: stretch;
-    display: grid;
-    grid-template-rows: min-content 1fr min-content;
-    block-size: 100%;
-    touch-action: none;
-    border-radius: var(--bdrs-xl);
+  @layer components {
+    [data-icon="external-1"] {
+      vertical-align: middle;
+      margin-inline-start: 0.1em;
+      stroke: currentColor;
+    }
+    .editor {
+      anchor-name: --editor;
+      position: relative;
+      z-index: 1;
+      background: var(--blue-800);
+      margin: 0;
+      justify-self: stretch;
+      display: grid;
+      grid-template-rows: min-content 1fr min-content;
+      block-size: 100%;
+      touch-action: none;
+      border-radius: var(--bdrs-xl);
 
-    block-size: calc(100% + 2 * var(--space-6));
-    min-block-size: 425px;
-    margin-inline-start: calc(-2 * var(--space-6));
-    margin-block-end: calc(-2 * var(--space-6));
-    box-shadow: 0 39.275px 70px -14.275px rgb(0 0 0 / 30%);
+      block-size: calc(100% + 2 * var(--space-6));
+      min-block-size: 425px;
+      margin-inline-start: calc(-2 * var(--space-6));
+      margin-block-end: calc(-2 * var(--space-6));
+      box-shadow: 0 39.275px 70px -14.275px rgb(0 0 0 / 30%);
 
-    .editor-actions {
-      display: flex;
-      align-items: center;
-      gap: var(--space-4);
-      border-top: 1px solid hsl(208 76% 26%);
-      padding: var(--space-4) 0;
-      margin-inline: calc(var(--space-2) + var(--space-1));
+      .editor-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        border-top: 1px solid hsl(208 76% 26%);
+        padding: var(--space-4) 0;
+        margin-inline: calc(var(--space-2) + var(--space-1));
 
-      :global(.codepen-form) {
-        margin-inline-start: auto;
+        :global(.codepen-form) {
+          margin-inline-start: auto;
+        }
+      }
+
+      @media (max-width: 895px) {
+        order: 1;
       }
     }
 
-    @media (max-width: 895px) {
-      order: 1;
+    /* Tabs styling */
+    .editor-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0;
+      margin: 0;
+      border-start-start-radius: inherit;
+      border-start-end-radius: inherit;
+      background: var(--blue-900);
+      overflow: clip;
+      margin-block-end: 0.4lh;
     }
-  }
 
-  /* Tabs styling */
-  .editor-tabs {
-    display: flex;
-    gap: 0;
-    padding: 0;
-    margin: 0;
-    border-start-start-radius: inherit;
-    border-start-end-radius: inherit;
-    background: var(--blue-900);
-    overflow: clip;
-    margin-block-end: 0.4lh;
-  }
+    .editor-tabs [role="tab"] {
+      display: inline flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: 0.875rem;
+      line-height: 0.9;
+      padding: 1lh 1.5lh;
+      font-family: var(--font-mona);
+      font-weight: 500;
+      font-variation-settings: "GRAD" 250;
+      color: var(--blue-muted-comment);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      border-radius: 0;
+      box-shadow: unset;
+      border: 0;
+      border-block-width: 2px;
+      border-style: solid;
+      border-block-color: #0000 var(--active-tab, #0000);
+    }
 
-  .editor-tabs [role="tab"] {
-    display: inline flex;
-    align-items: center;
-    gap: var(--space-2);
-    font-size: 0.875rem;
-    line-height: 0.9;
-    padding: 1lh 1.5lh;
-    font-family: var(--font-mona);
-    font-weight: 500;
-    font-variation-settings: "GRAD" 250;
-    color: var(--blue-muted-comment);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    border-radius: 0;
-    box-shadow: unset;
-    border: 0;
-    border-block-width: 2px;
-    border-style: solid;
-    border-block-color: #0000 var(--active-tab, #0000);
-  }
-
-  /* .editor-tabs [role="tab"]:first-child {
+    /* .editor-tabs [role="tab"]:first-child {
     border-start-start-radius: var(--bdrs-xl);
   } */
 
-  .editor-tabs [role="tab"][aria-selected="true"] {
-    --active-tab: var(--blue-500);
-    background: var(--blue-800);
-    color: var(--gray-100);
-    font-variation-settings: "GRAD" 600;
-  }
-
-  .editor-tabs [role="tab"][aria-selected="false"]:hover,
-  .editor-tabs [role="tab"][aria-selected="false"]:focus-visible {
-    color: var(--gray-300);
-    background: hsl(208 76% 22%);
-  }
-
-  .editor-tabs [role="tab"]:focus-visible {
-    outline: 2px solid var(--blue-500);
-    outline-offset: -2px;
-  }
-
-  .editor-tabs [role="tab"] .focus {
-    pointer-events: none;
-  }
-
-  .editor-tabs [role="tab"] svg {
-    flex-shrink: 0;
-  }
-
-  /* Tabpanels */
-  .tabpanels {
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 1fr;
-    flex: 1;
-    overflow: hidden;
-  }
-
-  .tabpanel {
-    grid-area: 1 / 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .tabpanel.is-hidden {
-    visibility: hidden;
-    pointer-events: none;
-    height: 0;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .tabpanel-css {
-    z-index: 1;
-  }
-
-  .tabpanel-html {
-    z-index: 0;
-  }
-
-  .tabpanel.is-hidden.tabpanel-css {
-    z-index: 0;
-  }
-
-  .tabpanel:not(.is-hidden).tabpanel-html {
-    z-index: 1;
-    height: auto;
-  }
-
-  .tabpanel textarea {
-    flex: 1;
-  }
-
-  .tabpanel-html textarea {
-    cursor: default;
-  }
-
-  small {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: hsl(209, 23%, 74%);
-    position: relative;
-    display: flex;
-    gap: 0.5ch;
-    flex-wrap: wrap;
-    margin-inline-start: var(--space-2);
-
-    a:any-link {
-      text-decoration: none;
+    .editor-tabs [role="tab"][aria-selected="true"] {
+      --active-tab: var(--blue-500);
+      background: var(--blue-800);
       color: var(--gray-100);
-      gap: var(--space-1);
-      align-items: center;
+      font-variation-settings: "GRAD" 600;
+    }
 
-      span {
-        text-decoration: underline;
-        text-decoration-color: var(--blue-500);
-      }
+    .editor-tabs [role="tab"][aria-selected="false"]:hover,
+    .editor-tabs [role="tab"][aria-selected="false"]:focus-visible {
+      color: var(--gray-300);
+      background: hsl(208 76% 22%);
+    }
 
-      svg {
-        inline-size: 1.15em;
-        block-size: 1.15em;
-      }
+    .editor-tabs [role="tab"]:focus-visible {
+      outline: 2px solid var(--blue-500);
+      outline-offset: -2px;
+    }
 
-      &:hover,
-      &:focus-visible {
-        color: var(--text-inverted);
+    .editor-tabs [role="tab"] .focus {
+      pointer-events: none;
+    }
+
+    .editor-tabs [role="tab"] svg {
+      flex-shrink: 0;
+    }
+
+    /* Tabpanels */
+    .tabpanels {
+      display: grid;
+      grid-template-rows: 1fr;
+      grid-template-columns: 1fr;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .tabpanel {
+      grid-area: 1 / 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .tabpanel.is-hidden {
+      visibility: hidden;
+      pointer-events: none;
+      height: 0;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .tabpanel-css {
+      z-index: 1;
+    }
+
+    .tabpanel-html {
+      z-index: 0;
+    }
+
+    .tabpanel.is-hidden.tabpanel-css {
+      z-index: 0;
+    }
+
+    .tabpanel:not(.is-hidden).tabpanel-html {
+      z-index: 1;
+      height: auto;
+    }
+
+    .tabpanel textarea {
+      flex: 1;
+    }
+
+    .tabpanel-html textarea {
+      cursor: default;
+    }
+
+    small {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: hsl(209, 23%, 74%);
+      position: relative;
+      display: flex;
+      gap: 0.5ch;
+      flex-wrap: wrap;
+      margin-inline-start: var(--space-2);
+
+      a:any-link {
+        text-decoration: none;
+        color: var(--gray-100);
+        gap: var(--space-1);
+        align-items: center;
 
         span {
           text-decoration: underline;
-          text-decoration-color: currentColor;
+          text-decoration-color: var(--blue-500);
+        }
+
+        svg {
+          inline-size: 1.15em;
+          block-size: 1.15em;
+        }
+
+        &:hover,
+        &:focus-visible {
+          color: var(--text-inverted);
+
+          span {
+            text-decoration: underline;
+            text-decoration-color: currentColor;
+          }
         }
       }
     }
-  }
-  .reset-buttons {
-    position: absolute;
-    inset-inline-end: 0;
-    inset-block-start: var(--space-2);
-    z-index: 1;
-    display: grid;
-    justify-items: end;
-    margin-inline-end: var(--space-2);
-    anchor-scope: all;
+    .reset-buttons {
+      position: absolute;
+      inset-inline-end: 0;
+      inset-block-start: var(--space-2);
+      z-index: 1;
+      display: grid;
+      justify-items: end;
+      margin-inline-end: var(--space-2);
+      anchor-scope: all;
 
-    > button.reset {
-      anchor-name: --reset-btn;
-      /* display: block; */
+      > button.reset {
+        anchor-name: --reset-btn;
+        /* display: block; */
 
-      &:has(+ :popover-open),
-      &:has(+ [open]) {
-        opacity: 0;
+        &:has(+ :popover-open),
+        &:has(+ [open]) {
+          opacity: 0;
+        }
       }
     }
-  }
 
-  .reset-dialog {
-    margin: 0;
-    position: fixed;
-    position-anchor: --reset-btn;
-    position-area: center span-left;
-    /* position-area: span-all span-start; */
-    border: 0;
-    padding: 0;
-    height: fit-content;
-    background: transparent;
-
-    form {
-      display: flex;
-      gap: 0.5ch;
-    }
-
-    &::backdrop {
+    .reset-dialog {
+      margin: 0;
+      position: fixed;
+      position-anchor: --reset-btn;
+      position-area: center span-left;
+      /* position-area: span-all span-start; */
+      border: 0;
+      padding: 0;
+      height: fit-content;
       background: transparent;
+
+      form {
+        display: flex;
+        gap: 0.5ch;
+      }
+
+      &::backdrop {
+        background: transparent;
+      }
     }
-  }
 
-  .confirm-btn {
-    --btn-stroke: 0;
-    --btn-theme: var(--blue-500);
-    position: relative;
-    color: var(--text-inverted);
-    padding: 0;
-    inline-size: 28px;
-    block-size: 28px;
-    background: transparent;
-    display: grid;
-    place-content: center;
-    border-radius: var(--bdrs-round);
-  }
+    .confirm-btn {
+      --btn-stroke: 0;
+      --btn-theme: var(--blue-500);
+      position: relative;
+      color: var(--text-inverted);
+      padding: 0;
+      inline-size: 28px;
+      block-size: 28px;
+      background: transparent;
+      display: grid;
+      place-content: center;
+      border-radius: var(--bdrs-round);
+    }
 
-  :global(button path) {
-    stroke-width: 3;
-  }
+    :global(button path) {
+      stroke-width: 3;
+    }
 
-  button:focus-visible {
-    --btn-stroke: 2px;
-  }
-
-  @media (hover: hover) {
-    button:hover {
+    button:focus-visible {
       --btn-stroke: 2px;
     }
-  }
-  button.reset {
-    --opacity: 0;
-    --btn-stroke: 0;
-    --btn-theme: var(--blue-500);
-    position: relative;
-    color: var(--text-inverted);
-    padding: 0;
-    inline-size: 28px;
-    block-size: 28px;
-    background: transparent;
-    display: grid;
-    place-content: center;
-    border-radius: var(--bdrs-round);
-  }
 
-  button.reset::before {
-    content: "Nulstil";
-    text-transform: uppercase;
-    position: absolute;
-    inset-inline-end: 100%;
-    margin-inline-end: var(--space-2);
-    inset-block-start: 0;
-    font-size: 0.7em;
-    font-family: var(--font-mona);
-    font-weight: 700;
-    block-size: 28px;
-    margin-block-start: 0.125em;
-    display: grid;
-    place-content: center;
-    letter-spacing: 0.1em;
-    pointer-events: none;
-    transition: 0.3s;
-    opacity: 0;
-  }
+    @media (hover: hover) {
+      button:hover {
+        --btn-stroke: 2px;
+      }
+    }
+    button.reset {
+      --opacity: 0;
+      --btn-stroke: 0;
+      --btn-theme: var(--blue-500);
+      position: relative;
+      color: var(--text-inverted);
+      padding: 0;
+      inline-size: 28px;
+      block-size: 28px;
+      background: transparent;
+      display: grid;
+      place-content: center;
+      border-radius: var(--bdrs-round);
+    }
 
-  button.reset svg path {
-    stroke-width: 3;
-  }
+    button.reset::before {
+      content: "Nulstil";
+      text-transform: uppercase;
+      position: absolute;
+      inset-inline-end: 100%;
+      margin-inline-end: var(--space-2);
+      inset-block-start: 0;
+      font-size: 0.7em;
+      font-family: var(--font-mona);
+      font-weight: 700;
+      block-size: 28px;
+      margin-block-start: 0.125em;
+      display: grid;
+      place-content: center;
+      letter-spacing: 0.1em;
+      pointer-events: none;
+      transition: 0.3s;
+      opacity: 0;
+    }
 
-  button:focus-visible {
-    --btn-stroke: 2px;
-  }
+    button.reset svg path {
+      stroke-width: 3;
+    }
 
-  @media (hover: hover) {
-    button:hover {
+    button:focus-visible {
       --btn-stroke: 2px;
     }
-    button.reset:hover::before {
-      opacity: 1;
-    }
-    button[disabled] {
-      box-shadow: inset 0 0 0 0 var(--ui-accent);
+
+    @media (hover: hover) {
+      button:hover {
+        --btn-stroke: 2px;
+      }
+      button.reset:hover::before {
+        opacity: 1;
+      }
+      button[disabled] {
+        box-shadow: inset 0 0 0 0 var(--ui-accent);
+      }
     }
   }
 </style>
