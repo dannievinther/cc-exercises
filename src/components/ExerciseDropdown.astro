@@ -5,9 +5,10 @@ import type { Exercise, NavItem } from "../data/navigation";
 interface Props {
   currentItem: NavItem;
   exercises: Exercise[];
+  isIndividualPage?: boolean;
 }
 
-const { currentItem, exercises } = Astro.props;
+const { currentItem, exercises, isIndividualPage = false } = Astro.props;
 ---
 
 <button popovertarget="exercise-list" class="exercise-dropdown">
@@ -20,9 +21,17 @@ const { currentItem, exercises } = Astro.props;
       exercises.map((exercise, index) => {
         const num = exercise.id.split("/").pop();
         const hashId = `${currentItem.collection}-${num}`;
+        // Map collection name to URL path (flexbox -> flex)
+        const urlPath =
+          currentItem.collection === "flexbox"
+            ? "flex"
+            : currentItem.collection;
+        // Remove leading zeros from number for URL (04 -> 4)
+        const urlNum = num ? parseInt(num, 10) : num;
+        const href = isIndividualPage ? `/${urlPath}/${urlNum}` : `#${hashId}`;
         return (
           <li class="exercise-list-item">
-            <a href={`#${hashId}`}>
+            <a href={href}>
               <span class="exercise-num">{index + 1}.</span>
               <span>{exercise.data.title}</span>
             </a>

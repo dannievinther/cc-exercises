@@ -13,6 +13,8 @@ interface Props {
 
 const { item, index, exercises, currentItem } = Astro.props;
 const isCurrent = isCurrentPath(Astro.url.pathname, item.href);
+const isIndividualPage =
+  Astro.url.pathname.replace(/\/$/, "").match(/\/\d+$/) !== null;
 const showDropdown = isCurrent && exercises.length > 0 && currentItem;
 const tooltipId = `nav-tooltip-${index}`;
 ---
@@ -30,7 +32,11 @@ const tooltipId = `nav-tooltip-${index}`;
     </span>
     <span class="nav-label">{item.text}</span>
   </a>
-  {showDropdown && <ExerciseDropdown {currentItem} {exercises} />}
+  {
+    showDropdown && (
+      <ExerciseDropdown {currentItem} {exercises} {isIndividualPage} />
+    )
+  }
   <Tooltip id={tooltipId} text={item.longText ?? item.text} />
 </li>
 
