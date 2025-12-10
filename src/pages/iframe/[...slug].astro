@@ -8,8 +8,8 @@ import "/src/style/global.css";
 
 export async function getStaticPaths() {
   // Vis drafts i dev-mode eller på staging branch (Vercel)
-  const isStaging = process.env.VERCEL_GIT_COMMIT_REF === "staging";
-  const showDrafts = import.meta.env.DEV || isStaging;
+  // const isStaging = process.env.VERCEL_GIT_COMMIT_REF === "staging";
+  // const showDrafts = import.meta.env.DEV || isStaging;
 
   const [grid, flexbox, subgrid, defensive, sda] = await Promise.all([
     getCollection("grid"),
@@ -20,22 +20,22 @@ export async function getStaticPaths() {
   ]);
 
   // Filter out drafts unless in dev mode or on staging
-  const filterDrafts = <T extends { data: { draft?: boolean } }>(
-    entries: T[]
-  ): T[] => entries.filter((entry) => showDrafts || !entry.data.draft);
+  // const filterDrafts = <T extends { data: { draft?: boolean } }>(
+  //   entries: T[]
+  // ): T[] => entries.filter((entry) => showDrafts || !entry.data.draft);
 
-  const filteredGrid = filterDrafts(grid);
-  const filteredFlexbox = filterDrafts(flexbox);
-  const filteredSubgrid = filterDrafts(subgrid);
-  const filteredDefensive = filterDrafts(defensive);
-  const filteredSda = filterDrafts(sda);
+  // const filteredGrid = filterDrafts(grid);
+  // const filteredFlexbox = filterDrafts(flexbox);
+  // const filteredSubgrid = filterDrafts(subgrid);
+  // const filteredDefensive = filterDrafts(defensive);
+  // const filteredSda = filterDrafts(sda);
 
   const allCollections = [
-    ...filteredGrid,
-    ...filteredFlexbox,
-    ...filteredSubgrid,
-    ...filteredDefensive,
-    ...filteredSda,
+    ...grid,
+    ...flexbox,
+    ...subgrid,
+    ...defensive,
+    ...sda,
   ];
 
   return allCollections.map((entry) => ({

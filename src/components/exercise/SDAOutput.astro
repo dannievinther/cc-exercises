@@ -39,7 +39,6 @@ const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
       --scroll-state-not-supported: ;
     }
 
-    /* Create scroll space before and after */
     &::before,
     &::after {
       content: "";
@@ -48,8 +47,9 @@ const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
       block-size: calc(100% + 1rlh);
       content: "Scroll ↓";
       translate: 0 -1lh;
-      font-weight: 800;
-      color: var(--ui-primary-dark);
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--ui-primary-border);
     }
     &::after {
       content: "Scroll ↑";
@@ -75,7 +75,7 @@ const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
         inset: -1.2cap 0 auto 0;
         justify-self: center;
         font-size: 0.8em;
-        background: var(--ui-surface);
+        background: oklch(from var(--ui-primary) 0.99 0.01 h);
         padding-inline: 0.5ch;
         pointer-events: none;
       }
@@ -89,7 +89,7 @@ const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
           inset: -1.2cap 0 auto 0;
           justify-self: center;
           font-size: 0.8em;
-          background: var(--ui-surface);
+          background: oklch(from var(--ui-primary) 0.99 0.01 h);
           padding-inline: 0.5ch;
           pointer-events: none;
         }
