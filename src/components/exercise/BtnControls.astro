@@ -60,13 +60,19 @@ import Button from "./Button.astro";
     }
     @media (hover: hover) {
       span[role="presentation"] {
-        :hover + & {
-          scale: 1 0;
-          border-radius: 0;
+        :not([disabled]):hover + & {
+          background: #0000;
+          filter: grayscale(1);
+          box-shadow: none;
+          outline: 1.5px dashed var(--gray-500);
+          transition-property: background, box-shadow;
+          &::before {
+            opacity: 0;
+          }
         }
       }
 
-      span[role="presentation"]:has(+ :hover) {
+      span[role="presentation"]:has(+ :not([disabled]):hover) {
         translate: 0 100%;
         &::before {
           translate: 0 -200%;
@@ -77,7 +83,9 @@ import Button from "./Button.astro";
         position: relative;
         translate: none;
         z-index: 1;
-        transition: 0.2s;
+        transition:
+          0.25s translate,
+          0.25s scale;
       }
 
       span[role="presentation"]::before {
@@ -91,6 +99,7 @@ import Button from "./Button.astro";
         border-radius: inherit;
         translate: inherit;
         box-shadow: inherit;
+        transform-origin: 50% 0%;
         z-index: -1;
         filter: grayscale(1);
         transition: inherit;
