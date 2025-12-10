@@ -41,8 +41,8 @@ sdaSections.forEach((section) => {
 
   const startingCSS = textarea.textContent;
 
-  // Custom prefix for SDA - targets .sda-result instead of .output
-  // Scopes @keyframes names to avoid conflicts between exercises
+  // Custom prefix for SDA - wraps CSS in scoped selector like regular exercises
+  // But keeps @keyframes at root level with scoped names
   function sdaPrefix(css, key) {
     // Collect all keyframe names used in this CSS
     const keyframeNames = new Set();
@@ -87,30 +87,21 @@ sdaSections.forEach((section) => {
       }
     }
 
-    // Replace .container, .box, .frame with scoped versions
-    let scoped = cssWithoutKeyframes
-      .replace(
-        /\.container\b(?![-\w])/g,
-        `[data-exercise-key="${key}"] .sda-result .container`
-      )
-      .replace(
-        /\.box\b(?![-\w])/g,
-        `[data-exercise-key="${key}"] .sda-result .box`
-      )
-      .replace(
-        /\.frame\b(?![-\w])/g,
-        `[data-exercise-key="${key}"] .sda-result .frame`
-      );
-
     // Replace animation references to use scoped keyframe names
+    let scopedCSS = cssWithoutKeyframes;
     keyframeNames.forEach((name) => {
       // Match animation: name or animation-name: name
       const animationRegex = new RegExp(`\\b${name}\\b`, "g");
-      scoped = scoped.replace(animationRegex, `${key}--${name}`);
+      scopedCSS = scopedCSS.replace(animationRegex, `${key}--${name}`);
     });
 
+    // Wrap in scoped selector (like regular exercises, but with .sda-result)
+    const wrappedCSS = `[data-exercise-key="${key}"] .sda-result {
+    ${scopedCSS}
+}`;
+
     // Append keyframes at the end (at root level, but with scoped names)
-    return scoped + "\n" + keyframesBlocks.join("\n");
+    return wrappedCSS + "\n" + keyframesBlocks.join("\n");
   }
 
   // Update reset button state

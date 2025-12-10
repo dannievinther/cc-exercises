@@ -21,7 +21,8 @@ const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
           from 90deg at 1px 1px,
           #0000 25%,
           oklch(from var(--ui-primary) 0.95 0.025 h) 0
-        ) -0.5px 0px / 25px 25px round local content-box,
+        ) -0.5px
+        0px / 25px 25px round local content-box,
       oklch(from var(--ui-primary) 0.99 0.01 h) content-box;
     border-radius: var(--bdrs-sm);
     min-height: 300px;
