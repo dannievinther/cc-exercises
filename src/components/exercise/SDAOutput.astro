@@ -1,37 +1,43 @@
 ---
-const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
+const {
+  boxContent = "I'm a box",
+  startingHTML,
+  markers = false,
+  scrollBefore = false,
+  scrollAfter = false,
+} = Astro.props;
 ---
 
 <div class="sda-result output">
-  <div class="container" data-markers={markers} set:html={startingHTML} />
+  <div
+    class="container"
+    data-markers={markers}
+    data-scroll-before={scrollBefore}
+    data-scroll-after={scrollAfter}
+    set:html={startingHTML}
+  />
 </div>
 
 <style>
   .sda-result {
     --padding: var(--space-2);
-    overscroll-behavior: contain;
-    container: sda-result / size var(--scroll-state-not-supported, scroll-state);
-    background:
-      var(
-        --marching-ants,
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E@keyframes ant %7Bto %7Bstroke-dashoffset: -8;%7D%7D%3C/style%3E%3Crect width='100%25' height='100%25' style='stroke: %23a9bcce; stroke-width: 3.75px; fill: none;stroke-dasharray: 5 3; animation: ant 0s infinite linear'/%3E%3C/svg%3E")
-          border-box
-      ),
-      conic-gradient(
-          from 90deg at 1px 1px,
-          #0000 25%,
-          oklch(from var(--ui-primary) 0.95 0.025 h) 0
-        ) -0.5px
-        0px / 25px 25px round local content-box,
-      oklch(from var(--ui-primary) 0.99 0.01 h) content-box;
+    /* container: sda-result / size var(--scroll-state-not-supported, scroll-state); */
+    background: var(
+      --marching-ants,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E@keyframes ant %7Bto %7Bstroke-dashoffset: -8;%7D%7D%3C/style%3E%3Crect width='100%25' height='100%25' style='stroke: %23a9bcce; stroke-width: 3.75px; fill: none;stroke-dasharray: 5 3; animation: ant 0s infinite linear'/%3E%3C/svg%3E")
+        border-box
+    );
     border-radius: var(--bdrs-sm);
-    min-height: 300px;
-    overflow-y: auto;
+    /* min-height: 300px; */
+    overflow: clip;
+    display: grid;
     position: relative;
     padding: 0.5lh;
     border: 2px dashed transparent;
+    max-block-size: 500px;
     padding: var(--padding);
     margin: calc(var(--padding) * -1);
+    align-self: start;
 
     position: sticky;
     top: 1rem;
@@ -40,61 +46,117 @@ const { boxContent = "I'm a box", startingHTML, markers = false } = Astro.props;
       --scroll-state-not-supported: ;
     }
 
-    &::before,
-    &::after {
-      content: "";
-      display: grid;
-      place-content: center;
-      block-size: calc(100% + 1rlh);
-      content: "Scroll ↓";
-      translate: 0 -1lh;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: var(--ui-primary-border);
-    }
-    &::after {
-      content: "Scroll ↑";
-      translate: 0 1rlh;
-    }
-
     .container {
-      padding: 1lh;
+      /* padding: 0.5cap; */
+      container: container / size;
+      overscroll-behavior: contain;
+      min-height: calc(round(to-zero, 300px, 25px) + 1px);
+      overflow-y: auto;
+      background:
+        conic-gradient(
+            from 90deg at 1px 1px,
+            #0000 25%,
+            oklch(from var(--ui-primary) 0.95 0.025 h) 0
+          ) -0.5px
+          0px / 25px 25px round local content-box,
+        oklch(from var(--ui-primary) 0.99 0.01 h);
+
+      &[data-scroll-before="true"]::before,
+      &[data-scroll-after="true"]::after {
+        display: grid;
+        place-content: center;
+        block-size: calc(100% + 1lh);
+        content: "Scroll ↓";
+        translate: 0 -1lh;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--ui-primary-border);
+      }
+      &[data-scroll-after="true"]::after {
+        content: "Scroll ↑";
+        translate: 0 1lh;
+      }
 
       .frame {
         display: grid;
+        isolation: isolate;
       }
     }
 
-    .container[data-markers="true"] {
-      outline: 1px dashed;
-      outline-offset: -1px;
+    .inner {
+      --debug-visibility: 0;
+      /* outline: 1px dashed; */
+      /* outline-offset: -1px; */
       position: relative;
+      isolation: isolate;
       color: var(--ui-primary-dark);
+      &::before,
+      &::after {
+        opacity: var(--debug-visibility);
+      }
       &::before {
-        content: ".container";
+        content: ".inner";
         position: absolute;
-        inset: -1.2cap 0 auto 0;
+        inset: calc(-1lh - 0.5cap) 0 auto 0;
         justify-self: center;
         font-size: 0.8em;
         background: oklch(from var(--ui-primary) 0.99 0.01 h);
         padding-inline: 0.5ch;
         pointer-events: none;
       }
+      &::after {
+        content: "";
+        position: absolute;
+        inset: -0.5lh 4px 0;
+        outline: 1px dashed var(--ui-primary-dark);
+        z-index: -1;
+      }
       .frame {
+        container-type: scroll-state;
         color: var(--ui-primary-border);
-        outline: 1px dashed;
-        outline-offset: -1px;
+        &::before,
+        &::after {
+          opacity: var(--debug-visibility);
+        }
+        /* outline: 1px dashed;
+        outline-offset: -0.5lh; */
         &::before {
           content: ".frame";
           position: absolute;
-          inset: -1.2cap 0 auto 0;
+          inset: 0 0 auto 0;
           justify-self: center;
           font-size: 0.8em;
           background: oklch(from var(--ui-primary) 0.99 0.01 h);
           padding-inline: 0.5ch;
           pointer-events: none;
         }
+        &::after {
+          content: "";
+          position: absolute;
+          inset: 0.5lh;
+          outline: 1px dashed;
+          z-index: -1;
+          --stripes-color: oklch(from var(--ui-primary) 0.9 0.025 h);
+          --stripes: repeating-linear-gradient(
+              -45deg,
+              var(--stripes-color) 0 12.5%,
+              #0000 0 50%
+            )
+            0 0 / 6px 6px;
+          background: var(--stripes);
+          @container scroll-state(stuck: top) {
+            outline-style: solid;
+            background:
+              url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%233a61c4' d='m22.313 10.175l-1.415 1.414l-.707-.707l-4.242 4.243l-.707 3.536l-1.415 1.414l-4.242-4.243l-4.95 4.95l-1.414-1.414l4.95-4.95l-4.243-4.243l1.414-1.414l3.536-.707l4.242-4.243l-.707-.707l1.414-1.414z'/%3E%3C/svg%3E")
+                no-repeat top 2px right 2px / 1rlh 1rlh,
+              var(--stripes);
+          }
+        }
       }
+    }
+
+    .controls:has(:checked) + & .inner {
+      --debug-visibility: 1;
     }
 
     .output:is(.editor:has(:focus-within) ~ &) {

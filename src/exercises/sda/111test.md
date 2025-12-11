@@ -3,7 +3,7 @@ title: Afgræns navngiven timeline
 id: test-1
 draft: true
 video: /assets/vid/sda/sda-ex-1.webm
-markers: false
+debug: false
 help:
   {
     link: https://developer.mozilla.org/en-US/docs/Web/CSS/animation-range,
@@ -22,7 +22,9 @@ startingCSS: |
     }
   }
 startingHTML: |
-  <div class="progress"></div>
+  <div class="inner">
+    <div class="progress"></div>
+  </div>
 hints:
   - { type: property, name: animation-range }
   - { type: value, name: entry }

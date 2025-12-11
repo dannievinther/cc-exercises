@@ -1,0 +1,53 @@
+---
+const { id } = Astro.props;
+
+//remove hyphen from id for valid html attribute
+const idWithoutHyphen = id.replace(/-/g, "");
+---
+
+<div class="controls">
+  <label for={idWithoutHyphen}>
+    <input type="checkbox" id={idWithoutHyphen} />
+    Debug
+  </label>
+</div>
+
+<style>
+  @layer components {
+    .controls {
+      display: grid;
+      grid: auto / repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+      gap: 0 var(--space-6);
+      justify-items: end;
+      align-self: end;
+      grid-column: 1 / -1;
+
+      &::after {
+        content: "";
+      }
+
+      > label {
+        display: flex;
+        align-items: center;
+        gap: var(--space-1);
+        grid-column: -2;
+        /* background: hsl(209deg 15% 97%); */
+        box-shadow: var(--shadow-ui);
+        border-radius: var(--bdrs-round);
+        padding: 0.25rem 0.5rem;
+        line-height: 1;
+        font-size: 0.8em;
+        font-family: var(--font-mono);
+        font-weight: 500;
+        text-transform: uppercase;
+
+        input {
+          height: 0.9lh;
+          width: 0.9lh;
+          margin: 0;
+          accent-color: var(--ui-primary-border);
+        }
+      }
+    }
+  }
+</style>
