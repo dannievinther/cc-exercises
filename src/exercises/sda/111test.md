@@ -4,6 +4,7 @@ id: test-1
 draft: true
 video: /assets/vid/sda/sda-ex-1.webm
 debug: false
+scrollDirection: block
 help:
   {
     link: https://developer.mozilla.org/en-US/docs/Web/CSS/animation-range,
@@ -22,7 +23,7 @@ startingCSS: |
     }
   }
 startingHTML: |
-  <div class="inner" style="height:200%;">
+  <div class="inner" style="height: 200%">
     <div class="progress"></div>
   </div>
 hints:

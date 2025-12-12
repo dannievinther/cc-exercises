@@ -1,9 +1,13 @@
 ---
-const { boxContent = "I'm a box", startingHTML } = Astro.props;
+const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
 ---
 
 <div class="sda-result output">
-  <div class="container" set:html={startingHTML} />
+  <div
+    class="container"
+    data-scroll-direction={scrollDirection}
+    set:html={startingHTML}
+  />
 </div>
 
 <style>
@@ -36,10 +40,13 @@ const { boxContent = "I'm a box", startingHTML } = Astro.props;
 
     .container {
       /* padding: 0.5cap; */
+      scrollbar-color: var(--ui-primary-border)
+        oklch(from var(--ui-primary) 0.95 0.025 h);
       container: container / size;
       overscroll-behavior: contain;
       min-height: calc(round(to-zero, 300px, 25px) + 1px);
-      overflow-y: auto;
+      /* overflow-y: auto; */
+      overflow: clip;
       background:
         conic-gradient(
             from 90deg at 1px 1px,
@@ -48,6 +55,14 @@ const { boxContent = "I'm a box", startingHTML } = Astro.props;
           ) -0.5px
           0px / 25px 25px round local content-box,
         oklch(from var(--ui-primary) 0.99 0.01 h);
+
+      &[data-scroll-direction="block"] {
+        overflow-block: auto;
+      }
+      &[data-scroll-direction="inline"] {
+        overflow-inline: auto;
+        padding: 1px;
+      }
 
       /* &[data-scroll-before="true"]::before,
       &[data-scroll-after="true"]::after {
@@ -87,6 +102,24 @@ const { boxContent = "I'm a box", startingHTML } = Astro.props;
       &:nth-last-child(1 of [style])::before {
         content: "Scroll ↑";
         translate: 0 1lh;
+      }
+    }
+
+    div:not([class])[style^="width"] {
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--ui-primary-border);
+      flex-shrink: 0;
+      &::before {
+        display: grid;
+        place-items: center;
+        height: 100%;
+      }
+      &:nth-child(1 of [style])::before {
+        content: "Scroll →";
+      }
+      &:nth-last-child(1 of [style])::before {
+        content: "Scroll ←";
       }
     }
 

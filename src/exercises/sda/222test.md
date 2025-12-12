@@ -1,44 +1,49 @@
 ---
 title: Afgræns navngiven timeline
-id: sda-4
+id: test-1
 draft: true
 video: /assets/vid/sda/sda-ex-1.webm
-debug: true
-scrollDirection: block
+debug: false
+scrollDirection: inline
 help:
   {
     link: https://developer.mozilla.org/en-US/docs/Web/CSS/animation-range,
     topic: animation-range,
   }
 startingCSS: |
-  .inner {
-    view-timeline: --container;
-    height: 200cqb;
-  }
-  .frame {
-    position: sticky;
-    top: 0;
-    height: 100cqb;
+  .container {
+    display: flex;
+    gap: 20px;
   }
   .box {
-    place-self: center;
+    flex-shrink: 0;
+    width: 40%;
     animation: spin linear both;
-    animation-timeline: ;
-    animation-range: ;
+    animation-timeline: view(inline);
   }
   @keyframes spin {
-    to {
-      rotate: 360deg;
+    entry 0%,
+    exit 100% {
+      scale: .5;
+    }
+    entry 50%,
+    exit 50% {
+      scale: 1;
     }
   }
 startingHTML: |
-  <div style="height:100%"></div>
-  <div class="inner">
-    <div class="frame">
-      <div class="box">I'm a box</div>
-    </div>
-  </div>
-  <div style="height:100%"></div>
+  <div style="width:50cqw"></div>
+
+  <div class="box">I'm a box</div>
+  <div class="box">I'm a box</div>
+  <div class="box">I'm a box</div>
+  <div class="box">I'm a box</div>
+  <div class="box">I'm a box</div>
+  <div class="box">I'm a box</div>
+  <div class="box">I'm a box</div>
+  <div class="box">I'm a box</div>
+
+  <div style="width:50cqw"></div>
 hints:
   - { type: property, name: animation-range }
   - { type: value, name: entry }
