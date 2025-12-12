@@ -1,21 +1,9 @@
 ---
-const {
-  boxContent = "I'm a box",
-  startingHTML,
-  markers = false,
-  scrollBefore = false,
-  scrollAfter = false,
-} = Astro.props;
+const { boxContent = "I'm a box", startingHTML } = Astro.props;
 ---
 
 <div class="sda-result output">
-  <div
-    class="container"
-    data-markers={markers}
-    data-scroll-before={scrollBefore}
-    data-scroll-after={scrollAfter}
-    set:html={startingHTML}
-  />
+  <div class="container" set:html={startingHTML} />
 </div>
 
 <style>
@@ -61,7 +49,7 @@ const {
           0px / 25px 25px round local content-box,
         oklch(from var(--ui-primary) 0.99 0.01 h);
 
-      &[data-scroll-before="true"]::before,
+      /* &[data-scroll-before="true"]::before,
       &[data-scroll-after="true"]::after {
         display: grid;
         place-content: center;
@@ -75,11 +63,30 @@ const {
       &[data-scroll-after="true"]::after {
         content: "Scroll ↑";
         translate: 0 1lh;
-      }
+      } */
 
       .frame {
         display: grid;
         isolation: isolate;
+      }
+    }
+
+    div:not([class])[style^="height"] {
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--ui-primary-border);
+      margin-bottom: 1lh;
+      &::before {
+        display: grid;
+        place-items: center;
+        height: 100%;
+      }
+      &:nth-child(1 of [style])::before {
+        content: "Scroll ↓";
+      }
+      &:nth-last-child(1 of [style])::before {
+        content: "Scroll ↑";
+        translate: 0 1lh;
       }
     }
 

@@ -22,7 +22,7 @@ startingCSS: |
     }
   }
 startingHTML: |
-  <div class="inner">
+  <div class="inner" style="height:200%;">
     <div class="progress"></div>
   </div>
 hints:

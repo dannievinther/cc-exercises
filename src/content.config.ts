@@ -71,8 +71,6 @@ const sda = defineCollection({
       image: image().optional(),
       customClass: z.string().optional(),
       debug: z.boolean().optional(),
-      scrollBefore: z.boolean().optional(),
-      scrollAfter: z.boolean().optional(),
       help: helpSchema,
       startingCSS: z.string(),
       startingHTML: z.string().optional(),

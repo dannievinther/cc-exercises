@@ -17,8 +17,6 @@ const {
   videoHeight,
   boxContent,
   debug,
-  scrollBefore,
-  scrollAfter,
 } = data;
 
 const { Content } = await render(entry);
@@ -64,13 +62,7 @@ import DebugButton from "./exercise/DebugButton.astro";
     />
 
     {debug && <DebugButton id={exerciseID} />}
-    <SDAOutput
-      {boxContent}
-      {startingHTML}
-      {debug}
-      {scrollBefore}
-      {scrollAfter}
-    />
+    <SDAOutput {boxContent} {startingHTML} {debug} />
   </div>
 </section>
 
