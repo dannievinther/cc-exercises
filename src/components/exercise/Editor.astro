@@ -35,7 +35,11 @@ const indentedHTML =
     .join("\n")
     .trim();
 
-const customContent = `<div class="container">
+const customContentParentString = id.includes("sda")
+  ? '<div class="scroller">\t'
+  : '<div class="container">\t';
+
+const customContent = `${customContentParentString}
 \t${indentedHTML}
 </div>`;
 

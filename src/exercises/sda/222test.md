@@ -1,6 +1,6 @@
 ---
 title: Afgræns navngiven timeline
-id: test-1
+id: test-2
 draft: true
 video: /assets/vid/sda/sda-ex-1.webm
 debug: false
@@ -11,7 +11,7 @@ help:
     topic: animation-range,
   }
 startingCSS: |
-  .container {
+  .scroller {
     display: flex;
     gap: 20px;
   }

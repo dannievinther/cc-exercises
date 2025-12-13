@@ -4,7 +4,7 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
 
 <div class="sda-result output">
   <div
-    class="container"
+    class="scroller"
     data-scroll-direction={scrollDirection}
     set:html={startingHTML}
   />
@@ -38,7 +38,7 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
       --scroll-state-not-supported: ;
     }
 
-    .container {
+    .scroller {
       /* padding: 0.5cap; */
       scrollbar-color: var(--ui-primary-border)
         oklch(from var(--ui-primary) 0.95 0.025 h);
@@ -55,13 +55,13 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
           ) -0.5px
           0px / 25px 25px round local content-box,
         oklch(from var(--ui-primary) 0.99 0.01 h);
+      padding: 1px;
 
       &[data-scroll-direction="block"] {
         overflow-block: auto;
       }
       &[data-scroll-direction="inline"] {
         overflow-inline: auto;
-        padding: 1px;
       }
 
       /* &[data-scroll-before="true"]::before,
@@ -96,12 +96,12 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
         place-items: center;
         height: 100%;
       }
-      &:nth-child(1 of [style])::before {
-        content: "Scroll ↓";
-      }
-      &:nth-last-child(1 of [style])::before {
+      &:nth-last-child(1 of [style^="height"])::before {
         content: "Scroll ↑";
         translate: 0 1lh;
+      }
+      &:nth-child(1 of [style^="height"])::before {
+        content: "Scroll ↓";
       }
     }
 
@@ -115,18 +115,16 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
         place-items: center;
         height: 100%;
       }
-      &:nth-child(1 of [style])::before {
-        content: "Scroll →";
-      }
-      &:nth-last-child(1 of [style])::before {
+      &:nth-last-child(1 of [style^="width"])::before {
         content: "Scroll ←";
+      }
+      &:nth-child(1 of [style^="width"])::before {
+        content: "Scroll →";
       }
     }
 
-    .inner {
+    .container {
       --debug-visibility: 0;
-      /* outline: 1px dashed; */
-      /* outline-offset: -1px; */
       position: relative;
       isolation: isolate;
       color: var(--ui-primary-dark);
@@ -135,7 +133,7 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
         opacity: var(--debug-visibility);
       }
       &::before {
-        content: ".inner";
+        content: ".container";
         position: absolute;
         inset: calc(-1lh - 0.5cap) 0 auto 0;
         justify-self: center;
@@ -158,8 +156,6 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
         &::after {
           opacity: var(--debug-visibility);
         }
-        /* outline: 1px dashed;
-        outline-offset: -0.5lh; */
         &::before {
           content: ".frame";
           position: absolute;
@@ -176,7 +172,7 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
           inset: 0.5lh;
           outline: 1px dashed;
           z-index: -1;
-          --stripes-color: oklch(from var(--ui-primary) 0.9 0.025 h);
+          --stripes-color: oklch(from var(--ui-primary) 0.92 0.025 h);
           --stripes: repeating-linear-gradient(
               -45deg,
               var(--stripes-color) 0 12.5%,
@@ -195,7 +191,7 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
       }
     }
 
-    .controls:has(:checked) + & .inner {
+    .controls:has(:checked) + & .container {
       --debug-visibility: 1;
     }
 

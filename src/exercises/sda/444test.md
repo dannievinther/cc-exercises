@@ -1,6 +1,6 @@
 ---
 title: Afgræns navngiven timeline
-id: test-1
+id: test-4
 draft: true
 video: /assets/vid/sda/sda-ex-1.webm
 debug: false
@@ -11,23 +11,37 @@ help:
     topic: animation-range,
   }
 startingCSS: |
-  .progress {
-    height: 10px;
-    display: block;
-    position: sticky;
-    top: 0;
-    transform-origin: left;
-    animation: grow linear both;
-    animation-timeline: scroll();
+  .box {
+    --distance: 6rem;
+    --from: calc(-1 * var(--distance));
+    --to: var(--distance);
+    line-height: 1;
+    margin-block: var(--distance);
+    opacity: 0;
+    animation: reveal linear both;
+    animation-timeline: view(block calc(50% - var(--distance)));
   }
-  @keyframes grow {
-    from {
-      scale: 0 1;
+  @keyframes reveal {
+    cover 0% {
+      opacity: 0;
+      translate: 0 var(--from);
+    }
+    contain 50% {
+      opacity: 1;
+    }
+    cover 100% {
+      opacity: 0;
+      translate: 0 var(--to);
     }
   }
 startingHTML: |
-  <div class="progress" style="background: red"></div>
   <div style="height:100%"></div>
+  <div class="container" style="display: grid; place-items: center;">
+    <div class="box">I'm a box</div>
+    <div class="box">I'm a box</div>
+    <div class="box">I'm a box</div>
+    <div class="box">I'm a box</div>
+  </div>
   <div style="height:100%"></div>
 hints:
   - { type: property, name: animation-range }
