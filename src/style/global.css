@@ -32,6 +32,13 @@ symbol {
   stroke-width: inherit !important;
 }
 
+.language-html > .token.tag:has(> .style-attr):not(:has(> .attr-name)) {
+  &,
+  & + .token.tag {
+    opacity: 0.5;
+  }
+}
+
 /* .main-header {
     anchor-name: --header;
   position: relative;
