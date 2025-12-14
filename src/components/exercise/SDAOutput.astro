@@ -4,7 +4,7 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
 
 <div class="sda-result output">
   <div
-    class="scroller"
+    class="scrollport"
     data-scroll-direction={scrollDirection}
     set:html={startingHTML}
   />
@@ -38,13 +38,13 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
       --scroll-state-not-supported: ;
     }
 
-    .scroller {
+    .scrollport {
       /* padding: 0.5cap; */
       scrollbar-color: var(--ui-primary-border)
         oklch(from var(--ui-primary) 0.95 0.025 h);
       container: container / size;
       overscroll-behavior: contain;
-      min-height: calc(round(to-zero, 300px, 25px) + 1px);
+      min-height: calc(round(to-zero, 300px, 1.5rlh) + 0px);
       /* overflow-y: auto; */
       overflow: clip;
       background:
@@ -53,15 +53,15 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
             #0000 25%,
             oklch(from var(--ui-primary) 0.95 0.025 h) 0
           ) -0.5px
-          0px / 25px 25px round local content-box,
+          0px / 1.5rlh 1.5rlh round repeat local content-box,
         oklch(from var(--ui-primary) 0.99 0.01 h);
-      padding: 1px;
 
       &[data-scroll-direction="block"] {
         overflow-block: auto;
       }
       &[data-scroll-direction="inline"] {
         overflow-inline: auto;
+        padding: 1px;
       }
 
       /* &[data-scroll-before="true"]::before,
@@ -80,7 +80,7 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
         translate: 0 1lh;
       } */
 
-      .frame {
+      .sticky-element {
         display: grid;
         isolation: isolate;
       }
@@ -90,7 +90,7 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
       font-weight: 600;
       text-transform: uppercase;
       color: var(--ui-primary-border);
-      margin-bottom: 1lh;
+      margin-bottom: 1.5rlh;
       &::before {
         display: grid;
         place-items: center;
@@ -135,21 +135,22 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
       &::before {
         content: ".container";
         position: absolute;
-        inset: calc(-1lh - 0.5cap) 0 auto 0;
+        inset: -1.5rlh 0 auto 0;
         justify-self: center;
         font-size: 0.8em;
         background: oklch(from var(--ui-primary) 0.99 0.01 h);
         padding-inline: 0.5ch;
         pointer-events: none;
+        line-height: 1.5rlh;
       }
       &::after {
         content: "";
         position: absolute;
-        inset: -0.5lh 4px 0;
+        inset: -0.75rlh 0.25rlh 0;
         outline: 1px dashed var(--ui-primary-dark);
         z-index: -1;
       }
-      .frame {
+      .sticky-element {
         container-type: scroll-state;
         color: var(--ui-primary-border);
         &::before,
@@ -157,7 +158,7 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
           opacity: var(--debug-visibility);
         }
         &::before {
-          content: ".frame";
+          content: ".sticky-element";
           position: absolute;
           inset: 0 0 auto 0;
           justify-self: center;
@@ -165,11 +166,15 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
           background: oklch(from var(--ui-primary) 0.99 0.01 h);
           padding-inline: 0.5ch;
           pointer-events: none;
+          line-height: 1.5rlh;
+          @container scroll-state(stuck: top) {
+            font-variation-settings: "GRAD" 600;
+          }
         }
         &::after {
           content: "";
           position: absolute;
-          inset: 0.5lh;
+          inset: 0.75rlh;
           outline: 1px dashed;
           z-index: -1;
           --stripes-color: oklch(from var(--ui-primary) 0.92 0.025 h);
@@ -201,6 +206,12 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
 
       /* border-color: transparent; */
       /* transition: filter 0.15s; */
+    }
+
+    .sibling-container {
+      display: grid;
+      background: #fff;
+      border-left: 1px dashed var(--ui-primary-border);
     }
 
     .box {

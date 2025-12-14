@@ -11,7 +11,7 @@ help:
     topic: animation-range,
   }
 startingCSS: |
-  .scroller {
+  .scrollport {
     display: flex;
     gap: 20px;
   }

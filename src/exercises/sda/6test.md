@@ -1,6 +1,6 @@
 ---
-title: Afgræns navngiven timeline
-id: test-1
+title: Scroll Another Div
+id: test-6
 draft: true
 video: /assets/vid/sda/sda-ex-1.webm
 debug: false
@@ -11,21 +11,33 @@ help:
     topic: animation-range,
   }
 startingCSS: |
-  .progress {
-    height: 10px;
-    transform-origin: left;
-    animation: grow linear both;
-    animation-timeline: scroll();
+  .scrollport {
+    timeline-scope: --scroll;
+    display: grid;
+    grid: auto / 1fr 1fr;
   }
-  @keyframes grow {
-    from {
-      scale: 0 1;
+  .scroller {
+    overflow-y: auto;
+    scroll-timeline: --scroll;
+  }
+  .box {
+    place-self: center;
+    animation: rotate linear both;
+    animation-timeline: --scroll;
+  }
+  @keyframes rotate {
+    to {
+      rotate: 180deg;
     }
   }
 startingHTML: |
-  <div class="progress" style="background:red;position:sticky;top:0"></div>
-  <div style="height:100%"></div>
-  <div style="height:100%"></div>
+  <div class="scroller" style="background:inherit">
+    <div style="height:100%"></div>
+    <div style="height:100%"></div>
+  </div>
+  <div class="sibling-container">
+    <div class="box">Rotate me</div>
+  </div>
 hints:
   - { type: property, name: animation-range }
   - { type: value, name: entry }
