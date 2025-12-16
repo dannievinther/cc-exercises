@@ -64,7 +64,7 @@ pre[class*="language-"] {
 .token.unit,
 .token.hexcode,
 .token.deleted {
-  color: var(--blue-500);
+  color: var(--ui-accent);
 }
 
 .token.attr-name {

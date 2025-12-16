@@ -110,8 +110,8 @@ const singleHref = baseHref.replace(/\/$/, "") + "/1";
       block-size: 1px;
       background: linear-gradient(
         90deg,
-        var(--gray-400),
-        var(--gray-400) 50%,
+        var(--gray-300),
+        var(--gray-300) 50%,
         transparent 0,
         transparent
       );
@@ -126,14 +126,14 @@ const singleHref = baseHref.replace(/\/$/, "") + "/1";
 
       &::before,
       &::after {
-        --border-color: var(--gray-500);
+        --border-color: var(--gray-200);
         content: "";
         position: fixed;
         top: 0;
         bottom: anchor(--footer top);
         position-anchor: --header-content;
         inline-size: 1px;
-        background: var(--gray-300);
+        background: var(--border-color);
       }
       &::before {
         left: calc(anchor(left) - 1px - 1rem);

@@ -75,10 +75,10 @@ const notHome = Astro.url.pathname !== "/";
 
     &:hover {
       border-color: var(--blue-muted-comment);
-      color: var(--blue-500);
+      color: var(--ui-accent);
 
       & :global(svg) {
-        color: var(--blue-500);
+        color: var(--ui-accent);
       }
     }
   }
@@ -108,7 +108,7 @@ const notHome = Astro.url.pathname !== "/";
     touch-action: manipulation;
     text-shadow: 0 0 10px hsl(209deg 15% 93%);
     letter-spacing: 0.05em;
-    text-decoration: underline 0.25em var(--blue-500);
+    text-decoration: underline 0.25em var(--ui-accent);
     text-underline-offset: 0.125em;
     transition: 0.2s;
 

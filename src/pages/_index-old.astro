@@ -55,7 +55,7 @@ import Front from "../layouts/Front.astro";
   }
 
   .stroke-text {
-    color: var(--c, var(--blue-500));
+    color: var(--c, var(--ui-accent));
     -webkit-text-fill-color: transparent;
     -webkit-text-stroke: 2px currentColor;
     overflow: hidden;
@@ -133,7 +133,7 @@ import Front from "../layouts/Front.astro";
     color: #72f1b8;
     text-decoration: none;
     /* touch-action: manipulation; */
-    color: var(--blue-500);
+    color: var(--ui-accent);
     font-weight: 500;
     font-family: "Mona Sans", system-ui;
     font-size: 1.2rem;
@@ -198,19 +198,19 @@ import Front from "../layouts/Front.astro";
 </script>
 
 <script is:inline>
-const root = document.documentElement;
+  const root = document.documentElement;
 
-let raf, x, y;
+  let raf, x, y;
 
-document.addEventListener("pointermove", (e) => {
-  x = (e.x / window.innerWidth - 0.5) * 2;
-  y = (e.y / window.innerWidth - 0.5) * 2;
-  raf = raf || requestAnimationFrame(update);
-});
+  document.addEventListener("pointermove", (e) => {
+    x = (e.x / window.innerWidth - 0.5) * 2;
+    y = (e.y / window.innerWidth - 0.5) * 2;
+    raf = raf || requestAnimationFrame(update);
+  });
 
-function update() {
-  root.style.setProperty("--x", x);
-  root.style.setProperty("--y", y);
-  raf = null;
-}
+  function update() {
+    root.style.setProperty("--x", x);
+    root.style.setProperty("--y", y);
+    raf = null;
+  }
 </script>

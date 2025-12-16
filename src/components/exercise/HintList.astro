@@ -52,8 +52,8 @@ const { hints } = Astro.props;
     white-space: break-spaces;
     align-items: center;
 
-    background: linear-gradient(90deg, var(--blue-700), transparent),
-      var(--blue-800);
+    background:
+      linear-gradient(90deg, var(--blue-700), transparent), var(--blue-800);
     padding: var(--space-3) var(--space-4);
     border-radius: var(--bdrs-md);
     margin: -3px -5px;
@@ -73,8 +73,8 @@ const { hints } = Astro.props;
     cursor: pointer;
     transition: 0.2s;
     &:hover {
-      color: var(--blue-500);
-      text-shadow: 0 0 6px hsl(from var(--blue-500) h s l / 50%);
+      color: var(--ui-accent);
+      text-shadow: 0 0 6px hsl(from var(--ui-accent) h s l / 50%);
     }
   }
 </style>
