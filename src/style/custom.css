@@ -98,7 +98,7 @@ html:focus-within {
 body {
   display: flow-root;
   overscroll-behavior: none;
-  color: var(--gray-900);
+  color: var(--text-muted);
   line-height: 1.75;
   /* min-height: 100%; */
   /* padding-block: 6rem; */
@@ -238,7 +238,8 @@ section {
     content: "";
     position: absolute;
     inset: 4%;
-    background: rgba(100, 41, 219, 0.5);
+    /* background: rgba(100, 41, 219, 0.5); */
+    background: oklch(from var(--ui-primary) 0.9 0.05 h);
     border-radius: inherit;
     z-index: -1;
     filter: blur(40px);
@@ -338,7 +339,7 @@ button[disabled] {
 
   /* color: var(--blue-800) !important; */
   /* background: #e9eef4; */
-  color: var(--gray-1000);
+  color: var(--text-primary);
   background: var(--ui-surface);
   box-shadow: var(--shadow-code);
   cursor: pointer;
@@ -346,7 +347,7 @@ button[disabled] {
 
   &:hover {
     color: var(--blue-700);
-    text-shadow: 0 0 3px hsl(from var(--blue-500) h s l / 25%);
+    text-shadow: 0 0 3px hsl(from var(--ui-accent) h s l / 33%);
   }
 }
 

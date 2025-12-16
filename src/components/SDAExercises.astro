@@ -16,7 +16,8 @@ const {
   videoWidth,
   videoHeight,
   boxContent,
-  markers,
+  debug,
+  scrollDirection,
 } = data;
 
 const { Content } = await render(entry);
@@ -30,6 +31,7 @@ import Editor from "./exercise/Editor.astro";
 import SDAOutput from "./exercise/SDAOutput.astro";
 import Hints from "./exercise/Hints.astro";
 import TargetMedia from "./exercise/TargetMedia.astro";
+import DebugButton from "./exercise/DebugButton.astro";
 ---
 
 <section
@@ -58,7 +60,9 @@ import TargetMedia from "./exercise/TargetMedia.astro";
       helpTopic={help?.topic}
       {startingHTML}
     />
-    <SDAOutput {boxContent} {startingHTML} {markers} />
+
+    {debug && <DebugButton id={exerciseID} />}
+    <SDAOutput {boxContent} {startingHTML} {debug} {scrollDirection} />
   </div>
 </section>
 
@@ -159,6 +163,11 @@ import TargetMedia from "./exercise/TargetMedia.astro";
         .sda-result {
           grid-row-start: 2;
           grid-column-start: 2;
+        }
+
+        .controls {
+          grid-column: revert;
+          justify-items: center;
         }
       }
     }

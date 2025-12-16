@@ -1,6 +1,6 @@
 ---
 title: Afgræns navngiven timeline
-id: test-1
+id: test-5
 draft: true
 video: /assets/vid/sda/sda-ex-1.webm
 debug: false
@@ -11,20 +11,24 @@ help:
     topic: animation-range,
   }
 startingCSS: |
-  .progress {
-    height: 10px;
-    transform-origin: left;
-    animation: grow linear both;
+  img {
+    animation: move both linear;
     animation-timeline: scroll();
+    animation-range: 0 100cqh;
+    z-index: 0;
+    max-block-size: 100cqh;
+    object-fit: cover;
   }
-  @keyframes grow {
-    from {
-      scale: 0 1;
+  @keyframes move {
+    to {
+      opacity: 0;
+      translate: 0 75cqh;
     }
   }
 startingHTML: |
-  <div class="progress" style="background:red;position:sticky;top:0"></div>
-  <div style="height:100%"></div>
+  <div class="container">
+    <img src="/assets/imgs/demo.jpg" alt="">
+  </div>
   <div style="height:100%"></div>
 hints:
   - { type: property, name: animation-range }

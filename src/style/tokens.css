@@ -4,7 +4,7 @@
      ======================================== */
 
   /* Neutrals */
-  --gray-100: #f2f2f2;
+  /* --gray-100: #f2f2f2;
   --gray-200: #ebebeb;
   --gray-300: #e6e6e6;
   --gray-400: #dbdbdb;
@@ -13,15 +13,37 @@
   --gray-700: #8f8f8f;
   --gray-800: #7d7d7d;
   --gray-900: #555555;
-  --gray-1000: #171717;
+  --gray-1000: #171717; */
+  --gray-50: oklch(98.5% 0 0);
+  --gray-100: oklch(96.7% 0.001 286.375);
+  --gray-200: oklch(92% 0.004 286.32);
+  --gray-300: oklch(87.1% 0.006 286.286);
+  --gray-400: oklch(70.5% 0.015 286.067);
+  --gray-500: oklch(55.2% 0.016 285.938);
+  --gray-600: oklch(44.2% 0.017 285.786);
+  --gray-700: oklch(37% 0.013 285.805);
+  --gray-800: oklch(27.4% 0.006 286.033);
+  --gray-900: oklch(21% 0.006 285.885);
+  --gray-1000: oklch(14.1% 0.005 285.823);
 
   /* Blues */
   --blue-muted-comment: #a9bcce;
   --blue-muted: #55718d;
-  --blue-500: #2ee5e5;
-  --blue-700: #0e395e;
+  /*--blue-500: #2ee5e5;
+--blue-700: #0e395e;
   --blue-800: #0d2e4e;
-  --blue-900: #0a2540;
+  --blue-900: #0a2540; */
+  /* --blue-500: oklch(83.9% 0.192 194.87); */
+  --blue-600: oklch(0.32 0.06 263.05);
+  --blue-700: #172541;
+  --blue-800: #071533;
+  --blue-900: #000523;
+
+  /* Cyan */
+  --cyan-400: oklch(0.88 0.21 182.57);
+
+  /* Yellow */
+  --yellow-200: oklch(0.92 0.22 102.66);
 
   /* Greens */
   --green-100: hsl(153.07deg 89.8% 80.78% / 95%);
@@ -81,7 +103,8 @@
   --ui-primary-border: hsl(153.07deg 70% 65%);
   --ui-primary-dark: hsl(153.07deg 79.8% 39.78%);
   --ui-secondary: #ffa956;
-  --ui-accent: var(--blue-700);
+  /* --ui-accent: var(--blue-700); */
+  --ui-accent: var(--cyan-400);
 
   --ui-bg: hsl(267, 30%, 18%);
   --ui-bg-2: hsl(266, 30%, 15%);
@@ -147,11 +170,4 @@
      MISC
      ======================================== */
   --resize-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'%3E%3Cpath fill='%23909090' d='M9.75 16.5a6.75 6.75 0 0 0 6.75-6.75v-4.5a2.25 2.25 0 0 1 4.5 0v4.5A11.25 11.25 0 0 1 9.75 21h-4.5a2.25 2.25 0 0 1 0-4.5h4.5Z'/%3E%3C/svg%3E%0A");
-}
-
-@supports (color: oklch(88.9% 0.192 194.87)) {
-  :root {
-    --blue-500: oklch(83.9% 0.192 194.87);
-    --ui-secondary: oklch(80.43% 0.177 62.35757074232738);
-  }
 }

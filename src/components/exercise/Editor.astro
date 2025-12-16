@@ -35,7 +35,11 @@ const indentedHTML =
     .join("\n")
     .trim();
 
-const customContent = `<div class="container">
+const customContentParentString = id.includes("sda")
+  ? '<div class="scrollport">\t'
+  : '<div class="container">\t';
+
+const customContent = `${customContentParentString}
 \t${indentedHTML}
 </div>`;
 
@@ -361,7 +365,7 @@ const resetDialogId = `${id}-reset-dialog`;
         display: flex;
         align-items: center;
         gap: var(--space-4);
-        border-top: 1px solid hsl(208 76% 26%);
+        border-top: 1px solid var(--blue-600);
         padding: var(--space-4) 0;
         margin-inline: calc(var(--space-2) + var(--space-1));
 
@@ -386,6 +390,7 @@ const resetDialogId = `${id}-reset-dialog`;
       background: var(--blue-900);
       overflow: clip;
       margin-block-end: 0.4lh;
+      box-shadow: inset 0 0px 1px 1px var(--blue-700);
     }
 
     .editor-tabs [role="tab"] {
@@ -408,7 +413,13 @@ const resetDialogId = `${id}-reset-dialog`;
       border: 0;
       border-block-width: 2px;
       border-style: solid;
-      border-block-color: #0000 var(--active-tab, #0000);
+      border-block-color: var(--active-tab, #0000) #0000;
+      /* box-shadow:
+        inset 0 1px 0px 0px var(--blue-900),
+        inset 0 3px 0 0px var(--active-tab, #0000); */
+      &:first-of-type {
+        border-start-start-radius: inherit;
+      }
     }
 
     /* .editor-tabs [role="tab"]:first-child {
@@ -416,20 +427,20 @@ const resetDialogId = `${id}-reset-dialog`;
   } */
 
     .editor-tabs [role="tab"][aria-selected="true"] {
-      --active-tab: var(--blue-500);
+      --active-tab: var(--ui-accent);
       background: var(--blue-800);
-      color: var(--gray-100);
+      color: var(--gray-50);
       font-variation-settings: "GRAD" 600;
     }
 
     .editor-tabs [role="tab"][aria-selected="false"]:hover,
     .editor-tabs [role="tab"][aria-selected="false"]:focus-visible {
       color: var(--gray-300);
-      background: hsl(208 76% 22%);
+      background: var(--blue-700);
     }
 
     .editor-tabs [role="tab"]:focus-visible {
-      outline: 2px solid var(--blue-500);
+      outline: 2px solid var(--ui-accent);
       outline-offset: -2px;
     }
 
@@ -508,7 +519,7 @@ const resetDialogId = `${id}-reset-dialog`;
 
         span {
           text-decoration: underline;
-          text-decoration-color: var(--blue-500);
+          text-decoration-color: var(--ui-accent);
         }
 
         svg {
@@ -571,7 +582,7 @@ const resetDialogId = `${id}-reset-dialog`;
 
     .confirm-btn {
       --btn-stroke: 0;
-      --btn-theme: var(--blue-500);
+      --btn-theme: var(--ui-accent);
       position: relative;
       color: var(--text-inverted);
       padding: 0;
@@ -599,7 +610,7 @@ const resetDialogId = `${id}-reset-dialog`;
     button.reset {
       --opacity: 0;
       --btn-stroke: 0;
-      --btn-theme: var(--blue-500);
+      --btn-theme: var(--ui-accent);
       position: relative;
       color: var(--text-inverted);
       padding: 0;
