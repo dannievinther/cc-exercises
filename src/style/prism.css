@@ -73,8 +73,8 @@ pre[class*="language-"] {
   color: #4bf3c8;
 }
 
-.token.selector,
-.token.property {
+.token.property,
+.token.function {
   color: #fff;
 }
 
@@ -86,11 +86,6 @@ pre[class*="language-"] {
 .token.function-name {
   color: #6196cc;
   color: #00d4ff;
-}
-
-.token.function {
-  color: #00d4ff;
-  color: #a7b6ff;
 }
 
 /*.token.function,*/
@@ -149,6 +144,15 @@ pre[class*="language-"] {
 .token.inserted {
   color: green;
 }
+
+/* .token.selector + .token.punctuation,
+.token.punctuation:has(+ .token.selector),
+.token.atrule ~ .token.punctuation + .token.punctuation,
+.token.punctuation:has(+ .line-numbers-rows) {
+  color: #d96fd6;
+  color: var(--gray-400);
+  color: #fff;
+} */
 
 pre[class*="language-"].line-numbers {
   position: relative;
