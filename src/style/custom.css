@@ -238,7 +238,8 @@ section {
     content: "";
     position: absolute;
     inset: 4%;
-    background: rgba(100, 41, 219, 0.5);
+    /* background: rgba(100, 41, 219, 0.5); */
+    background: oklch(from var(--ui-primary) 0.9 0.05 h);
     border-radius: inherit;
     z-index: -1;
     filter: blur(40px);

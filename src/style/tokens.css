@@ -34,9 +34,13 @@
   --blue-800: #0d2e4e;
   --blue-900: #0a2540; */
   /* --blue-500: oklch(83.9% 0.192 194.87); */
+  --blue-600: oklch(0.32 0.06 263.05);
   --blue-700: #172541;
   --blue-800: #071533;
   --blue-900: #000523;
+
+  /* Cyan */
+  --cyan-400: oklch(0.88 0.21 182.57);
 
   /* Yellow */
   --yellow-200: oklch(0.92 0.22 102.66);
@@ -100,7 +104,7 @@
   --ui-primary-dark: hsl(153.07deg 79.8% 39.78%);
   --ui-secondary: #ffa956;
   /* --ui-accent: var(--blue-700); */
-  --ui-accent: var(--yellow-200);
+  --ui-accent: var(--cyan-400);
 
   --ui-bg: hsl(267, 30%, 18%);
   --ui-bg-2: hsl(266, 30%, 15%);
