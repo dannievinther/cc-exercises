@@ -83,7 +83,9 @@ const help = data.help;
 
 // SDA-specific properties
 const boxContent = isSDA && "boxContent" in data ? data.boxContent : undefined;
-const markers = isSDA && "markers" in data ? data.markers : undefined;
+const debug = isSDA && "debug" in data ? data.debug : undefined;
+const scrollDirection =
+  isSDA && "scrollDirection" in data ? data.scrollDirection : undefined;
 
 // Standard/Defensive-specific properties
 const hiddenCSS =
@@ -126,7 +128,7 @@ const boxes = isSDA ? [1] : [...Array("boxes" in data ? data.boxes : 1)];
       />
       {
         isSDA ? (
-          <SDAOutput {boxContent} {startingHTML} {markers} />
+          <SDAOutput {boxContent} {startingHTML} {debug} {scrollDirection} />
         ) : (
           <Output {boxes} {startingHTML} {showOutputSize} />
         )
