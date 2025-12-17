@@ -530,7 +530,11 @@ const resetDialogId = `${id}-reset-dialog`;
         &:hover,
         &:focus-visible {
           color: var(--text-inverted);
-
+          outline-color: var(--ui-accent);
+          outline-width: 1px;
+          svg {
+            color: var(--ui-accent);
+          }
           span {
             text-decoration: underline;
             text-decoration-color: currentColor;

@@ -11,6 +11,9 @@ help:
     topic: animation-range,
   }
 startingCSS: |
+  .container {
+    overflow: clip;
+  }
   img {
     animation: move both linear;
     animation-timeline: scroll();

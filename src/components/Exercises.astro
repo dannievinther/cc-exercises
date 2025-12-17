@@ -75,7 +75,7 @@ import TargetMedia from "./exercise/TargetMedia.astro";
 </section>
 
 <style>
-  small {
+  /* small {
     font-size: 0.8rem;
     font-weight: 500;
     color: hsl(209, 23%, 74%);
@@ -87,31 +87,30 @@ import TargetMedia from "./exercise/TargetMedia.astro";
 
     a:any-link {
       text-decoration: none;
-      /* color: var(--blue-500); */
       color: var(--ui-accent);
       gap: var(--space-1);
       align-items: center;
 
-      & span {
+      span {
         text-decoration: underline;
       }
 
-      & svg {
+      svg {
         inline-size: 1em;
         block-size: 1em;
       }
 
       &:hover,
       &:focus-visible {
-        color: var(--text-inverted);
+        outline-color: var(--ui-accent);
+        outline-width: 1px;
 
         span {
-          /* text-decoration: underline var(--blue-500); */
           text-decoration: underline var(--ui-accent);
         }
       }
     }
-  }
+  } */
 
   .exercise-details {
     picture {
