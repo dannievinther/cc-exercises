@@ -98,9 +98,9 @@ import Front from "../layouts/Front.astro";
 
   h1 {
     font-family: var(--font-flex);
-    font-variation-settings:
+    /* font-variation-settings:
       "wdth" 200,
-      "HGHT" 500;
+      "HGHT" 500; */
     font-size: 8rem;
     font-size: max(5em, 5rem);
     letter-spacing: 0.03em;
@@ -108,12 +108,12 @@ import Front from "../layouts/Front.astro";
     font-weight: 700;
     color: #fff;
     margin-block-start: -0.5em;
-    cursor: pointer;
-    -webkit-user-select: none;
-    user-select: none;
+    /* cursor: pointer; */
+    /* -webkit-user-select: none; */
+    /* user-select: none; */
     filter: var(--filter);
-    contain: paint;
-    will-change: transform;
+    /* contain: paint;
+    will-change: transform; */
 
     /* &.toggled {
       --wdth: 200;
@@ -154,7 +154,6 @@ import Front from "../layouts/Front.astro";
       font-variation-settings: "wdth" 500, "HGHT" 500;
       display: inline flex;
       align-items: baseline;
-      cursor: pointer;
       transform: skewY(-5deg);
       transition: var(--smooth);
       color: #000524;
@@ -172,7 +171,8 @@ import Front from "../layouts/Front.astro";
       
       span {
         transition: .5s .1s color;
-        color: #000524dd;
+        /* color: #000524dd; */
+        /* color: #000524; */
         h1[style] & {
           transition: .5s color;
         color: #00052355;
