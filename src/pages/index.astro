@@ -5,7 +5,8 @@ import Front from "../layouts/Front.astro";
 <Front title="Home">
   <header>
     <div>
-      <h1 aria-label="CSS exercises">Exer<span>CSS</span>ises</h1>
+      <!-- <h1 aria-label="CSS exercises">Exer<span>CSS</span>ises</h1> -->
+      <h1 aria-label="CSS exercises"><span>CSS<span>XS</span></span></h1>
       <p>By Dannie Vinther</p>
     </div>
     <nav class="bento">
@@ -27,7 +28,51 @@ import Front from "../layouts/Front.astro";
   </header>
 </Front>
 
+<script>
+  const h1 = document.querySelector("h1");
+  const bentoLinks = document.querySelectorAll<HTMLElement>(".bento li");
+  
+  for (const link of bentoLinks) {
+    const theme = link?.style.getPropertyValue("--theme");
+    link?.addEventListener("pointerover", (_) => {
+      h1?.style.setProperty("--theme", theme);
+    });
+    link?.addEventListener("pointerout", (_) => {
+      h1?.removeAttribute("style");
+    });
+  }
+
+  /* h1?.addEventListener("click", (_) => {
+    h1?.classList.toggle("toggled");
+  }); */
+  
+
+  /* const hiddenLink = document.querySelector(".bento li:last-child");
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const sem = urlParams.get("sem");
+
+  if (sem === "3") {
+    localStorage.setItem("sem", sem);
+  }
+
+  if (localStorage.getItem("sem") === "3") {
+    hiddenLink.hidden = false;
+
+    if (!urlParams.has("sem")) {
+      const updatedUrl = new URL(window.location.href);
+      updatedUrl.searchParams.set("sem", "3");
+      window.history.replaceState({}, "", updatedUrl);
+    }
+  } */
+</script>
+
 <style>
+  @property --theme-c {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: #0000;
+  }
   header {
     display: grid;
     gap: 3rlh;
@@ -70,7 +115,7 @@ import Front from "../layouts/Front.astro";
     contain: paint;
     will-change: transform;
 
-    &.toggled {
+    /* &.toggled {
       --wdth: 200;
       --h: 500;
       --w: 1.3ch;
@@ -79,10 +124,10 @@ import Front from "../layouts/Front.astro";
       --t: 0.2s cubic-bezier(0.22, 0.03, 0.26, 1);
       --transform: none;
       --bg: #fff0;
-    }
+    } */
 
-    span {
-      font-variation-settings:
+    > span {
+      /* font-variation-settings:
         "wdth" var(--wdth, 800),
         "HGHT" var(--h, 500);
       color: var(--c, #fff0);
@@ -105,7 +150,34 @@ import Front from "../layouts/Front.astro";
       vertical-align: bottom;
       contain: paint;
       will-change: transform;
-      transform: var(--transform, skewY(-5deg));
+      transform: var(--transform, skewY(-5deg)); */
+      font-variation-settings: "wdth" 500, "HGHT" 500;
+      display: inline flex;
+      align-items: baseline;
+      cursor: pointer;
+      transform: skewY(-5deg);
+      transition: var(--smooth);
+      color: #000524;
+      background: linear-gradient(135deg, var(--theme-c) 0 100%) center / 100% 100% text no-repeat, linear-gradient(135deg, var(--theme-grid) 20%, var(--theme-subgrid), var(--theme-flex), var(--theme-sda) 90%) text;
+      /* mask: repeating-radial-gradient(circle at 60% 65%, #000d 0 0.01em, #000 0 0.02em); */
+      -webkit-text-stroke: 3px #00052300;
+      paint-order: stroke fill;
+      transition: 1s --theme-c;
+      h1[style] & {
+        --theme-c: var(--theme);
+        @starting-style {
+          --theme-c: #0000;
+        }
+      }
+      
+      span {
+        transition: .5s .1s color;
+        color: #000524cc;
+        h1[style] & {
+          transition: .5s color;
+        color: #00052355;
+      }
+      }
     }
   }
 
@@ -239,29 +311,4 @@ import Front from "../layouts/Front.astro";
   }
 </style>
 
-<script>
-  const h1 = document.querySelector("h1");
 
-  h1?.addEventListener("click", (_) => {
-    h1?.classList.toggle("toggled");
-  });
-
-  /* const hiddenLink = document.querySelector(".bento li:last-child");
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const sem = urlParams.get("sem");
-
-  if (sem === "3") {
-    localStorage.setItem("sem", sem);
-  }
-
-  if (localStorage.getItem("sem") === "3") {
-    hiddenLink.hidden = false;
-
-    if (!urlParams.has("sem")) {
-      const updatedUrl = new URL(window.location.href);
-      updatedUrl.searchParams.set("sem", "3");
-      window.history.replaceState({}, "", updatedUrl);
-    }
-  } */
-</script>
