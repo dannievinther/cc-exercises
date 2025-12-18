@@ -80,6 +80,7 @@ const isDefensive = collection === "defensive";
 const startingCSS = data.startingCSS ?? "";
 const startingHTML = data.startingHTML;
 const help = data.help;
+const customClass = data.customClass;
 
 // SDA-specific properties
 const boxContent = isSDA && "boxContent" in data ? data.boxContent : undefined;
@@ -115,7 +116,7 @@ const boxes = isSDA ? [1] : [...Array("boxes" in data ? data.boxes : 1)];
   <body data-iframe>
     <section
       data-exercise-key={exerciseID}
-      class:list={[isSDA && "sda-exercise", "iframe-container"]}
+      class:list={[isSDA && "sda-exercise", "iframe-container", customClass]}
     >
       <Editor
         id={exerciseID}
@@ -242,9 +243,12 @@ const boxes = isSDA ? [1] : [...Array("boxes" in data ? data.boxes : 1)];
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    padding: 1rem;
     height: 100%;
     box-sizing: border-box;
+
+    .output {
+      margin: 0;
+    }
 
     @media (max-width: 768px) {
       grid-template-columns: 1fr;

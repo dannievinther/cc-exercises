@@ -42,6 +42,9 @@
   /* Cyan */
   --cyan-400: oklch(0.88 0.21 182.57);
 
+  /* Orange */
+  --orange-500: #ff6701;
+
   /* Yellow */
   --yellow-200: oklch(0.96 0.24 109);
 

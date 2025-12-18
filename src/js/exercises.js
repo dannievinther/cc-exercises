@@ -30,8 +30,9 @@ function scheduleUpdate(updateFn) {
 const sections = document.querySelectorAll("section:not(.sda-exercise)");
 
 // Use separate localStorage namespace for iframe embeds
-const isIframe = document.body.hasAttribute("data-iframe");
-const storageKey = isIframe ? "exerciseData-iframe" : "exerciseData";
+// const isIframe = document.body.hasAttribute("data-iframe");
+// const storageKey = isIframe ? "exerciseData-iframe" : "exerciseData";
+const storageKey = "exerciseData";
 
 let exerciseData = JSON.parse(localStorage.getItem(storageKey)) || {};
 
