@@ -40,7 +40,7 @@
   --blue-900: #000523;
 
   /* Cyan */
-  --cyan-400: oklch(0.88 0.21 182.57);
+  --cyan-400: oklch(0.83 0.19 207.05);
 
   /* Orange */
   --orange-500: #ff6701;
@@ -107,7 +107,7 @@
   --ui-primary-dark: hsl(153.07deg 79.8% 39.78%);
   --ui-secondary: #ffa956;
   /* --ui-accent: var(--blue-700); */
-  --ui-accent: var(--yellow-200);
+  --ui-accent: var(--cyan-400);
 
   --ui-bg: hsl(267, 30%, 18%);
   --ui-bg-2: hsl(266, 30%, 15%);
