@@ -151,22 +151,38 @@ import Front from "../layouts/Front.astro";
       contain: paint;
       will-change: transform;
       transform: var(--transform, skewY(-5deg)); */
+      position: relative;
       font-variation-settings: "wdth" 500, "HGHT" 500;
       display: inline flex;
       align-items: baseline;
       transform: skewY(-5deg);
       transition: var(--smooth);
-      color: #000524;
+      color: #000524cc;
       background: linear-gradient(135deg, var(--theme-c) 0 100%) center / 100% 100% text no-repeat, linear-gradient(135deg, var(--theme-grid) 20%, var(--theme-subgrid), var(--theme-flex), var(--theme-sda) 90%) text;
       /* mask: repeating-radial-gradient(circle at 60% 65%, #000d 0 0.01em, #000 0 0.02em); */
       -webkit-text-stroke: 3px #00052300;
       paint-order: stroke fill;
       transition: 1s --theme-c;
+      isolation: isolate;
       h1[style] & {
         --theme-c: var(--theme);
         @starting-style {
           --theme-c: #0000;
         }
+
+
+      }
+      &::before {
+        content: "CSSXS";
+        position: absolute;
+        font-variation-settings: "wdth" 500, "HGHT" 500;
+        background: repeating-radial-gradient(circle at 8% 75%, #000 0 0.01em, #0000 0 0.018em) text;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        mix-blend-mode: overlay;
+        color: #000523cc;
+        opacity: .8;
       }
       
       span {
