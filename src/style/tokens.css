@@ -107,7 +107,8 @@
   --ui-primary-dark: hsl(153.07deg 79.8% 39.78%);
   --ui-secondary: #ffa956;
   /* --ui-accent: var(--blue-700); */
-  --ui-accent: var(--cyan-400);
+  /* --ui-accent: var(--cyan-400); */
+  --ui-accent: oklch(from var(--ui-primary) l 100% h);
 
   --ui-bg: hsl(267, 30%, 18%);
   --ui-bg-2: hsl(266, 30%, 15%);
