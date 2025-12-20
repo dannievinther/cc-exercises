@@ -122,7 +122,7 @@ const { currentItem, exercises, isIndividualPage = false } = Astro.props;
       padding: 0.7lh;
       border-radius: 0.4rem;
       text-decoration: none;
-      color: var(--gray-900);
+      color: var(--text-muted);
       font-size: 0.9rem;
       font-weight: 500;
       inline-size: 100%;
@@ -141,7 +141,8 @@ const { currentItem, exercises, isIndividualPage = false } = Astro.props;
       &:active {
         /* background: var(--gray-200); */
         background: oklch(from var(--ui-primary) 0.95 calc(c * 0.5) h);
-        --active-color: oklch(from var(--ui-primary) 0.6 calc(c * 0.75) h);
+        --active-color: oklch(from var(--ui-primary) 0.5 calc(c * 0.75) h);
+        color: oklch(from var(--ui-primary) 0.35 calc(c * 0.75) h);
       }
     }
 
