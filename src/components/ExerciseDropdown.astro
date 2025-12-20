@@ -32,7 +32,7 @@ const { currentItem, exercises, isIndividualPage = false } = Astro.props;
         return (
           <li class="exercise-list-item">
             <a href={href}>
-              <span class="exercise-num">{index + 1}.</span>
+              <span class="exercise-num">{index + 1} </span>
               <span>{exercise.data.title}</span>
             </a>
           </li>
@@ -106,41 +106,49 @@ const { currentItem, exercises, isIndividualPage = false } = Astro.props;
       list-style-type: "";
       padding: 0;
       display: grid;
-      gap: var(--space-1);
+      gap: var(--space-1) 0.75ch;
+      grid: auto / auto 1fr;
       scroll-target-group: auto;
     }
 
     .exercise-list-item {
       display: grid;
-
-      &::marker {
-        font-family: system-ui;
-      }
+      grid-column: 1 / -1;
+      grid: auto / subgrid;
     }
 
     li a {
       font-family: var(--font-mona);
-      padding: 0.4rem 0.6rem;
+      padding: 0.7lh;
       border-radius: 0.4rem;
       text-decoration: none;
       color: var(--gray-900);
       font-size: 0.9rem;
       font-weight: 500;
       inline-size: 100%;
-      transition: background 0.1s;
+      display: grid;
+      grid-column: inherit;
+      grid-template-columns: subgrid;
+
+      span {
+        text-box: cap alphabetic;
+      }
 
       &:hover {
         background: var(--gray-100);
       }
       &:target-current,
       &:active {
-        background: var(--gray-200);
+        /* background: var(--gray-200); */
+        background: oklch(from var(--ui-primary) 0.95 calc(c * 0.5) h);
+        --active-color: oklch(from var(--ui-primary) 0.6 calc(c * 0.75) h);
       }
     }
 
     .exercise-num {
-      color: var(--gray-700);
-      font-variant-numeric: tabular-nums;
+      justify-self: end;
+      color: var(--active-color, var(--gray-400));
+      /* font-variant-numeric: tabular-nums; */
     }
   }
 </style>
