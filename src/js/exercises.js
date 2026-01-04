@@ -25,20 +25,17 @@ const STORAGE_PREFIX = "ex:";
 
 // Simple debounced save per key
 const pendingSaves = new Map();
-function debouncedSave(key, value, delay = 300) {
+function debouncedSave(key, data, delay = 300) {
   if (pendingSaves.has(key)) {
     clearTimeout(pendingSaves.get(key));
   }
   pendingSaves.set(
     key,
     setTimeout(() => {
-      if (value === null) {
+      if (data === null) {
         localStorage.removeItem(STORAGE_PREFIX + key);
       } else {
-        localStorage.setItem(
-          STORAGE_PREFIX + key,
-          typeof value === "string" ? value : JSON.stringify(value)
-        );
+        localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(data));
       }
       pendingSaves.delete(key);
     }, delay)
@@ -62,10 +59,15 @@ function debouncedStyleUpdate(styleTag, css, delay = 16) {
   );
 }
 
-function getStoredValue(key, parse = false) {
+// Get stored exercise data: { css?: string, boxes?: number }
+function getStoredData(key) {
   const value = localStorage.getItem(STORAGE_PREFIX + key);
   if (value === null) return null;
-  return parse ? JSON.parse(value) : value;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
 }
 
 // Cache for DOM elements per section
@@ -109,13 +111,22 @@ sections.forEach((section) => {
 
   let startingCSS = textarea.textContent;
   const exerciseKey = section.dataset.exerciseKey;
-  const boxKey = `box-${exerciseKey}`;
+  const startingBoxCount = boxContainer.children.length || 1;
 
-  let boxCount = boxContainer.children.length || 1;
+  let boxCount = startingBoxCount;
   const maxBoxCount = 12;
 
-  const saveToLocalStorage = (key, value) => {
-    debouncedSave(key, value);
+  // Save combined data to localStorage
+  const saveExerciseData = (css, boxes) => {
+    const data = {};
+    if (css && css !== startingCSS) data.css = css;
+    if (boxes && boxes !== startingBoxCount) data.boxes = boxes;
+
+    if (Object.keys(data).length === 0) {
+      debouncedSave(exerciseKey, null); // Remove if back to defaults
+    } else {
+      debouncedSave(exerciseKey, data);
+    }
   };
 
   function createBox(count) {
@@ -127,10 +138,11 @@ sections.forEach((section) => {
   }
 
   function loadLocalStorageBoxes() {
-    const localStorageBoxes = getStoredValue(boxKey, true);
+    const stored = getStoredData(exerciseKey);
+    const storedBoxes = stored?.boxes;
 
-    if (localStorageBoxes && localStorageBoxes !== boxCount) {
-      boxCount = localStorageBoxes;
+    if (storedBoxes && storedBoxes !== boxCount) {
+      boxCount = storedBoxes;
       const newBoxes = Array.from({ length: boxCount }, (_, index) =>
         createBox(index + 1)
       );
@@ -161,7 +173,7 @@ sections.forEach((section) => {
 
   function modifyBoxes(action) {
     action();
-    saveToLocalStorage(boxKey, boxCount);
+    saveExerciseData(textarea.value, boxCount);
     updateButtonState();
     // Dispatch event to notify tabs that boxes changed
     section.dispatchEvent(new CustomEvent("boxeschanged", { bubbles: true }));
@@ -192,15 +204,19 @@ sections.forEach((section) => {
   }
 
   function resetUI() {
-    if (getStoredValue(exerciseKey) || textarea.value === "") {
+    const stored = getStoredData(exerciseKey);
+    if (stored || textarea.value === "") {
       localStorage.removeItem(STORAGE_PREFIX + exerciseKey);
-      if (getStoredValue(boxKey)) {
-        localStorage.removeItem(STORAGE_PREFIX + boxKey);
-        boxCount = boxContainer.children.length;
+      if (stored?.boxes) {
+        boxCount = startingBoxCount;
+        const newBoxes = Array.from({ length: boxCount }, (_, index) =>
+          createBox(index + 1)
+        );
+        boxContainer.replaceChildren(...newBoxes);
       }
       styleTag.textContent = "";
       textarea.value = startingCSS;
-      textarea.focus(); /* ensure that the UI updates */
+      textarea.focus();
       reset.disabled = true;
       output.getAttribute("style") && output.removeAttribute("style");
       init();
@@ -220,9 +236,9 @@ sections.forEach((section) => {
     loadLocalStorageBoxes();
     updateButtonState();
 
-    const savedCSS = getStoredValue(exerciseKey);
-    if (savedCSS) {
-      textarea.value = savedCSS;
+    const stored = getStoredData(exerciseKey);
+    if (stored?.css) {
+      textarea.value = stored.css;
     }
     styleTag.textContent = prefix(textarea.value, exerciseKey);
 
@@ -236,12 +252,8 @@ sections.forEach((section) => {
     // Debounced style update (every frame)
     debouncedStyleUpdate(styleTag, prefix(value, exerciseKey));
 
-    // Debounced storage save (300ms)
-    if (value === "") {
-      localStorage.removeItem(STORAGE_PREFIX + exerciseKey);
-    } else {
-      saveToLocalStorage(exerciseKey, value);
-    }
+    // Debounced storage save (300ms) - combined with box count
+    saveExerciseData(value, boxCount);
 
     updateResetButtonState();
   });
