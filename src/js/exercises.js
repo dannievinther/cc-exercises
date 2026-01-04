@@ -1,14 +1,5 @@
 import { prefix } from "./utils";
 
-// Debounce utility function
-function debounce(fn, delay) {
-  let timeoutId;
-  return function (...args) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn.apply(this, args), delay);
-  };
-}
-
 // Batch DOM updates using requestAnimationFrame
 let pendingUpdates = [];
 let rafScheduled = false;
@@ -29,17 +20,53 @@ function scheduleUpdate(updateFn) {
 // Cache sections once - exclude SDA exercises (handled by sda-exercises.js)
 const sections = document.querySelectorAll("section:not(.sda-exercise)");
 
-// Use separate localStorage namespace for iframe embeds
-// const isIframe = document.body.hasAttribute("data-iframe");
-// const storageKey = isIframe ? "exerciseData-iframe" : "exerciseData";
-const storageKey = "exerciseData";
+// Storage key prefix for exercise data
+const STORAGE_PREFIX = "ex:";
 
-let exerciseData = JSON.parse(localStorage.getItem(storageKey)) || {};
+// Simple debounced save per key
+const pendingSaves = new Map();
+function debouncedSave(key, value, delay = 300) {
+  if (pendingSaves.has(key)) {
+    clearTimeout(pendingSaves.get(key));
+  }
+  pendingSaves.set(
+    key,
+    setTimeout(() => {
+      if (value === null) {
+        localStorage.removeItem(STORAGE_PREFIX + key);
+      } else {
+        localStorage.setItem(
+          STORAGE_PREFIX + key,
+          typeof value === "string" ? value : JSON.stringify(value)
+        );
+      }
+      pendingSaves.delete(key);
+    }, delay)
+  );
+}
 
-// Debounced localStorage save (300ms delay)
-const debouncedSaveToStorage = debounce(() => {
-  localStorage.setItem(storageKey, JSON.stringify(exerciseData));
-}, 300);
+// Debounced CSS update to avoid excessive style recalculations
+const pendingStyleUpdates = new Map();
+function debouncedStyleUpdate(styleTag, css, delay = 16) {
+  // ~1 frame
+  const key = styleTag;
+  if (pendingStyleUpdates.has(key)) {
+    cancelAnimationFrame(pendingStyleUpdates.get(key));
+  }
+  pendingStyleUpdates.set(
+    key,
+    requestAnimationFrame(() => {
+      styleTag.textContent = css;
+      pendingStyleUpdates.delete(key);
+    })
+  );
+}
+
+function getStoredValue(key, parse = false) {
+  const value = localStorage.getItem(STORAGE_PREFIX + key);
+  if (value === null) return null;
+  return parse ? JSON.parse(value) : value;
+}
 
 // Cache for DOM elements per section
 const sectionCache = new WeakMap();
@@ -88,8 +115,7 @@ sections.forEach((section) => {
   const maxBoxCount = 12;
 
   const saveToLocalStorage = (key, value) => {
-    exerciseData[key] = value;
-    debouncedSaveToStorage();
+    debouncedSave(key, value);
   };
 
   function createBox(count) {
@@ -101,7 +127,7 @@ sections.forEach((section) => {
   }
 
   function loadLocalStorageBoxes() {
-    const localStorageBoxes = exerciseData[boxKey];
+    const localStorageBoxes = getStoredValue(boxKey, true);
 
     if (localStorageBoxes && localStorageBoxes !== boxCount) {
       boxCount = localStorageBoxes;
@@ -166,14 +192,13 @@ sections.forEach((section) => {
   }
 
   function resetUI() {
-    if (exerciseData[exerciseKey] || textarea.value === "") {
-      delete exerciseData[exerciseKey];
-      if (exerciseData[boxKey]) {
-        delete exerciseData[boxKey];
+    if (getStoredValue(exerciseKey) || textarea.value === "") {
+      localStorage.removeItem(STORAGE_PREFIX + exerciseKey);
+      if (getStoredValue(boxKey)) {
+        localStorage.removeItem(STORAGE_PREFIX + boxKey);
         boxCount = boxContainer.children.length;
       }
-      localStorage.setItem("exerciseData", JSON.stringify(exerciseData));
-      styleTag.innerHTML = "";
+      styleTag.textContent = "";
       textarea.value = startingCSS;
       textarea.focus(); /* ensure that the UI updates */
       reset.disabled = true;
@@ -195,25 +220,31 @@ sections.forEach((section) => {
     loadLocalStorageBoxes();
     updateButtonState();
 
-    if (exerciseData[exerciseKey]) {
-      textarea.value = exerciseData[exerciseKey];
+    const savedCSS = getStoredValue(exerciseKey);
+    if (savedCSS) {
+      textarea.value = savedCSS;
     }
-    styleTag.innerHTML = prefix(textarea.value, exerciseKey);
+    styleTag.textContent = prefix(textarea.value, exerciseKey);
 
     updateResetButtonState();
-
-    textarea.addEventListener("input", (e) => {
-      styleTag.innerHTML = prefix(e.target.value, exerciseKey);
-      saveToLocalStorage(exerciseKey, textarea.value);
-
-      if (textarea.value === "") {
-        delete exerciseData[exerciseKey];
-        localStorage.setItem("exerciseData", JSON.stringify(exerciseData));
-      }
-
-      updateResetButtonState();
-    });
   }
+
+  // Input handler - defined once, outside init() to prevent memory leaks
+  textarea.addEventListener("input", (e) => {
+    const value = e.target.value;
+
+    // Debounced style update (every frame)
+    debouncedStyleUpdate(styleTag, prefix(value, exerciseKey));
+
+    // Debounced storage save (300ms)
+    if (value === "") {
+      localStorage.removeItem(STORAGE_PREFIX + exerciseKey);
+    } else {
+      saveToLocalStorage(exerciseKey, value);
+    }
+
+    updateResetButtonState();
+  });
 
   init();
 
