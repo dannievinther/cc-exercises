@@ -47,9 +47,9 @@ const link = links[title]?.link || "/grid";
     </main>
 
     <Footer label={label} linkTo={link} />
-    <script is:inline src="/script/bliss-minimal.js"></script>
-    <script is:inline src="/script/prism.js"></script>
-    <script is:inline src="/script/prism-linenumbers.js"></script>
+    <script is:inline defer src="/script/bliss-minimal.js"></script>
+    <script is:inline defer src="/script/prism.js"></script>
+    <script is:inline defer src="/script/prism-linenumbers.js"></script>
     <script>
       // Lazy load Prism editor extensions on first textarea interaction
       let prismLoaded = false;

@@ -1,32 +1,50 @@
 // SDA (Scroll-Driven Animations) exercises functionality
 // Uses same pattern as exercises.js but with SDA-specific CSS prefixing
 
-import { prefix } from "./utils";
+// Storage key prefix for exercise data
+const STORAGE_PREFIX = "ex:";
 
-// Debounce utility function
-function debounce(fn, delay) {
-  let timeoutId;
-  return function (...args) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn.apply(this, args), delay);
-  };
+// Simple debounced save per key
+const pendingSaves = new Map();
+function debouncedSave(key, value, delay = 300) {
+  if (pendingSaves.has(key)) {
+    clearTimeout(pendingSaves.get(key));
+  }
+  pendingSaves.set(
+    key,
+    setTimeout(() => {
+      if (value === null) {
+        localStorage.removeItem(STORAGE_PREFIX + key);
+      } else {
+        localStorage.setItem(STORAGE_PREFIX + key, value);
+      }
+      pendingSaves.delete(key);
+    }, delay)
+  );
 }
 
-// Use separate localStorage namespace for iframe embeds
-// const isIframe = document.body.hasAttribute("data-iframe");
-// const storageKey = isIframe ? "exerciseData-iframe" : "exerciseData";
-const storageKey = "exerciseData";
+function getStoredValue(key) {
+  return localStorage.getItem(STORAGE_PREFIX + key);
+}
 
-let exerciseData = JSON.parse(localStorage.getItem(storageKey)) || {};
-
-// Debounced localStorage save (300ms delay)
-const debouncedSaveToStorage = debounce(() => {
-  localStorage.setItem(storageKey, JSON.stringify(exerciseData));
-}, 300);
+// Debounced CSS update to avoid excessive style recalculations
+const pendingStyleUpdates = new Map();
+function debouncedStyleUpdate(styleTag, css) {
+  const key = styleTag;
+  if (pendingStyleUpdates.has(key)) {
+    cancelAnimationFrame(pendingStyleUpdates.get(key));
+  }
+  pendingStyleUpdates.set(
+    key,
+    requestAnimationFrame(() => {
+      styleTag.textContent = css;
+      pendingStyleUpdates.delete(key);
+    })
+  );
+}
 
 const saveToLocalStorage = (key, value) => {
-  exerciseData[key] = value;
-  debouncedSaveToStorage();
+  debouncedSave(key, value);
 };
 
 const sdaSections = document.querySelectorAll("section.sda-exercise");
@@ -114,11 +132,8 @@ sdaSections.forEach((section) => {
 
   // Reset UI
   function resetUI() {
-    if (exerciseData[exerciseKey]) {
-      delete exerciseData[exerciseKey];
-      localStorage.setItem("exerciseData", JSON.stringify(exerciseData));
-    }
-    styleTag.innerHTML = "";
+    localStorage.removeItem(STORAGE_PREFIX + exerciseKey);
+    styleTag.textContent = "";
     textarea.value = startingCSS;
     textarea.focus();
     resetBtn.disabled = true;
@@ -128,21 +143,26 @@ sdaSections.forEach((section) => {
   // Initialize
   function init() {
     // Load saved CSS from localStorage
-    if (exerciseData[exerciseKey]) {
-      textarea.value = exerciseData[exerciseKey];
+    const savedCSS = getStoredValue(exerciseKey);
+    if (savedCSS) {
+      textarea.value = savedCSS;
     }
-    styleTag.innerHTML = sdaPrefix(textarea.value, exerciseKey);
+    styleTag.textContent = sdaPrefix(textarea.value, exerciseKey);
     updateResetState();
   }
 
-  // Listen for input
+  // Input handler - defined once, outside init() to prevent memory leaks
   textarea.addEventListener("input", (e) => {
-    styleTag.innerHTML = sdaPrefix(e.target.value, exerciseKey);
-    saveToLocalStorage(exerciseKey, textarea.value);
+    const value = e.target.value;
 
-    if (textarea.value === "" || textarea.value === startingCSS) {
-      delete exerciseData[exerciseKey];
-      localStorage.setItem("exerciseData", JSON.stringify(exerciseData));
+    // Debounced style update (every frame)
+    debouncedStyleUpdate(styleTag, sdaPrefix(value, exerciseKey));
+
+    // Debounced storage save (300ms)
+    if (value === "" || value === startingCSS) {
+      localStorage.removeItem(STORAGE_PREFIX + exerciseKey);
+    } else {
+      saveToLocalStorage(exerciseKey, value);
     }
 
     updateResetState();
