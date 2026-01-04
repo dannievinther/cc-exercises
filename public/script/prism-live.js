@@ -92,21 +92,50 @@
         console.log(new Incrementable(this.textarea));
       }
 
-      $.bind(this.textarea, {
-        input: (evt) => this.update(),
-        focus: (evt) => this.update(),
+      this._enterHandled = false;
 
-        keyup: (evt) => {
-          if (evt.key == "Enter") {
-            // Enter
-            // Maintain indent on line breaks
-            this.insert(this.currentIndent);
-            this.syncScroll();
+      $.bind(this.textarea, {
+        input: (evt) => {
+          this.update();
+
+          // Auto-dedent when typing closing brace
+          if (evt.data === "}") {
+            this.handleClosingBrace();
           }
         },
+        focus: (evt) => this.update(),
 
         keydown: (evt) => {
-          if (evt.key == "Tab" && !evt.altKey) {
+          if (evt.key == "Enter") {
+            // Handle Enter with smart indentation
+            var indent = this.currentIndent;
+            var before = this.beforeCaret();
+            var after = this.afterCaret();
+            var charBeforeCaret = before.slice(-1);
+            var charAfterCaret = after.charAt(0);
+
+            // Check if we're between { and }
+            if (charBeforeCaret === "{" && charAfterCaret === "}") {
+              evt.preventDefault();
+              this._enterHandled = true;
+              // Insert newline + indent + newline + base indent, position caret on middle line
+              var newIndent = indent + this.indent;
+              this.insert("\n" + newIndent + "\n" + indent);
+              // Move caret back to the indented line
+              this.selectionStart = this.selectionEnd =
+                this.selectionStart - indent.length - 1;
+              this.update();
+              this.syncScroll();
+            } else if (charBeforeCaret === "{") {
+              evt.preventDefault();
+              this._enterHandled = true;
+              this.insert("\n" + indent + this.indent);
+              this.update();
+              this.syncScroll();
+            } else {
+              this._enterHandled = false;
+            }
+          } else if (evt.key == "Tab" && !evt.altKey) {
             // Default is to move focus off the textarea
             // this is never desirable in an editor
             evt.preventDefault();
@@ -171,6 +200,15 @@
           var v = this.value;
           var ss = this.selectionStart;
           //console.log(ss, v[ss], l, v.slice(l.start, l.end));
+        },
+
+        keyup: (evt) => {
+          if (evt.key == "Enter" && !this._enterHandled) {
+            // Maintain indent on regular line breaks (when not handled by keydown)
+            this.insert(this.currentIndent);
+            this.syncScroll();
+          }
+          this._enterHandled = false;
         },
 
         "click keyup": (evt) => {
@@ -322,6 +360,54 @@
     get currentIndent() {
       var before = this.value.slice(0, this.selectionStart - 1);
       return _.match(before, /^[\t ]*/gm, "", -1);
+    }
+
+    // Handle auto-dedent when typing closing brace
+    handleClosingBrace() {
+      var pos = this.selectionStart;
+      var value = this.value;
+
+      // Get the current line up to caret
+      var lineStart = value.lastIndexOf("\n", pos - 2) + 1;
+      var lineBeforeBrace = value.slice(lineStart, pos - 1);
+
+      // Only auto-dedent if line is only whitespace before the }
+      if (!/^\s*$/.test(lineBeforeBrace)) return;
+
+      // Find matching opening brace
+      var beforeBrace = value.slice(0, pos - 1);
+      var braceDepth = 0;
+      var matchPos = -1;
+
+      for (var i = beforeBrace.length - 1; i >= 0; i--) {
+        if (beforeBrace[i] === "}") braceDepth++;
+        else if (beforeBrace[i] === "{") {
+          if (braceDepth === 0) {
+            matchPos = i;
+            break;
+          }
+          braceDepth--;
+        }
+      }
+
+      if (matchPos === -1) return;
+
+      // Get indentation of the line with the opening brace
+      var openLineStart = beforeBrace.lastIndexOf("\n", matchPos) + 1;
+      var openLineIndent = _.match(
+        beforeBrace.slice(openLineStart),
+        /^[\t ]*/,
+        ""
+      );
+
+      // Replace current line's indentation with matching indentation
+      var newValue =
+        value.slice(0, lineStart) + openLineIndent + "}" + value.slice(pos);
+      var newCaretPos = lineStart + openLineIndent.length + 1;
+
+      this.value = newValue;
+      this.selectionStart = this.selectionEnd = newCaretPos;
+      this.update();
     }
 
     // Current language at caret position
