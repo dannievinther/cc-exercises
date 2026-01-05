@@ -1,5 +1,5 @@
 ---
-const { collection, theme, hasWarning } = Astro.props;
+const { collection, theme, hasWarning, devNotice } = Astro.props;
 
 import { getCollection } from "astro:content";
 import Exercises from "../components/Exercises.astro";
@@ -28,8 +28,33 @@ const ExerciseComponent = collection === "sda" ? SDAExercises : Exercises;
 
 <Base {title} {hasWarning} {theme}>
   {
+    devNotice && (
+      <aside class="dev-notice">
+        <span>🚧</span> Disse øvelser er under udvikling
+      </aside>
+    )
+  }
+  {
     sorted.map((entry, index) => (
       <ExerciseComponent {entry} index={index + 1} total={sorted.length} />
     ))
   }
 </Base>
+
+<style>
+  .dev-notice {
+    grid-column: 2;
+    place-self: center;
+    padding: 0.75rem 1rem;
+    background: oklch(from var(--yellow-200) 0.98 0.06 h);
+    border: 1px solid oklch(from var(--yellow-200) 0.8 0.4 h);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: oklch(from var(--yellow-200) 0.4 0.1 h);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-block-end: calc(-1 * (var(--space-9) / 2));
+    font-weight: 500;
+  }
+</style>
