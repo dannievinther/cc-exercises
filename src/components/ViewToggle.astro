@@ -1,6 +1,6 @@
 ---
-import ViewSingleIcon from "../icons/view-single.svg";
-import ViewAllIcon from "../icons/view-all.svg";
+import ViewSingleIcon from "../icons/layers.svg";
+import ViewAllIcon from "../icons/list.svg";
 import Tooltip from "./Tooltip.astro";
 
 interface Props {
@@ -65,12 +65,14 @@ const tooltipText = isSingleView
       opacity: 1;
 
       svg {
-        transform-box: fill-box;
+        /* transform-box: fill-box; */
         > * {
           transition: 0.3s;
 
-          .view-toggle:hover &:nth-child(2) {
-            translate: 15% -15%;
+          .view-toggle:hover &:nth-child(1) {
+            /* transform-origin: 100% 100%;
+            scale: 1.1; */
+            opacity: 0.2;
           }
         }
       }
