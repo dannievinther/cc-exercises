@@ -72,7 +72,12 @@ const tooltipText = isSingleView
           .view-toggle:hover &:nth-child(1) {
             /* transform-origin: 100% 100%;
             scale: 1.1; */
-            opacity: 0.2;
+            opacity: 0;
+          }
+          .view-toggle:hover &:nth-child(2) {
+            transform: translate(-10%, 5%) skewY(10deg) scale(1.25);
+            transform-box: fill-box;
+            transform-origin: bottom right;
           }
         }
       }
