@@ -1,7 +1,7 @@
 import GridIcon from "../icons/grid2.svg";
 import SubgridIcon from "../icons/subgrid2.svg";
 import FlexboxIcon from "../icons/flex.svg";
-import SdaIcon from "../icons/sda2.svg";
+import SdaIcon from "../icons/scrolling.svg";
 
 export interface NavItem {
   href: string;
