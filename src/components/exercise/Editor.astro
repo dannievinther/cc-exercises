@@ -17,7 +17,7 @@ const exerciseNumber = id.match(/\d+[a-zA-Z]*/)[0].replace(/^0+/, "");
 // Generate HTML content for the HTML tab
 const boxCount = boxes
   .map(
-    (_, index) => `<div class="box box-${index + 1}">.box-${index + 1}</div>`
+    (_, index) => `<div class="box box-${index + 1}">.box-${index + 1}</div>`,
   )
   .join("\n\t");
 const htmlContent = `<div class="container">
@@ -175,7 +175,7 @@ const resetDialogId = `${id}-reset-dialog`;
     constructor(tablistNode: HTMLElement) {
       this.tablistNode = tablistNode;
       this.tabs = Array.from(
-        this.tablistNode.querySelectorAll('[role="tab"]')
+        this.tablistNode.querySelectorAll('[role="tab"]'),
       ) as HTMLButtonElement[];
       this.tabpanels = [];
 
@@ -185,7 +185,7 @@ const resetDialogId = `${id}-reset-dialog`;
       this.tabs.forEach((tab) => {
         const panelId = tab.getAttribute("aria-controls");
         const tabpanel = editorContainer?.querySelector(
-          `#${panelId}`
+          `#${panelId}`,
         ) as HTMLElement;
         if (tabpanel) {
           this.tabpanels.push(tabpanel);
@@ -210,7 +210,7 @@ const resetDialogId = `${id}-reset-dialog`;
     updateHTMLIfActive() {
       // Find the HTML tab and check if it's active
       const htmlTabIndex = this.tabs.findIndex((tab) =>
-        tab.getAttribute("aria-controls")?.includes("panel-html")
+        tab.getAttribute("aria-controls")?.includes("panel-html"),
       );
       if (
         htmlTabIndex !== -1 &&
@@ -245,7 +245,7 @@ const resetDialogId = `${id}-reset-dialog`;
 
       const boxContainer = exercise.querySelector(".output .container");
       const htmlTextarea = htmlPanel.querySelector(
-        "textarea"
+        "textarea",
       ) as HTMLTextAreaElement;
 
       if (!boxContainer || !htmlTextarea) return;
@@ -255,14 +255,14 @@ const resetDialogId = `${id}-reset-dialog`;
 
       // Read actual DOM state - count only .box elements
       const boxes = boxContainer.querySelectorAll(
-        ":scope > .box, :scope > [class*='box-']"
+        ":scope > .box, :scope > [class*='box-']",
       );
       const currentBoxCount = boxes.length;
 
       const boxHTML = Array.from(
         { length: currentBoxCount },
         (_, index) =>
-          `<div class="box box-${index + 1}">.box-${index + 1}</div>`
+          `<div class="box box-${index + 1}">.box-${index + 1}</div>`,
       ).join("\n\t");
       const htmlContent = `<div class="container">\n\t${boxHTML}\n</div>`;
       htmlTextarea.value = htmlContent;
@@ -346,7 +346,7 @@ const resetDialogId = `${id}-reset-dialog`;
       anchor-name: --editor;
       position: relative;
       z-index: 1;
-      background: var(--blue-900);
+      background: var(--blue-800);
       margin: 0;
       justify-self: stretch;
       display: grid;
@@ -387,7 +387,7 @@ const resetDialogId = `${id}-reset-dialog`;
       margin: 0;
       border-start-start-radius: inherit;
       border-start-end-radius: inherit;
-      background: var(--blue-800);
+      background: var(--blue-900);
       /* overflow: clip; */
       margin-block-end: 0.4lh;
       box-shadow: inset 0 0px 0 1px var(--blue-700);
@@ -430,7 +430,7 @@ const resetDialogId = `${id}-reset-dialog`;
 
     .editor-tabs [role="tab"][aria-selected="true"] {
       --active-tab: var(--ui-accent);
-      background: var(--blue-900);
+      background: var(--blue-800);
       color: var(--gray-50);
       font-variation-settings: "GRAD" 600;
     }
