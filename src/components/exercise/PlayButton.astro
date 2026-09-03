@@ -29,7 +29,7 @@ import PauseIcon from "../../icons/pause.svg";
         button.dataset.playing = String(isPlaying);
         button.setAttribute(
           "aria-label",
-          isPlaying ? "Pause video" : "Afspil video"
+          isPlaying ? "Pause video" : "Afspil video",
         );
       };
 
@@ -88,7 +88,7 @@ import PauseIcon from "../../icons/pause.svg";
     border-radius: 999px;
     cursor: pointer;
     color: oklch(from var(--ui-primary) 0.5 0.2 h);
-    transition: 0.15s cubic-bezier(0.44, 0, 0.56, 1);
+    /* transition: 0.15s cubic-bezier(0.44, 0, 0.56, 1) scale; */
     box-shadow: none;
     border: 2px solid oklch(from var(--ui-primary) 0.6 0.1 h);
     animation: pulse 1.5s infinite paused;

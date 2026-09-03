@@ -76,6 +76,7 @@ const { title, index, total, exerciseID } = Astro.props;
         block-size: 0.9em;
         opacity: 0;
         transition: 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+        transition-property: opacity, translate;
         justify-self: flex-end;
         translate: -0.4em 0;
 
@@ -86,7 +87,7 @@ const { title, index, total, exerciseID } = Astro.props;
 
       &:hover :global(svg) {
         opacity: 1;
-        translate: 0 0;
+        translate: none;
       }
     }
 
