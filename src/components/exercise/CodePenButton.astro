@@ -125,7 +125,7 @@ const { title = "CSS Exercise" } = Astro.props;
 }
 
 :is([class|="box"], .box):has(*) {
-  > :is([class*="box"], h4, p, dt, dd) {
+  :global(> :is([class*="box"], h4, p, dt, dd)) {
     background: var(--ui-primary-dark);
     padding-inline: 0.5rem;
   }

@@ -111,7 +111,7 @@ const { boxes, theme, startingHTML, showOutputSize } = Astro.props;
         padding-block: 0.5rem;
       }
 
-      > :is([class*="box"], h4, p, dt, dd) {
+      :global(> :is([class*="box"], h4, p, dt, dd)) {
         box-shadow: inherit;
         border-radius: inherit;
         background: var(--ui-primary-dark);
