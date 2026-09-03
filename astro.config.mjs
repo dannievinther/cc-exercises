@@ -1,4 +1,4 @@
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
@@ -6,15 +6,15 @@ export default defineConfig({
     responsiveStyles: true,
     layout: "constrained",
   },
-  experimental: {
-    clientPrerender: true,
-    svgo: true,
-    fonts: [
-      {
-        provider: "local",
-        name: "Mona Sans",
-        cssVariable: "--font-mona",
-        fallbacks: ["system-ui", "sans-serif"],
+  svgo: true,
+  compressHTML: true,
+  fonts: [
+    {
+      provider: fontProviders.local(),
+      name: "Mona Sans",
+      cssVariable: "--font-mona",
+      fallbacks: ["system-ui", "sans-serif"],
+      options: {
         variants: [
           {
             weight: "200 900",
@@ -24,11 +24,13 @@ export default defineConfig({
           },
         ],
       },
-      {
-        provider: "local",
-        name: "OpMn",
-        cssVariable: "--font-mono",
-        fallbacks: ["Consolas", "Monaco", "monospace"],
+    },
+    {
+      provider: fontProviders.local(),
+      name: "OpMn",
+      cssVariable: "--font-mono",
+      fallbacks: ["Consolas", "Monaco", "monospace"],
+      options: {
         variants: [
           {
             weight: 500,
@@ -37,11 +39,13 @@ export default defineConfig({
           },
         ],
       },
-      {
-        provider: "local",
-        name: "flex",
-        cssVariable: "--font-flex",
-        fallbacks: ["sans-serif"],
+    },
+    {
+      provider: fontProviders.local(),
+      name: "flex",
+      cssVariable: "--font-flex",
+      fallbacks: ["sans-serif"],
+      options: {
         variants: [
           {
             weight: 700,
@@ -51,7 +55,10 @@ export default defineConfig({
           },
         ],
       },
-    ],
+    },
+  ],
+  experimental: {
+    clientPrerender: true,
   },
   prefetch: {
     prefetchAll: true,

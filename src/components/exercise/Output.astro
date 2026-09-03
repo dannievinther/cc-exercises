@@ -27,7 +27,9 @@ const { boxes, theme, startingHTML, showOutputSize } = Astro.props;
         opacity: 0;
         scale: 0.95;
       }
-      transition: 0.3s;
+      transition:
+        0.3s opacity,
+        0.3s scale;
       transition-behavior: allow-discrete;
     }
     :global(.box, [class|="box"]) {

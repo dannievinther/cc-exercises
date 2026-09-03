@@ -71,7 +71,7 @@ const { hints } = Astro.props;
     color: var(--type-color);
     border-radius: var(--bdrs-md);
     cursor: pointer;
-    transition: 0.2s;
+    /* transition: 0.2s; */
     &:hover {
       color: var(--ui-accent);
       text-shadow: 0 0 6px hsl(from var(--ui-accent) h s l / 50%);
@@ -81,7 +81,7 @@ const { hints } = Astro.props;
 
 <script>
   const copyCode = document.querySelectorAll(
-    ".hints [data-type] code, .exercise-content p code"
+    ".hints [data-type] code, .exercise-content p code",
   );
 
   const insertTextAtCaret = (element, text) => {
@@ -113,6 +113,6 @@ const { hints } = Astro.props;
       editor.dispatchEvent(new Event("input"));
       editor.focus();
       editor.setSelectionRange(caretPosition, caretPosition);
-    })
+    }),
   );
 </script>

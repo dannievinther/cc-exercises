@@ -21,7 +21,7 @@ export async function getStaticPaths() {
 
   // Filter out drafts unless in dev mode or on staging
   const filterDrafts = <T extends { data: { draft?: boolean } }>(
-    entries: T[]
+    entries: T[],
   ): T[] => entries.filter((entry) => showDrafts || !entry.data.draft);
 
   const filteredGrid = filterDrafts(grid);
@@ -59,10 +59,10 @@ export async function getStaticPaths() {
   function getIndex(entry, index) {
     const collection = entry.collection;
     const collectionEntries = allCollections.filter(
-      (item) => item.collection === collection
+      (item) => item.collection === collection,
     );
     const sortedEntries = collectionEntries.sort((a, b) =>
-      a.id.localeCompare(b.id, undefined, { numeric: true })
+      a.id.localeCompare(b.id, undefined, { numeric: true }),
     );
     const entryIndex = sortedEntries.findIndex((item) => item.id === entry.id);
     return entryIndex + 1;
@@ -107,7 +107,7 @@ const { entry, total, index, theme, slugs } = Astro.props;
 const title =
   entry.collection.charAt(0).toUpperCase() + entry.collection.slice(1);
 const sortedSlugs = slugs.sort((a, b) =>
-  a.localeCompare(b, undefined, { numeric: true })
+  a.localeCompare(b, undefined, { numeric: true }),
 );
 
 // Use SDA-specific component for scroll-driven animations
@@ -170,7 +170,7 @@ const prevLink = (entry) => {
       padding: var(--space-4) var(--space-6);
       color: var(--blue-900);
       border-radius: var(--bdrs-md);
-      transition: 0.1s linear;
+      /* transition: 0.1s linear; */
       text-decoration: none;
       text-transform: uppercase;
       font-variation-settings: "wdth" 120;
@@ -209,7 +209,7 @@ const prevLink = (entry) => {
       [data-icon] {
         color: var(--chevron-color, var(--blue-muted));
         translate: var(--_offset, var(--offset)) -1px;
-        transition: 0.2s;
+        /* transition: 0.2s; */
       }
 
       &:hover {
