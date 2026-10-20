@@ -33,7 +33,7 @@ export const navItems: NavItem[] = [
 
 export type Exercise = {
   id: string;
-  data: { title: string; draft?: boolean };
+  data: { id?: string; title: string; draft?: boolean };
 };
 
 export const isCurrentPath = (pathname: string, href: string): boolean =>

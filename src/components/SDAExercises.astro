@@ -1,8 +1,7 @@
 ---
 import { render } from "astro:content";
 const { entry, index, total } = Astro.props;
-const { id, data, collection } = entry;
-const colID = id.split("/").pop();
+const { data } = entry;
 const {
   title,
   draft,
@@ -21,7 +20,8 @@ const {
 } = data;
 
 const { Content } = await render(entry);
-const exerciseID = `${collection}-${colID}`;
+// Keep saved code and anchor links stable when exercise files are reordered.
+const exerciseID = data.id;
 
 // SDA uses a single box by default
 const boxes = [1];
