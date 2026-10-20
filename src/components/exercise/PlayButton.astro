@@ -34,7 +34,12 @@ import PauseIcon from "../../icons/pause.svg";
       };
 
       // Listen for video play/pause events
-      video.addEventListener("play", updateState);
+      video.addEventListener("play", () => {
+        document.querySelectorAll("video").forEach((otherVideo) => {
+          if (otherVideo !== video) otherVideo.pause();
+        });
+        updateState();
+      });
       video.addEventListener("pause", updateState);
 
       // Toggle video play/pause

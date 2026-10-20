@@ -27,7 +27,10 @@ const isFirst = index === 1;
             width={videoWidth}
             height={videoHeight}
           >
-            <source src={video + "#t=0.001"} type="video/webm" />
+            <source
+              src={video + "#t=0.001"}
+              type={video.endsWith(".mp4") ? "video/mp4" : "video/webm"}
+            />
           </video>
           <play-button>
             <PlayButton />
