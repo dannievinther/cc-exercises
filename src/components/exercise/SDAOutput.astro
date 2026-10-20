@@ -197,7 +197,8 @@ const { boxContent = "I'm a box", startingHTML, scrollDirection } = Astro.props;
       }
     }
 
-    .controls:has(:checked) + & .container {
+    /* The control is a sibling component; the container comes from set:html. */
+    :global(.controls:has(:checked)) + & :global(.container) {
       --debug-visibility: 1;
     }
 
