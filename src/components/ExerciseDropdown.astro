@@ -20,7 +20,9 @@ const { currentItem, exercises, isIndividualPage = false } = Astro.props;
     {
       exercises.map((exercise, index) => {
         const num = exercise.id.split("/").pop();
-        const hashId = `${currentItem.collection}-${num}`;
+        const hashId = currentItem.collection === "sda"
+          ? exercise.data.id ?? `${currentItem.collection}-${num}`
+          : `${currentItem.collection}-${num}`;
         // Map collection name to URL path (flexbox -> flex)
         const urlPath =
           currentItem.collection === "flexbox"
