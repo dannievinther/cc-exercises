@@ -66,8 +66,10 @@ const tooltipText = isSingleView
 
       svg {
         /* transform-box: fill-box; */
-        > * {
-          transition: 0.3s;
+        :global(> *) {
+          transition:
+            0.3s transform,
+            0.3s opacity;
 
           .view-toggle:hover &:nth-child(1) {
             /* transform-origin: 100% 100%;

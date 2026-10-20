@@ -77,7 +77,8 @@ function getHints(type) {
           1.006 72.2%,
           0.998 86.7%,
           1
-        );
+        )
+        rotate;
     }
 
     details[open] svg {
@@ -114,7 +115,7 @@ function getHints(type) {
     }
 
     [data-icon] {
-      transition: 0.2s cubic-bezier(0.1, 0, 0.1, 1);
+      /* transition: 0.2s cubic-bezier(0.1, 0, 0.1, 1); */
 
       & :global(path) {
         stroke-width: 3px;
@@ -133,6 +134,7 @@ function getHints(type) {
         overflow: clip;
         height: 0;
         transition: 0.25s allow-discrete;
+        transition-property: height, content-visibility;
         margin-top: -0.4rem;
       }
       &[open]::details-content {

@@ -1,5 +1,6 @@
 // SDA (Scroll-Driven Animations) exercises functionality
 // Uses same pattern as exercises.js but with SDA-specific CSS prefixing
+import { simulateViewportHeight } from "./sda-viewport.js";
 
 // Storage key prefix for exercise data
 const STORAGE_PREFIX = "ex:";
@@ -63,6 +64,8 @@ sdaSections.forEach((section) => {
   // Custom prefix for SDA - wraps CSS in scoped selector like regular exercises
   // But keeps @keyframes at root level with scoped names
   function sdaPrefix(css, key) {
+    css = simulateViewportHeight(css);
+
     // Collect all keyframe names used in this CSS
     const keyframeNames = new Set();
     const keyframeRegex = /@keyframes\s+([\w-]+)\s*\{/g;
