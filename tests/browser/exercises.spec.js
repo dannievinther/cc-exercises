@@ -200,14 +200,15 @@ test('dispose cancels work and removed editors can be reattached', async ({ page
 });
 
 test('videos retain posters without downloading all media on load', async ({ page }) => {
+  const videoCount = 11;
   await ready(page, '/sda/');
-  await expect(page.locator('video')).toHaveCount(9);
-  await expect(page.locator('video[preload=none]')).toHaveCount(8);
+  await expect(page.locator('video')).toHaveCount(videoCount);
+  await expect(page.locator('video[preload=none]')).toHaveCount(videoCount - 1);
   const videos = await page.locator('video').evaluateAll(videos => videos.map(v => ({ poster: v.poster, src: v.currentSrc })));
   expect(videos.every(v => v.poster.endsWith('.poster.webp'))).toBe(true);
   const requests = await page.evaluate(() => performance.getEntriesByType('resource').filter(r => /\.mp4/.test(r.name)).length);
   expect(requests).toBeLessThan(3);
-  expect(await page.evaluate(async () => Promise.all(Array.from(document.querySelectorAll('video'), v => new Promise(resolve => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = v.poster; }))))).toEqual(Array(9).fill(true));
+  expect(await page.evaluate(async () => Promise.all(Array.from(document.querySelectorAll('video'), v => new Promise(resolve => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = v.poster; }))))).toEqual(Array(videoCount).fill(true));
   await page.locator('.video-wrapper').first().click({ position: { x: 100, y: 60 } });
   await expect.poll(() => page.locator('video').first().evaluate(v => v.paused)).toBe(false);
 });
