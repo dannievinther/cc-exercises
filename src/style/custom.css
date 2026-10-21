@@ -231,7 +231,10 @@ section {
   box-shadow: var(--shadow-border);
   background: var(--ui-surface);
   view-timeline: --t;
-  animation: --a both linear;
+  /* Keep the timeline separate in the minified CSS (see ExerciseLabel). */
+  animation-name: --a;
+  animation-fill-mode: both;
+  animation-timing-function: linear;
   animation-timeline: --t;
 
   &::before {
