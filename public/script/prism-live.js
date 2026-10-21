@@ -89,6 +89,29 @@
 
         keydown: (evt) => {
           if (this.textarea.readOnly || this.textarea.disabled || evt.isComposing || this.composing) return;
+          const primaryOnly = evt[superKey] && !evt.altKey &&
+            !(superKey === "metaKey" ? evt.ctrlKey : evt.metaKey);
+          if (!evt.defaultPrevented && primaryOnly && evt.key === "Enter") {
+            evt.preventDefault();
+            this._enterHandled = true;
+            this.insertLine(evt.shiftKey);
+            return;
+          }
+          // Danish Shift+7 produces '/', while code identifies the physical 7
+          // key even when the browser reports a different shifted character.
+          if (!evt.defaultPrevented && primaryOnly && evt.shiftKey &&
+              (evt.code === "Digit7" || (!evt.code && evt.key === "/"))) {
+            evt.preventDefault();
+            this.update();
+            this.toggleComment();
+            return;
+          }
+          if (!evt.defaultPrevented && evt.altKey && !evt.ctrlKey && !evt.metaKey &&
+              (evt.key === "ArrowUp" || evt.key === "ArrowDown")) {
+            evt.preventDefault();
+            this.editLines(evt.key === "ArrowDown" ? 1 : -1, evt.shiftKey);
+            return;
+          }
           // DOM-based shortcuts must see the latest highlighted text.
           if (evt.key === "Tab" || evt.ctrlKey || evt.metaKey) this.update();
           if (evt.key == "Enter") {
@@ -568,12 +591,77 @@
       this.selectionEnd = se;
     }
 
+    insertLine(above = false) {
+      const source = this.textarea;
+      const value = source.value;
+      // Use the active end of a selection, without replacing selected text.
+      const caret = source.selectionDirection === "backward"
+        ? source.selectionStart : source.selectionEnd;
+      const start = value.slice(0, caret).lastIndexOf("\n") + 1;
+      const newline = value.indexOf("\n", caret);
+      const end = newline === -1 ? value.length : newline;
+      const line = value.slice(start, end);
+      let indent = line.match(/^[\t ]*/)[0];
+      if (!above && /\{\s*$/.test(line)) indent += this.indent;
+      const position = above ? start : end;
+      // Replace the line for insertion above: WebKit adds an extra newline
+      // when inserting a tab + newline before an existing tab-only line.
+      const text = above ? indent + "\n" + line : "\n" + indent;
+      source.setSelectionRange(position, above ? end : position);
+      this.insertText(text);
+      const nextCaret = position + indent.length + (above ? 0 : 1);
+      source.setSelectionRange(nextCaret, nextCaret);
+      this.tabstops = null;
+      this.syncScroll();
+    }
+
+    // Move/copy whole logical lines in one native edit, preserving the caret or
+    // selection within the block. A selection ending at column 0 excludes that line.
+    editLines(direction, copy = false) {
+      const source = this.textarea;
+      if (source.readOnly || source.disabled || this.composing) return;
+      const value = source.value;
+      const ss = source.selectionStart, se = source.selectionEnd;
+      const selectionDirection = source.selectionDirection;
+      const start = value.slice(0, ss).lastIndexOf("\n") + 1;
+      const last = se > ss && value[se - 1] === "\n" ? se - 1 : se;
+      const newline = value.indexOf("\n", last);
+      const end = newline === -1 ? value.length : newline;
+      const block = value.slice(start, end);
+      let from = start, to = end, text, offset;
+
+      if (copy) {
+        from = to = direction < 0 ? start : end;
+        text = direction < 0 ? block + "\n" : "\n" + block;
+        offset = direction < 0 ? 0 : block.length + 1;
+      } else if (direction < 0) {
+        if (start === 0) return;
+        from = value.slice(0, start - 1).lastIndexOf("\n") + 1;
+        text = block + "\n" + value.slice(from, start - 1);
+        offset = from - start;
+      } else {
+        if (end === value.length) return;
+        const nextNewline = value.indexOf("\n", end + 1);
+        to = nextNewline === -1 ? value.length : nextNewline;
+        const next = value.slice(end + 1, to);
+        text = next + "\n" + block;
+        offset = next.length + 1;
+      }
+
+      source.setSelectionRange(from, to);
+      this.insertText(text);
+      source.setSelectionRange(ss + offset, se + offset, selectionDirection);
+      this.tabstops = null;
+      this.syncScroll();
+    }
+
     insertText(text) {
-      if (!text || this.textarea.readOnly || this.textarea.disabled) return false;
+      if (typeof text !== "string" || (!text && !this.hasSelection) ||
+          this.textarea.readOnly || this.textarea.disabled) return false;
       // Retain native undo where supported. A successful replacement can leave
       // the value unchanged, so testing value inequality can insert it twice.
       try {
-        if (document.execCommand?.("insertText", false, text)) return true;
+        if (document.execCommand?.(text ? "insertText" : "delete", false, text)) return true;
       } catch { /* Fall through to the textarea API. */ }
       this.textarea.setRangeText(text, this.selectionStart, this.selectionEnd, "end");
       $.fire(this.textarea, "input");
@@ -636,59 +724,55 @@
     }
 
     toggleComment() {
-      var comments = this.context.comments;
-
-      // Are we inside a comment?
-      var node = this.getNode();
-      var commentNode = node?.parentNode.closest(".token.comment");
-
-      if (commentNode) {
-        // Remove comment
-        var start = this.getOffset(commentNode);
-        var commentText = commentNode.textContent;
-
-        if (
-          comments.singleline &&
-          commentText.indexOf(comments.singleline) === 0
-        ) {
-          var end = start + commentText.length;
-          this.set(this.value.slice(start + comments.singleline.length, end), {
-            start,
-            end,
-          });
-          this.moveCaret(-comments.singleline.length);
-        } else {
-          comments = comments.multiline || comments;
-          var end = start + commentText.length - comments[1].length;
-          this.set(this.value.slice(start + comments[0].length, end), {
-            start,
-            end: end + comments[1].length,
-          });
-        }
-      } else {
-        // Not inside comment, add
-        if (this.hasSelection) {
-          comments = comments.multiline || comments;
-
-          this.wrapSelection({
-            before: comments[0],
-            after: comments[1],
-          });
-        } else {
-          // No selection, wrap line
-          // FIXME *inside indent*
-          comments = comments.singleline
-            ? [comments.singleline, ""]
-            : comments.multiline || comments;
-          end = this.afterCaretIndex("\n");
-          this.wrap({
-            before: comments[0],
-            after: comments[1],
-            start: this.beforeCaretIndex("\n") + 1,
-            end: end < 0 ? this.value.length : end,
-          });
+      const source = this.textarea;
+      const ss = source.selectionStart, se = source.selectionEnd;
+      const direction = source.selectionDirection;
+      const value = source.value;
+      const comments = this.context.comments;
+      // At EOF there is no text node at the caret; inspect the preceding one.
+      const node = this.getNode(ss) || (ss > 0 ? this.getNode(ss - 1) : null);
+      const commentNode = node?.parentNode?.closest(".token.comment");
+      let commentStart = commentNode ? this.getOffset(commentNode) : -1;
+      let commentText = commentNode?.textContent;
+      if (!commentNode && comments.multiline) {
+        // A worker may still be highlighting. Recognize a wrapper around the
+        // selection or whole line from current text, so rapid toggles work too.
+        const [before, after] = comments.multiline;
+        const start = ss === se ? value.slice(0, ss).lastIndexOf("\n") + 1 : ss - before.length;
+        const newline = value.indexOf("\n", se);
+        const end = ss === se ? (newline === -1 ? value.length : newline) : se + after.length;
+        const text = value.slice(Math.max(0, start), end);
+        if (start >= 0 && text.startsWith(before) && text.endsWith(after) &&
+            text.indexOf(after, before.length) === text.length - after.length) {
+          commentStart = start;
+          commentText = text;
         }
       }
+      if (commentStart >= 0) {
+        const start = commentStart;
+        const text = commentText;
+        const end = start + text.length;
+        const single = comments.singleline && text.startsWith(comments.singleline);
+        const [before, after] = single ? [comments.singleline, ""] : comments.multiline || comments;
+        const closing = after && text.endsWith(after) ? after.length : 0;
+        const content = text.slice(before.length, text.length - closing);
+        const map = position => position <= start ? position
+          : position >= end ? position - before.length - closing
+          : Math.max(start, Math.min(position - before.length, start + content.length));
+        source.setSelectionRange(start, end);
+        this.insertText(content);
+        source.setSelectionRange(map(ss), map(se), direction);
+      } else {
+        const [before, after] = comments.multiline || comments;
+        const start = ss === se ? value.slice(0, ss).lastIndexOf("\n") + 1 : ss;
+        const newline = value.indexOf("\n", se);
+        const end = ss === se ? (newline === -1 ? value.length : newline) : se;
+        source.setSelectionRange(start, end);
+        this.insertText(before + value.slice(start, end) + after);
+        source.setSelectionRange(ss + before.length, se + before.length, direction);
+      }
+      this.tabstops = null;
+      this.syncScroll();
     }
 
     duplicateContent() {

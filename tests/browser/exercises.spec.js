@@ -144,7 +144,7 @@ test('highlighting is lazy and readonly HTML survives editor shortcuts', async (
   const html = section.locator('.tabpanel-html textarea');
   await expect(html).toHaveClass(/prism-live-source/); const initial = await html.inputValue();
   await html.focus();
-  for (const key of ['Tab', 'Enter', '{', 'Control+Shift+D', 'Meta+/']) {
+  for (const key of ['Tab', 'Enter', '{', 'Control+Shift+D', 'Meta+/', 'Alt+ArrowUp', 'Alt+ArrowDown', 'Alt+Shift+ArrowUp', 'Alt+Shift+ArrowDown', 'Meta+Enter', 'Meta+Shift+Enter', 'Control+Enter', 'Control+Shift+Enter', 'Meta+Shift+Digit7', 'Control+Shift+Digit7']) {
     await html.focus(); await page.keyboard.press(key); await expect(html).toHaveValue(initial);
   }
 });
