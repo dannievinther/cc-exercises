@@ -23,6 +23,7 @@ const { title = "CSS Exercise" } = Astro.props;
 </form>
 
 <script>
+  import { exerciseHTML } from "../../js/exercise-html.js";
   document.querySelectorAll(".codepen-form").forEach((form) => {
     form.addEventListener("submit", (e) => {
       const formEl = e.currentTarget as HTMLFormElement;
@@ -81,9 +82,6 @@ const { title = "CSS Exercise" } = Astro.props;
       // Determine exercise type from URL path
       const path = window.location.pathname;
       const isSDA = path.includes("/sda");
-      const isGrid = path.includes("/grid");
-      const isSubgrid = path.includes("/subgrid");
-      const isFlex = path.includes("/flex");
 
       // Base CSS shared across all exercise types
       const sharedCSS = `
@@ -204,7 +202,7 @@ body {
       const title = formEl.dataset.title || "CSS Exercise";
       const exerciseCSS = cssTextarea.value;
       const css = exerciseCSS + baseCSS;
-      const html = htmlTextarea.value;
+      const html = exerciseHTML(formEl.closest("section")!);
 
       const data = {
         title,

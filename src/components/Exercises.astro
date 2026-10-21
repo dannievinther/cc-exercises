@@ -1,8 +1,8 @@
 ---
+import { exerciseKey } from "../data/exercise-routes.js";
 import { render } from "astro:content";
-const { entry, index, total, theme } = Astro.props;
-const { id, data, collection } = entry;
-const colID = id.split("/").pop();
+const { entry, index, total } = Astro.props;
+const { data } = entry;
 const {
   title,
   hints,
@@ -15,13 +15,11 @@ const {
   canAddBoxes,
   image,
   video,
-  // id
 } = data;
 
 const { Content } = await render(entry);
 const boxes = [...Array(data.boxes)];
-// const exerciseID = id;
-const exerciseID = `${collection}-${colID}`;
+const exerciseID = exerciseKey(entry);
 
 import ExerciseLabel from "./exercise/ExerciseLabel.astro";
 import BtnControls from "./exercise/BtnControls.astro";
@@ -30,8 +28,6 @@ import Output from "./exercise/Output.astro";
 import Hints from "./exercise/Hints.astro";
 import TargetMedia from "./exercise/TargetMedia.astro";
 
-// console.log(`${collection}-${slug}`);
-// data-exercise-key={"vc-" + id}
 ---
 
 <section data-exercise-key={exerciseID} class={customClass ?? ""}>

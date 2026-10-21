@@ -154,10 +154,13 @@ pre[class*="language-"] {
   color: #fff;
 } */
 
+/* Layout belongs to the initial HTML, not to Prism's initialization timing. */
+:is(pre, textarea)[class*="language-"].line-numbers {
+  padding-left: clamp(3.56rem, calc(3.36rem + 1.02vw), 4.13rem);
+}
+
 pre[class*="language-"].line-numbers {
   position: relative;
-  padding-left: 3.8em;
-  padding-left: clamp(3.56rem, calc(3.36rem + 1.02vw), 4.13rem);
   counter-reset: linenumber;
 }
 
@@ -211,6 +214,9 @@ pre.prism-live {
   padding: 0.2rem 0.5rem;
   box-sizing: border-box;
   margin: 0;
+  font-size: 1em;
+  line-height: 1.5;
+  tab-size: 2;
 }
 
 textarea.prism-live {
@@ -221,6 +227,7 @@ textarea.prism-live {
   height: 100%;
   z-index: 1;
   color: transparent;
+  caret-color: #ffd493;
   /* color: hsla(0,0%,50%,.4); */
   cursor: text;
   white-space: pre;
@@ -264,4 +271,15 @@ pre.prism-live {
 
 pre.prism-live > code:empty::before {
   content: " ";
+}
+
+/* Bare, dynamically created sources have no static surface to show yet. */
+:not(.prism-live) > textarea.prism-live:not(.prism-live-source) {
+  position: relative;
+  color: var(--blue-muted, #cbd5e1);
+  min-height: 300px;
+  font-family: var(--font-mono), monospace;
+  line-height: 1.5;
+  font-size: 1em;
+  tab-size: 2;
 }

@@ -24,3 +24,7 @@ pnpm-debug.log*
 
 # Local Netlify folder
 .netlify
+
+# Browser regression artifacts
+playwright-report/
+test-results/

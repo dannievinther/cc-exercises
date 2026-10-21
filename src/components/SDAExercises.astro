@@ -1,4 +1,5 @@
 ---
+import { exerciseKey } from "../data/exercise-routes.js";
 import { render } from "astro:content";
 const { entry, index, total } = Astro.props;
 const { data } = entry;
@@ -21,7 +22,7 @@ const {
 
 const { Content } = await render(entry);
 // Keep saved code and anchor links stable when exercise files are reordered.
-const exerciseID = data.id;
+const exerciseID = exerciseKey(entry);
 
 // SDA uses a single box by default
 const boxes = [1];

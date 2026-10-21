@@ -1,76 +1,26 @@
 ---
 import { getCollection } from "astro:content";
 import { Font } from "astro:assets";
+import EditorScripts from "../../components/EditorScripts.astro";
+import { exerciseSlug, exerciseKey, exerciseTheme } from "../../data/exercise-routes.js";
 import Editor from "../../components/exercise/Editor.astro";
 import Output from "../../components/exercise/Output.astro";
 import SDAOutput from "../../components/exercise/SDAOutput.astro";
 import "/src/style/global.css";
 
 export async function getStaticPaths() {
-  // Vis drafts i dev-mode eller på staging branch (Vercel)
-  // const isStaging = process.env.VERCEL_GIT_COMMIT_REF === "staging";
-  // const showDrafts = import.meta.env.DEV || isStaging;
-
-  const [grid, flexbox, subgrid, defensive, sda] = await Promise.all([
-    getCollection("grid"),
-    getCollection("flexbox"),
-    getCollection("subgrid"),
-    getCollection("defensive"),
-    getCollection("sda"),
-  ]);
-
-  // Filter out drafts unless in dev mode or on staging
-  // const filterDrafts = <T extends { data: { draft?: boolean } }>(
-  //   entries: T[]
-  // ): T[] => entries.filter((entry) => showDrafts || !entry.data.draft);
-
-  // const filteredGrid = filterDrafts(grid);
-  // const filteredFlexbox = filterDrafts(flexbox);
-  // const filteredSubgrid = filterDrafts(subgrid);
-  // const filteredDefensive = filterDrafts(defensive);
-  // const filteredSda = filterDrafts(sda);
-
-  const allCollections = [
-    ...grid,
-    ...flexbox,
-    ...subgrid,
-    ...defensive,
-    ...sda,
-  ];
-
-  return allCollections.map((entry) => ({
-    params: { slug: slug(entry) },
-    props: {
-      entry,
-      theme: getTheme(entry.collection),
-    },
-  }));
-
-  function getTheme(collection) {
-    const themeMap = {
-      grid: "green",
-      flexbox: "purple",
-      subgrid: "indigo",
-      defensive: "green",
-      sda: "periwinkle",
-    };
-
-    return themeMap[collection];
-  }
-
-  function slug(entry) {
-    if (entry.collection === "flexbox") {
-      return `flex/${entry.id.replace(/^0+/, "")}`;
-    } else {
-      return `${entry.collection}/${entry.id.replace(/^0+/, "")}`;
-    }
-  }
+  const showDrafts = import.meta.env.DEV || process.env.VERCEL_GIT_COMMIT_REF === "staging";
+  const collections = await Promise.all(
+    ["grid", "flexbox", "subgrid", "defensive", "sda"].map((name) => getCollection(name as any)),
+  );
+  return collections.flatMap((entries) => entries
+    .filter((entry) => showDrafts || !entry.data.draft)
+    .map((entry) => ({ params: { slug: exerciseSlug(entry) }, props: { entry, theme: exerciseTheme(entry.collection) } })));
 }
 
 const { entry, theme } = Astro.props;
-const { id, data, collection } = entry;
-const colID = id.split("/").pop();
-const exerciseID = `${collection}-${colID}`;
+const { data, collection } = entry;
+const exerciseID = exerciseKey(entry);
 
 // Determine collection type for conditional property access
 const isSDA = collection === "sda";
@@ -91,8 +41,6 @@ const scrollDirection =
 // Standard/Defensive-specific properties
 const hiddenCSS =
   isDefensive && "hiddenCSS" in data ? data.hiddenCSS : undefined;
-const canAddBoxes =
-  !isSDA && "canAddBoxes" in data ? data.canAddBoxes : undefined;
 const showOutputSize =
   !isSDA && "showOutputSize" in data ? data.showOutputSize : undefined;
 
@@ -136,62 +84,15 @@ const boxes = isSDA ? [1] : [...Array("boxes" in data ? data.boxes : 1)];
       }
     </section>
 
-    <script is:inline src="/script/bliss-minimal.js"></script>
-    <script is:inline src="/script/prism-custom.js"></script>
-    <script is:inline src="/script/prism-linenumbers.js"></script>
+    <EditorScripts />
+
     <script>
-      // Load Prism editor extensions
-      let prismLoaded = false;
-
-      async function loadPrismExtensions() {
-        if (prismLoaded) return;
-        prismLoaded = true;
-
-        await new Promise((resolve, reject) => {
-          const script = document.createElement("script");
-          script.src = "/script/prism-live.js";
-          script.onload = resolve;
-          script.onerror = reject;
-          document.body.appendChild(script);
-        });
-
-        const dependentScripts = [
-          "/script/prism-live-markup.js",
-          "/script/prism-live-css.js",
-        ];
-
-        dependentScripts.forEach((src) => {
-          const script = document.createElement("script");
-          script.src = src;
-          document.body.appendChild(script);
-        });
-      }
-
-      document.addEventListener(
-        "focusin",
-        (e) => {
-          if (
-            e.target instanceof HTMLTextAreaElement &&
-            e.target.classList.contains("prism-live")
-          ) {
-            loadPrismExtensions();
-          }
-        },
-        { once: true }
-      );
-
-      if ("requestIdleCallback" in window) {
-        requestIdleCallback(loadPrismExtensions, { timeout: 3000 });
+      // Standard embeds do not need to download the SDA CSS parser.
+      if (document.querySelector("section.sda-exercise")) {
+        import("../../js/sda-exercises.js");
       } else {
-        setTimeout(loadPrismExtensions, 100);
+        import("../../js/exercises.js");
       }
-    </script>
-
-    <script>
-      // Import the appropriate exercise script based on exercise type
-      // Both are imported but only one will find matching sections
-      import "../../js/exercises.js";
-      import "../../js/sda-exercises.js";
     </script>
   </body>
 </html>

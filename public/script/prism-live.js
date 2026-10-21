@@ -3,80 +3,60 @@
 	Works best in Chrome. Currently only very basic support in other browsers (no snippets, no shortcuts)
 	@author Lea Verou
 */
-(async function () {
-  if (!window.Bliss) {
-    // Load Bliss if not loaded
-    console.log("Bliss not loaded. Loading remotely from blissfuljs.com");
-
-    let bliss = document.createElement("script");
-    bliss.src = "https://blissfuljs.com/bliss.shy.min.js";
-    document.head.appendChild(bliss);
-
-    await new Promise((resolve) => (bliss.onload = resolve));
-  }
-
-  var $ = Bliss,
-    $$ = Bliss.$;
+(function () {
+  if (Prism.Live) return;
+  var $ = Bliss;
   var ready = Promise.resolve();
-
-  if (document.currentScript) {
-    // Tiny dynamic loader. Use e.g. ?load=css,markup,javascript to load components
-    var base = document.currentScript.src;
-    var load = new URL(base).searchParams.get("load");
-
-    if (load !== null) {
-      var files = ["../css/prism-live.css"];
-
-      if (load) {
-        files.push(
-          ...load
-            .split(/,/)
-            .map((c) => (/\./.test(c) ? c : `prism-live-${c}.js`))
-        );
-      }
-
-      ready = Promise.all(files.map((url) => $.load(url, base)));
-    }
-  }
-
   var superKey =
     navigator.platform.indexOf("Mac") === 0 ? "metaKey" : "ctrlKey";
 
   var _ = (Prism.Live = class PrismLive {
     constructor(source) {
+      const existing = _.all.get(source);
+      if (existing) return existing;
+      this.controller = new AbortController();
+      this.bind = (element, events) => {
+        for (const [types, handler] of Object.entries(events)) {
+          for (const type of types.split(/\s+/)) element.addEventListener(type, handler, { signal: this.controller.signal });
+        }
+      };
       this.source = source;
       this.sourceType = source.nodeName.toLowerCase();
 
-      this.wrapper = $.create({
-        className: "prism-live",
-        around: this.source,
-      });
-
-      if (this.sourceType === "textarea") {
+      // The build ships the visible surface. Hydrate it in place instead of
+      // replacing it after first paint. Bare dynamic sources still work.
+      this.serverRendered = this.sourceType === "textarea" && this.source.parentElement?.matches('[data-editor-shell]');
+      if (this.serverRendered) {
+        this.wrapper = this.source.parentElement;
         this.textarea = this.source;
-        this.code = $.create("code");
-
-        this.pre = $.create("pre", {
-          className: this.textarea.className + " no-whitespace-normalization",
-          contents: this.code,
-          before: this.textarea,
-        });
+        this.pre = this.wrapper.querySelector(':scope > pre');
+        this.code = this.pre.querySelector('code');
+        const value = this.textarea.value;
+        const display = value + (/\n$/.test(value) ? "\u200b" : "");
+        if (this.code.textContent === display) this.lastValue = value;
       } else {
-        this.pre = this.source;
-        // Normalize once, to fix indentation from markup and then remove normalization
-        // so we can enter blank lines etc
-
-        // Prism.plugins.NormalizeWhitespace.normalize($("code", this.pre), {});
-        this.pre.classList.add("no-whitespace-normalization");
-        this.code = $("code", this.pre);
-
-        this.textarea = $.create("textarea", {
-          className: this.pre.className,
-          value: this.pre.textContent,
-          after: this.pre,
-        });
+        this.wrapper = $.create({ className: "prism-live", around: this.source });
+        if (this.sourceType === "textarea") {
+          this.textarea = this.source;
+          this.code = $.create("code");
+          this.pre = $.create("pre", {
+            className: this.textarea.className + " no-whitespace-normalization",
+            contents: this.code,
+            before: this.textarea,
+          });
+        } else {
+          this.pre = this.source;
+          this.pre.classList.add("no-whitespace-normalization");
+          this.code = $("code", this.pre);
+          this.textarea = $.create("textarea", {
+            className: this.pre.className,
+            value: this.pre.textContent,
+            after: this.pre,
+          });
+        }
       }
 
+      _.all.set(this.wrapper, this);
       _.all.set(this.textarea, this);
       _.all.set(this.pre, this);
       _.all.set(this.code, this);
@@ -89,23 +69,28 @@
         // TODO data-* attribute for modifier
         // TODO load dynamically if not present
         new Incrementable(this.textarea);
-        console.log(new Incrementable(this.textarea));
       }
 
       this._enterHandled = false;
 
-      $.bind(this.textarea, {
+      this.bind(this.textarea, {
         input: (evt) => {
-          this.update();
+          this.scheduleUpdate();
 
           // Auto-dedent when typing closing brace
           if (evt.data === "}") {
             this.handleClosingBrace();
           }
         },
-        focus: (evt) => this.update(),
+        focus: () => this.update(),
+        "editor-refresh": () => this.update(),
+        compositionstart: () => { this.composing = true; },
+        compositionend: () => { this.composing = false; this.scheduleUpdate(); },
 
         keydown: (evt) => {
+          if (this.textarea.readOnly || this.textarea.disabled || evt.isComposing || this.composing) return;
+          // DOM-based shortcuts must see the latest highlighted text.
+          if (evt.key === "Tab" || evt.ctrlKey || evt.metaKey) this.update();
           if (evt.key == "Enter") {
             // Handle Enter with smart indentation
             var indent = this.currentIndent;
@@ -172,7 +157,7 @@
               var snippetExpanded = this.expandSnippet(selector);
 
               if (snippetExpanded) {
-                requestAnimationFrame(() => $.fire(this.textarea, "input"));
+                $.fire(this.textarea, "input");
               } else {
                 this.insert(this.indent);
               }
@@ -195,14 +180,8 @@
           }
         },
 
-        click: (evt) => {
-          var l = this.getLine();
-          var v = this.value;
-          var ss = this.selectionStart;
-          //console.log(ss, v[ss], l, v.slice(l.start, l.end));
-        },
-
         keyup: (evt) => {
+          if (this.textarea.readOnly || this.textarea.disabled || evt.isComposing || this.composing) return;
           if (evt.key == "Enter" && !this._enterHandled) {
             // Maintain indent on regular line breaks (when not handled by keydown)
             this.insert(this.currentIndent);
@@ -219,36 +198,11 @@
         },
       });
 
-      // this.syncScroll();
-      this.textarea.addEventListener("scroll", this, { passive: true });
-
-      $.bind(window, {
-        resize: (evt) => this.syncStyles(),
-      });
-
-      // Copy styles with a delay
-      requestAnimationFrame(() => {
-        this.syncStyles();
-
-        var sourceCS = getComputedStyle(this.source);
-
-        this.pre.style.height =
-          this.source.style.height || sourceCS.getPropertyValue("--height");
-        this.pre.style.maxHeight =
-          this.source.style.maxHeight ||
-          sourceCS.getPropertyValue("--max-height");
-      });
+      this.textarea.addEventListener("scroll", this, { passive: true, signal: this.controller.signal });
+      this.syncStyles();
 
       this.update();
       this.lang = (this.code.className.match(/lang(?:uage)?-(\w+)/i) || [,])[1];
-
-      this.observer = new MutationObserver((r) => {
-        if (document.activeElement !== this.textarea) {
-          this.textarea.value = this.pre.textContent;
-        }
-      });
-
-      this.observe();
 
       this.source.dispatchEvent(
         new CustomEvent("prism-live-init", { bubbles: true, detail: this })
@@ -261,22 +215,25 @@
       }
     }
 
-    observe() {
-      return (
-        this.observer &&
-        this.observer.observe(this.pre, {
-          childList: true,
-          subtree: true,
-          characterData: true,
-        })
-      );
+    scheduleUpdate() {
+      if (this.destroyed || this.highlightFrame) return;
+      this.highlightFrame = requestAnimationFrame(() => {
+        this.highlightFrame = 0;
+        this.update();
+        this.syncScroll();
+      });
     }
 
-    unobserve() {
-      if (this.observer) {
-        this.observer.takeRecords();
-        this.observer.disconnect();
-      }
+    destroy() {
+      if (this.destroyed) return;
+      this.destroyed = true;
+      this.controller.abort();
+      this.onDestroy?.();
+      cancelAnimationFrame(this.highlightFrame);
+      this.worker?.terminate();
+      for (const node of [this.source, this.textarea, this.pre, this.code, this.wrapper]) _.all.delete(node);
+      this.source.classList.remove("prism-live-source");
+      if (!this.serverRendered) this.wrapper.replaceWith(this.source);
     }
 
     expandSnippet(text) {
@@ -407,6 +364,7 @@
 
       this.value = newValue;
       this.selectionStart = this.selectionEnd = newCaretPos;
+      $.fire(this.textarea, "input");
       this.update();
     }
 
@@ -415,7 +373,7 @@
       var node = this.getNode();
       node = node ? node.parentNode : this.code;
       var lang = _.match(
-        node.closest('[class*="language-"]').className,
+        (node.closest('[class*="language-"]') || this.pre).className,
         /language-(\w+)/,
         1
       );
@@ -429,42 +387,61 @@
     }
 
     update(force) {
-      var code = this.value;
-
-      // If code ends in newline then browser "conveniently" trims it
-      // but we want to see the new line we just inserted!
-      // So we insert a zero-width space, which isn't trimmed
-      if (/\n$/.test(this.value)) {
-        code += "\u200b";
-      }
-
-      if (!force && this.code.textContent === code && $(".token", this.code)) {
-        // Already highlighted
+      if (this.destroyed) return;
+      cancelAnimationFrame(this.highlightFrame);
+      this.highlightFrame = 0;
+      const value = this.value;
+      if (!force && (this.lastValue === value || (this.worker && this.pendingValue === value))) return;
+      const code = value + (/\n$/.test(value) ? "\u200b" : "");
+      this.code.textContent = code;
+      this.lastValue = undefined;
+      if (value.length > 16000) {
+        // Tokenize large pastes off the main thread. Discard stale results and
+        // terminate obsolete work instead of queuing behind a pathological regex.
+        this.worker?.terminate();
+        try {
+          const worker = new Worker('/script/prism-worker.js');
+          this.worker = worker;
+          this.pendingValue = value;
+          worker.onmessage = ({ data }) => {
+            worker.terminate();
+            if (this.worker === worker) this.worker = null;
+            if (this.destroyed || this.value !== value || data.code !== code) return;
+            this.code.innerHTML = data.html;
+            const env = { element: this.code, code, language: data.language };
+            Prism.hooks.run("after-highlight", env);
+            Prism.hooks.run("complete", env);
+            this.lastValue = value;
+            this.syncScroll();
+          };
+          worker.onerror = () => { worker.terminate(); if (this.worker === worker) this.worker = null; };
+          worker.postMessage({ code, language: Prism.util.getLanguage(this.pre) });
+        } catch { /* Keep the plain text overlay if workers are unavailable. */ }
         return;
       }
-
-      this.unobserve();
-      this.code.textContent = code;
-
-      Prism.highlightElement(this.code);
-
-      this.observe();
+      this.worker?.terminate();
+      this.worker = null;
+      try {
+        Prism.highlightElement(this.code);
+        this.lastValue = value;
+      } catch {
+        // Malformed/large input must remain editable even if a grammar fails.
+        this.code.textContent = code;
+      }
     }
 
     syncStyles() {
+      if (this.destroyed || this.source.closest(".is-hidden") || !this.wrapper.getClientRects().length) return;
       // Copy pre metrics over to textarea
       var cs = getComputedStyle(this.pre);
 
       // Copy styles from <pre> to textarea
       this.textarea.style.caretColor = cs.color;
 
-      var properties = /^(font|lineHeight)|[tT]abSize/gi;
-
-      for (var prop in cs) {
-        if (cs[prop] && prop in this.textarea.style && properties.test(prop)) {
-          this.wrapper.style[prop] = cs[prop];
-          this.textarea.style[prop] = this.pre.style[prop] = "inherit";
-        }
+      const properties = ["fontFamily", "fontSize", "fontWeight", "fontStyle", "fontStretch", "fontVariationSettings", "fontFeatureSettings", "lineHeight", "letterSpacing", "tabSize"];
+      for (const prop of properties) {
+        if (this.wrapper.style[prop] !== cs[prop]) this.wrapper.style[prop] = cs[prop];
+        this.textarea.style[prop] = this.pre.style[prop] = "inherit";
       }
 
       // This is primarily for supporting the line-numbers plugin.
@@ -592,32 +569,15 @@
     }
 
     insertText(text) {
-      if (!text) {
-        return;
-      }
-
-      if (_.supportsExecCommand === true) {
-        document.execCommand("insertText", false, text);
-      } else if (_.supportsExecCommand === undefined) {
-        // We still don't know if document.execCommand("insertText") is supported
-        let value = this.value;
-
-        document.execCommand("insertText", false, text);
-
-        _.supportsExecCommand = value !== this.value;
-      }
-
-      if (_.supportsExecCommand === false) {
-        this.textarea.setRangeText(
-          text,
-          this.selectionStart,
-          this.selectionEnd,
-          "end"
-        );
-        requestAnimationFrame(() => this.update());
-      }
-
-      return _.supportsExecCommand;
+      if (!text || this.textarea.readOnly || this.textarea.disabled) return false;
+      // Retain native undo where supported. A successful replacement can leave
+      // the value unchanged, so testing value inequality can insert it twice.
+      try {
+        if (document.execCommand?.("insertText", false, text)) return true;
+      } catch { /* Fall through to the textarea API. */ }
+      this.textarea.setRangeText(text, this.selectionStart, this.selectionEnd, "end");
+      $.fire(this.textarea, "input");
+      return false;
     }
 
     /**
@@ -680,7 +640,7 @@
 
       // Are we inside a comment?
       var node = this.getNode();
-      var commentNode = node.parentNode.closest(".token.comment");
+      var commentNode = node?.parentNode.closest(".token.comment");
 
       if (commentNode) {
         // Remove comment
@@ -799,7 +759,7 @@
 
       var match = str.match(regex);
 
-      if (index < 0) {
+      if (match && index < 0) {
         index = match.length + index;
       }
 
@@ -935,15 +895,5 @@
     })(),
   });
 
-  _.supportsExecCommand = document.execCommand ? undefined : false;
 
-  $.ready().then(() => {
-    $$(
-      ":not(.prism-live) > textarea.prism-live, :not(.prism-live) > pre.prism-live"
-    ).forEach((source) => {
-      if (!_.all.get(source)) {
-        new _(source);
-      }
-    });
-  });
 })();

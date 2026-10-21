@@ -13,7 +13,7 @@
         var isSnippet =
           isName || selector.match(/^[.#\w:-]+(\{.+?\})?(\*\d+)?$/);
         var node = this.getNode();
-        var inTag = node.parentNode.closest(".token.tag");
+        var inTag = node?.parentNode.closest(".token.tag");
 
         if (isName && inTag) {
           // Attribute
