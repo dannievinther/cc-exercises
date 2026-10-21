@@ -47,7 +47,7 @@ import Button from "./Button.astro";
         border-radius: var(--bdrs-round);
         padding: 0.25rem;
 
-        > span[role="presentation"] {
+        > :where(span[role="presentation"]) {
           /* font-weight: 600;
           font-size: 0.75rem; */
           padding: 0.2rem 1rem;
@@ -60,9 +60,9 @@ import Button from "./Button.astro";
     }
     @media (hover: hover) {
       span[role="presentation"] {
-        :not([disabled]):hover + & {
+        :global(:not([disabled]):hover) + & {
           background: #0000;
-          filter: grayscale(1);
+          filter: grayscale(100%);
           box-shadow: none;
           outline: 1.5px dashed var(--gray-500);
           transition-property: background, box-shadow;
