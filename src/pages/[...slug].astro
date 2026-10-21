@@ -3,151 +3,49 @@ import { getCollection } from "astro:content";
 import Exercises from "../components/Exercises.astro";
 import SDAExercises from "../components/SDAExercises.astro";
 import Base from "../layouts/Base.astro";
+import { exerciseSlug, exerciseHref, exerciseTheme } from "../data/exercise-routes.js";
 import ChevronLeftIcon from "../icons/chevron-left.svg";
 import ChevronRightIcon from "../icons/chevron-right.svg";
 
 export async function getStaticPaths() {
-  // Vis drafts i dev-mode eller på staging branch (Vercel)
-  const isStaging = process.env.VERCEL_GIT_COMMIT_REF === "staging";
-  const showDrafts = import.meta.env.DEV || isStaging;
-
-  const [grid, flexbox, subgrid, defensive, sda] = await Promise.all([
-    getCollection("grid"),
-    getCollection("flexbox"),
-    getCollection("subgrid"),
-    getCollection("defensive"),
-    getCollection("sda"),
-  ]);
-
-  // Filter out drafts unless in dev mode or on staging
-  const filterDrafts = <T extends { data: { draft?: boolean } }>(
-    entries: T[],
-  ): T[] => entries.filter((entry) => showDrafts || !entry.data.draft);
-
-  const filteredGrid = filterDrafts(grid);
-  const filteredFlexbox = filterDrafts(flexbox);
-  const filteredSubgrid = filterDrafts(subgrid);
-  const filteredDefensive = filterDrafts(defensive);
-  const filteredSda = filterDrafts(sda);
-
-  const allCollections = [
-    ...filteredGrid,
-    ...filteredFlexbox,
-    ...filteredSubgrid,
-    ...filteredDefensive,
-    ...filteredSda,
-  ];
-
-  return allCollections.map((entry, index) => ({
-    params: { slug: slug(entry) },
-    // params: { id: entry.id },
-    props: {
-      entry,
-      index: getIndex(entry, index),
-      total: getTotal(entry),
-      theme: getTheme(entry.collection),
-      slugs: getCollectionSlugs(entry.collection),
-    },
-  }));
-
-  function getCollectionSlugs(collection) {
-    return allCollections
-      .filter((item) => item.collection === collection)
-      .map((item) => item.id);
-  }
-
-  function getIndex(entry, index) {
-    const collection = entry.collection;
-    const collectionEntries = allCollections.filter(
-      (item) => item.collection === collection,
-    );
-    const sortedEntries = collectionEntries.sort((a, b) =>
-      a.id.localeCompare(b.id, undefined, { numeric: true }),
-    );
-    const entryIndex = sortedEntries.findIndex((item) => item.id === entry.id);
-    return entryIndex + 1;
-  }
-
-  function getTotal(entry) {
-    const collection = entry.collection;
-    const collectionMap = {
-      grid: filteredGrid.length,
-      flexbox: filteredFlexbox.length,
-      subgrid: filteredSubgrid.length,
-      defensive: filteredDefensive.length,
-      sda: filteredSda.length,
-    };
-
-    return collectionMap[collection] || 0;
-  }
-
-  function getTheme(collection) {
-    const themeMap = {
-      grid: "green",
-      flexbox: "purple",
-      subgrid: "indigo",
-      defensive: "green",
-      sda: "periwinkle",
-    };
-
-    return themeMap[collection];
-  }
-
-  function slug(entry) {
-    if (entry.collection === "flexbox") {
-      return `flex/${entry.id.replace(/^0+/, "")}`;
-    } else {
-      return `${entry.collection}/${entry.id.replace(/^0+/, "")}`;
-    }
-  }
+  const showDrafts = import.meta.env.DEV || process.env.VERCEL_GIT_COMMIT_REF === "staging";
+  const collections = await Promise.all(
+    ["grid", "flexbox", "subgrid", "defensive", "sda"].map((name) => getCollection(name as any)),
+  );
+  return collections.flatMap((entries) => {
+    const sorted = entries.filter((entry) => showDrafts || !entry.data.draft)
+      .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+    return sorted.map((entry, index) => ({
+      params: { slug: exerciseSlug(entry) },
+      props: { entry, index: index + 1, total: sorted.length,
+        theme: exerciseTheme(entry.collection),
+        prev: index > 0 ? exerciseHref(sorted[index - 1]) : null,
+        next: index + 1 < sorted.length ? exerciseHref(sorted[index + 1]) : null,
+      },
+    }));
+  });
 }
 
-const { slug } = Astro.params;
-const { entry, total, index, theme, slugs } = Astro.props;
-const title =
-  entry.collection.charAt(0).toUpperCase() + entry.collection.slice(1);
-const sortedSlugs = slugs.sort((a, b) =>
-  a.localeCompare(b, undefined, { numeric: true }),
-);
-
-// Use SDA-specific component for scroll-driven animations
+const { entry, total, index, theme, prev, next } = Astro.props;
+const title = entry.collection.charAt(0).toUpperCase() + entry.collection.slice(1);
 const ExerciseComponent = entry.collection === "sda" ? SDAExercises : Exercises;
-// Render a link to the next exercise based on the current index of the slugs array
-const nextLink = (entry: { id: string }, total: number) => {
-  const currentIndex = sortedSlugs.indexOf(entry.id);
-  const nextIndex = currentIndex + 1;
 
-  if (nextIndex < total) {
-    return sortedSlugs[nextIndex].replace(/^0+/, "");
-  } else {
-    return "/";
-  }
-};
-const prevLink = (entry) => {
-  const currentIndex = slugs.indexOf(entry.id);
-  const prevIndex = currentIndex - 1;
-  if (prevIndex >= 0) {
-    return slugs[prevIndex].replace(/^0+/, "");
-  } else {
-    return null;
-  }
-};
 ---
 
 <Base title={title} theme={theme}>
   <ExerciseComponent {entry} index={index} total={total} />
   <div class="navigation">
     {
-      prevLink(entry) && (
-        <a href={prevLink(entry)} class="prev">
+      prev && (
+        <a href={prev} class="prev">
           <ChevronLeftIcon stroke-width={3} width={16} height={16} />
           <span>Forrige</span>
         </a>
       )
     }
     {
-      index < total && (
-        <a href={nextLink(entry, total)} class="next">
+      next && (
+        <a href={next} class="next">
           <span>Næste</span>
           <ChevronRightIcon stroke-width={3} width={16} height={16} />
         </a>

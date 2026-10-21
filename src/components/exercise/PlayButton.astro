@@ -45,7 +45,7 @@ import PauseIcon from "../../icons/pause.svg";
       // Toggle video play/pause
       const togglePlay = () => {
         if (video.paused) {
-          video.play();
+          video.play().catch(updateState);
         } else {
           video.pause();
         }

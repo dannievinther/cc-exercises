@@ -1,4 +1,5 @@
 ---
+import { isExercisePage } from "../data/exercise-routes.js";
 import type { Exercise, NavItem } from "../data/navigation";
 import { isCurrentPath } from "../data/navigation";
 import ExerciseDropdown from "./ExerciseDropdown.astro";
@@ -14,7 +15,7 @@ interface Props {
 const { item, index, exercises, currentItem } = Astro.props;
 const isCurrent = isCurrentPath(Astro.url.pathname, item.href);
 const isIndividualPage =
-  Astro.url.pathname.replace(/\/$/, "").match(/\/\d+$/) !== null;
+  isExercisePage(Astro.url.pathname);
 const showDropdown = isCurrent && exercises.length > 0 && currentItem;
 const tooltipId = `nav-tooltip-${index}`;
 ---

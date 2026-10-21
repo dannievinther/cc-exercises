@@ -23,7 +23,8 @@ const isFirst = index === 1;
             muted
             loop
             playsinline
-            preload="metadata"
+            preload={isFirst ? "metadata" : "none"}
+            poster={video.replace(/\.(mp4|webm)$/, ".poster.webp")}
             width={videoWidth}
             height={videoHeight}
           >
@@ -42,7 +43,8 @@ const isFirst = index === 1;
             muted
             loop
             playsinline
-            preload="metadata"
+            preload={isFirst ? "metadata" : "none"}
+            poster={video.replace(/\.(mp4|webm)$/, ".poster.webp")}
             width={videoWidth}
             height={videoHeight}
           >

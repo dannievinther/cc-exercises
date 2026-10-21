@@ -1,5 +1,7 @@
 # Performance- og robusthedsaudit — 20. oktober 2026
 
+> Opfølgning 21. oktober 2026: Auditpunkterne er nu behandlet. Se [rettelser, storage-kompatibilitet og testresultater](performance-fixes-2026-10-21.md). Afsnittene nedenfor beskriver tilstanden ved den oprindelige audit.
+
 ## Konklusion og omfang
 
 Projektet har konkrete korrekthedsfejl, som bør prioriteres før større performanceændringer. Den største oplagte performancekandidat er at initialisere færre Prism-editorer ved opstart og vinduesresize. Der er ikke påvist voksende hukommelsesforbrug under normal redigering; Prism har dog en konkret fastholdelsesrisiko ved dynamisk fjernelse af editorer.

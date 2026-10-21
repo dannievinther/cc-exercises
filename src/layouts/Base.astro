@@ -2,6 +2,7 @@
 import "/src/style/global.css";
 import Head from "../components/Head.astro";
 import Header from "../components/Header.astro";
+import EditorScripts from "../components/EditorScripts.astro";
 import Footer from "../components/Footer.astro";
 
 const { title, hasWarning, theme } = Astro.props;
@@ -47,62 +48,8 @@ const link = links[title]?.link || "/grid";
     </main>
 
     <Footer label={label} linkTo={link} />
-    <script is:inline defer src="/script/bliss-minimal.js"></script>
-    <script is:inline defer src="/script/prism-custom.min.js"></script>
-    <script is:inline defer src="/script/prism-linenumbers.js"></script>
-    <script>
-      // Lazy load Prism editor extensions on first textarea interaction
-      let prismLoaded = false;
+    <EditorScripts />
 
-      async function loadPrismExtensions() {
-        if (prismLoaded) return;
-        prismLoaded = true;
-
-        // Load prism-live.js first and wait for it to complete
-        await new Promise((resolve, reject) => {
-          const script = document.createElement("script");
-          script.src = "/script/prism-live.js";
-          script.onload = resolve;
-          script.onerror = reject;
-          document.body.appendChild(script);
-        });
-
-        // Then load the dependent scripts
-        const dependentScripts = [
-          "/script/prism-live-markup.js",
-          "/script/prism-live-css.js",
-        ];
-
-        dependentScripts.forEach((src) => {
-          const script = document.createElement("script");
-          script.src = src;
-          document.body.appendChild(script);
-        });
-      }
-
-      // Load on first focus of any textarea
-      document.addEventListener(
-        "focusin",
-        (e) => {
-          if (
-            e.target instanceof HTMLTextAreaElement &&
-            e.target.classList.contains("prism-live")
-          ) {
-            loadPrismExtensions();
-          }
-        },
-        { once: true }
-      );
-
-      // Preload scripts: use requestIdleCallback where supported,
-      // setTimeout fallback for Safari
-      if ("requestIdleCallback" in window) {
-        requestIdleCallback(loadPrismExtensions, { timeout: 3000 });
-      } else {
-        // Safari fallback - load after short delay
-        setTimeout(loadPrismExtensions, 100);
-      }
-    </script>
     <script>
       import "../js/exercises";
     </script>

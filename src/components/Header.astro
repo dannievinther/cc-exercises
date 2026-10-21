@@ -1,4 +1,5 @@
 ---
+import { isExercisePage } from "../data/exercise-routes.js";
 import { getCollection } from "astro:content";
 import AboutPopup from "./AboutPopup.astro";
 import BrowserAlert from "./BrowserAlert.astro";
@@ -31,7 +32,7 @@ if (currentItem) {
 }
 
 const isSingleView =
-  Astro.url.pathname.replace(/\/$/, "").match(/\/\d+$/) !== null;
+  isExercisePage(Astro.url.pathname);
 const baseHref = currentItem?.href || "/grid";
 const singleHref = baseHref.replace(/\/$/, "") + "/1";
 ---

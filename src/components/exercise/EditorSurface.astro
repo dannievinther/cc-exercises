@@ -1,0 +1,10 @@
+---
+import { highlightedEditor } from '../../lib/editor-highlight.js';
+const { value, language, ...attributes } = Astro.props;
+const languageClass = `language-${language}`;
+---
+
+<div class="prism-live" data-editor-shell>
+  <pre class:list={["prism-live", languageClass, "line-numbers", "no-whitespace-normalization"]} aria-hidden="true"><code class={languageClass} set:html={highlightedEditor(value, language)} /></pre>
+  <textarea {...attributes} class:list={["prism-live", languageClass, "line-numbers"]}>{value}</textarea>
+</div>
