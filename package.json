@@ -16,7 +16,7 @@
     "pretest:cross-browser": "npm run build"
   },
   "dependencies": {
-    "astro": "^7.3.1",
+    "astro": "^7.4.2",
     "postcss": "^8.5.31",
     "postcss-safe-parser": "^7.1.0",
     "postcss-value-parser": "^4.2.0"
