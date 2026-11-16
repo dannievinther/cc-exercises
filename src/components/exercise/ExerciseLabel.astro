@@ -1,5 +1,6 @@
 ---
 import LinkIcon from "../../icons/link.svg";
+import CompletionButton from "./CompletionButton.astro";
 const { title, index, total, exerciseID } = Astro.props;
 ---
 
@@ -8,7 +9,10 @@ const { title, index, total, exerciseID } = Astro.props;
     <LinkIcon stroke-width={2} width={24} height={24} />
     {title}
   </a>
-  <span>{index} / {total}</span>
+  <span class="label-actions">
+    <span class="exercise-count">{index} / {total}</span>
+    <CompletionButton {title} />
+  </span>
 </h2>
 
 <style>
@@ -91,7 +95,7 @@ const { title, index, total, exerciseID } = Astro.props;
       }
     }
 
-    & span {
+    & .exercise-count {
       font-weight: 600;
       font-size: 0.55em;
       /* color: var(--blue-muted); */
@@ -99,6 +103,14 @@ const { title, index, total, exerciseID } = Astro.props;
       font-variation-settings: "wdth" 125;
       align-self: center;
     }
+  }
+
+  .label-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-inline-start: auto;
+    align-self: center;
   }
 
   .small-label::before {
