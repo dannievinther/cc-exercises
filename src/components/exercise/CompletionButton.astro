@@ -1,0 +1,94 @@
+---
+const { title } = Astro.props;
+---
+
+<button
+  type="button"
+  class="exercise-completion"
+  aria-label={`Markér som færdig: ${title}`}
+  aria-pressed="false"
+  title="Markér som færdig"
+>
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" />
+    <path class="completion-check" d="m8 12 2.5 2.5L16 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+</button>
+
+<style>
+  .exercise-completion {
+    display: grid;
+    place-items: center;
+    /* min-inline-size: 36px;
+    min-block-size: 36px;
+    padding: 6px; */
+    padding: 0;
+    border-radius: var(--bdrs-round);
+    background: transparent;
+    color: var(--gray-300);
+    box-shadow: none;
+    stroke-width: 2;
+
+    .completion-check {
+      display: none;
+    }
+
+    &:hover {
+      color: var(--green-400);
+      .completion-check {
+        display: block;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid #164c35;
+      outline-offset: 3px;
+    }
+
+    &[aria-pressed="true"] {
+      color: #164c35;
+
+      circle {
+        fill: #a2fad2f2;
+        stroke: #a2fad2f2;
+      }
+
+      .completion-check {
+        display: block;
+      }
+    }
+
+    @media (pointer: coarse) {
+      min-inline-size: 44px;
+      min-block-size: 44px;
+    }
+  }
+
+  :global(section[data-exercise-key][data-completed="true"]) {
+    outline: 2px solid oklch(from #a2fad2f2 l 100% h);
+  }
+</style>
+
+<script>
+  import { readStorage, saveStorage } from "../../js/exercise-storage.js";
+
+  document.querySelectorAll<HTMLButtonElement>(".exercise-completion").forEach((button) => {
+    const section = button.closest<HTMLElement>("section[data-exercise-key]");
+    if (!section) return;
+    const key = `ex:completed:${section.dataset.exerciseKey}`;
+
+    const update = (completed: boolean) => {
+      button.setAttribute("aria-pressed", String(completed));
+      button.title = completed ? "Fjern færdigmarkering" : "Markér som færdig";
+      if (completed) section.dataset.completed = "true";
+      else section.removeAttribute("data-completed");
+    };
+
+    update(readStorage(key) === "true");
+    button.addEventListener("click", () => {
+      const completed = button.getAttribute("aria-pressed") !== "true";
+      update(completed);
+      saveStorage(key, completed ? "true" : null, true);
+    });
+  });
+</script>
